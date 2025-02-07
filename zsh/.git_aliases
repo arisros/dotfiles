@@ -1,0 +1,31 @@
+alias ga='git add'
+alias gc='git commit -m'
+alias gca='git commit --amend'
+alias gcam='git commit -am'
+alias gcm='git commit -m'
+alias gp='git push'
+alias gl='git pull'
+alias gst='git status'
+alias gb='git branch'
+alias gco='git checkout'
+alias gcl='git clone'
+alias gd='git diff'
+alias grm='git rm'
+
+# Git Log & Reset
+alias glog='git log --oneline --graph --decorate --all'
+alias grh='git reset --hard HEAD'
+alias gsoft='git reset --soft HEAD~1'
+
+# Git Fetch & Rebase
+alias gpr='git pull --rebase'
+alias gfp='git fetch --prune'
+alias grc='git rebase --continue'
+
+# Git Push & Pull for Current Branch
+alias ggpull='git pull origin $(git branch --show-current)'
+alias ggpush='git push origin $(git branch --show-current)'
+
+# Git Set Upstream & Sync
+alias gpsup='git push --set-upstream origin $(git branch --show-current)'
+

@@ -1,0 +1,11 @@
+
+# Navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias ~='cd ~'
+
+# List files
+alias ls='ls --color=auto'  # macOS: alias ls='ls -G'
+alias ll='ls -lh'
+alias la='ls -lha'

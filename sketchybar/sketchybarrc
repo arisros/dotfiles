@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+
+# https://github.com/FelixKratz/dotfiles
+# https://felixkratz.github.io/SketchyBar/config/bar
+
+source "$CONFIG_DIR/env.sh" # Loads all defined colors
+
+# bar props and defaults
+source "$CONFIG_DIR/sketchy_defaults.sh"
+
+# HACK - Left is Top when bar is displayed vertically
+
+##### Left Side Items #####
+# these are now top items
+# starting at top-most
+source $ITEM_DIR/aerospace_spaces.sh
+source $ITEM_DIR/aerospace_controls.sh
+
+##### Left Side Of Notch Items #####
+# not relevant on vertical layout
+
+##### Right Side Of Notch Items #####
+# not relevant on vertical layout
+
+##### Right Side Items #####
+# these are now bottom items
+# starting at bottom-most
+
+source $ITEM_DIR/apple.sh
+source $ITEM_DIR/clock.sh
+source $ITEM_DIR/outdated.sh
+source $ITEM_DIR/cpu.sh
+source $ITEM_DIR/disk.sh
+# source $ITEM_DIR/volume.sh
+# source $ITEM_DIR/battery.sh
+# source $ITEM_DIR/wifi.sh
+
+
+##### Finalizing Setup #####
+sketchybar --update
+sketchybar --hotload true

@@ -1,0 +1,31 @@
+tap "felixkratz/formulae"
+tap "homebrew/bundle"
+tap "homebrew/services"
+tap "nikitabobko/tap"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# Improved top (interactive process viewer)
+brew "htop"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Mac App Store command-line interface
+brew "mas"
+# Modern shell for the GitHub era
+brew "nushell"
+# Create, run, and share large language models (LLMs)
+brew "ollama"
+# Terminal multiplexer
+brew "tmux"
+# A window border system for macOS
+brew "felixkratz/formulae/borders"
+# Custom macOS statusbar with shell plugin, interaction and graph support
+brew "felixkratz/formulae/sketchybar"
+# AeroSpace is an i3-like tiling window manager for macOS
+cask "aerospace"
+cask "font-hack-nerd-font"
+cask "font-sf-pro"
+cask "font-sketchybar-app-font"
+# Archive manager for data compression and backups
+cask "rar"
+# Music streaming service
+cask "spotify"

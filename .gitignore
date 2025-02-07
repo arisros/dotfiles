@@ -1,0 +1,35 @@
+# Ignore everything except explicitly tracked dotfiles
+
+
+# Ignore backup files
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Ignore system-specific files
+.DS_Store
+.Trash
+
+# Ignore shell history files
+.zsh_history
+.bash_history
+
+# Ignore SSH keys (security risk)
+.ssh/id_rsa
+.ssh/id_rsa.pub
+.ssh/known_hosts
+
+# Ignore Vim/Neovim swap and backup files
+.viminfo
+.vim/.netrwhist
+.netrwhist
+
+# Ignore macOS-specific files
+*.localized
+.AppleDouble
+.LSOverride
+
+# Ignore logs
+*.log
+

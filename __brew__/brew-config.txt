@@ -1,0 +1,19 @@
+HOMEBREW_VERSION: 4.4.20
+ORIGIN: https://github.com/Homebrew/brew
+HEAD: 47ef1a3b0b742a78be35c016df6a0279d6035ebb
+Last commit: 28 hours ago
+Branch: stable
+Core tap JSON: 04 Feb 20:21 UTC
+Core cask tap JSON: 04 Feb 20:21 UTC
+HOMEBREW_PREFIX: /opt/homebrew
+HOMEBREW_CASK_OPTS: []
+HOMEBREW_MAKE_JOBS: 8
+Homebrew Ruby: 3.3.7 => /opt/homebrew/Library/Homebrew/vendor/portable-ruby/3.3.7/bin/ruby
+CPU: octa-core 64-bit arm_blizzard_avalanche
+Clang: 16.0.0 build 1600
+Git: 2.39.5 => /Library/Developer/CommandLineTools/usr/bin/git
+Curl: 8.7.1 => /usr/bin/curl
+macOS: 14.7-arm64
+CLT: 16.2.0.0.1.1733547573
+Xcode: N/A
+Rosetta 2: false

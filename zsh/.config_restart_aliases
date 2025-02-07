@@ -1,0 +1,2 @@
+alias tmuxr='tmux source-file ~/.tmux.conf'
+alias szz='source .zshrc'
