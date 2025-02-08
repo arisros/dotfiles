@@ -7,6 +7,7 @@ mkdir -p ~/.config/borders
 mkdir -p ~/.config/sketchybar
 mkdir -p ~/.config/tmux
 mkdir -p ~/.config/ghostty
+mkdir -p ~/.ssh
 
 stow -t ~/.config/aerospace aerospace
 stow -t ~/.config/alacritty alacritty
@@ -15,6 +16,7 @@ stow -t ~/.config/borders borders
 stow -t ~/.config/sketchybar sketchybar
 stow -t ~/.config/tmux tmux
 stow -t ~/.config/ghostty ghostty
+stow -t ~/.ssh ssh
 stow -t ~ vim
 stow -t ~ zsh
 

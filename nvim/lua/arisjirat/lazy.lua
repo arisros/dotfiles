@@ -11,7 +11,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup({ { import = "arisjirat.plugins" }, { import = "arisjirat.plugins.lsp" } }, {
+require("lazy").setup({ 
+  { import = "arisjirat.plugins" }, { import = "arisjirat.plugins.lsp" } }, {
 	checker = {
 		enabled = true,
 		notify = false,

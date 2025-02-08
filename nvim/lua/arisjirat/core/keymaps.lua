@@ -19,4 +19,4 @@ keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer
 
 keymap.set("n", "<leader>w", ":w<CR>", { noremap = true, silent = true, desc = "Save file" })
 
-
+keymap.set("n", "<leader>e", ":Explore<CR>")

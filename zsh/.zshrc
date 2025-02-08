@@ -9,6 +9,7 @@ setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_REDUCE_BLANKS
 
+
 [[ -f ~/.git_aliases ]] && source ~/.git_aliases
 [[ -f ~/.config_restart_aliases ]] && source ~/.config_restart_aliases
 [[ -f ~/.fs_aliases ]] && source ~/.fs_aliases
@@ -20,9 +21,13 @@ if [[ ! -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.z
 
 fi
 
-
-
-
+export PATH="$HOME/.bun/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_ed25519_github
+fi
+
