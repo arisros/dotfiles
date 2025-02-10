@@ -1,5 +1,12 @@
-Host github.com
-    User git
+# Personal GitHub Account
+Host github.com-arisros
     HostName github.com
-    IdentityFile ~/.ssh/id_ed25519_github
-    IdentitiesOnly yes
+    User git
+    IdentityFile ~/.ssh/id_rsa_git_arisjirat
+
+# Work GitHub Account (BFI)
+Host github.com-bfi-finance
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_github_bfi
+

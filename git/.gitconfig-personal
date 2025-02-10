@@ -1,0 +1,5 @@
+[user]
+    name = "Aris Jirat"
+    email = "arisjiratkurniawan@gmail.com"
+[core]
+    sshCommand = "ssh -i ~/.ssh/id_rsa_git_arisjirat -F /dev/null"

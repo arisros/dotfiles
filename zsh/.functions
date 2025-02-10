@@ -1,0 +1,13 @@
+# Function to remove duplicate entries from PATH
+dedupe_path() {
+  export PATH=$(echo "$PATH" | awk -v RS=':' '!seen[$0]++' | paste -sd ':')
+}
+
+# Function to add a path only if it's not already in PATH
+add_to_path() {
+  case ":$PATH:" in
+    *":$1:"*) ;;  # If already in PATH, do nothing
+    *) export PATH="$PATH:$1" ;;  # Otherwise, add it
+  esac
+}
+

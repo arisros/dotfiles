@@ -1,0 +1,5 @@
+[user]
+    name = "Aris Kurniawan_098183"
+    email = "aris.kurniawan@bfi.co.id"
+[core]
+    sshCommand = "ssh -i ~/.ssh/id_github_bfi -F /dev/null"
