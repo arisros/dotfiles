@@ -23,6 +23,12 @@ stow -t ~ zsh
 
 echo "Dotfiles successfully stowed!"
 
+# run __scripts__
+
+./__scripts__/install_version_manager.sh
+./__scripts__/install_zsh_plugins.sh
+
+
 # Load SSH Agent
 # sudo launchctl load ~/Library/LaunchAgents/com.user.ssh-agent.plist
 
