@@ -3,8 +3,6 @@
     dynamic_padding = true
 [env]
     TERM = "xterm-256color"
-
-
 [font]
     normal = { family = "BlexMono Nerd Font", style = "Regular" }
     bold = { family = "BlexMono Nerd Font", style = "Bold" }
@@ -12,14 +10,10 @@
     bold_italic = { family = "BlexMono Nerd Font", style = "Bold Italic" }
     size = 14
     builtin_box_drawing = true  # Fixes misaligned box-drawing characters
-
-    # Fallback fonts for missing icons
-    # fallback = ["Hack Nerd Font", "FiraCode Nerd Font"]
-
 [font.offset]
     x = 0  # Horizontal spacing
     y = 0  # Vertical spacing for better readability
-
 [font.glyph_offset]
     x = 0
     y = 1  # Fine-tune glyph positioning
+

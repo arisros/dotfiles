@@ -17,7 +17,14 @@ stow -t ~/.config/sketchybar sketchybar
 stow -t ~/.config/tmux tmux
 stow -t ~/.config/ghostty ghostty
 stow -t ~/.ssh ssh
+stow -t ~ git
 stow -t ~ vim
 stow -t ~ zsh
 
 echo "Dotfiles successfully stowed!"
+
+# Load SSH Agent
+# sudo launchctl load ~/Library/LaunchAgents/com.user.ssh-agent.plist
+
+# Verify SSH keys
+# ssh-add -l

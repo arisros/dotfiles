@@ -1,6 +1,11 @@
 return {
   "nvim-treesitter/nvim-treesitter", 
-  build = ":TSUpdate",
+
+  event = { 'BufReadPre', 'BufNewFile' },
+  build = ':TSUpdate',
+  dependencies = {
+    'windwp/nvim-ts-autotag',
+  },
   config = function()
     require'nvim-treesitter.configs'.setup {
      -- enable indentation
