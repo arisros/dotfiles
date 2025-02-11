@@ -1,3 +1,2 @@
 require("arisjirat.core")
-require("arisjirat.lazy") 
-
+require("arisjirat.lazy")
