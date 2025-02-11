@@ -14,7 +14,7 @@ source "$CONFIG_DIR/sketchy_defaults.sh"
 # these are now top items
 # starting at top-most
 source $ITEM_DIR/aerospace_spaces.sh
-source $ITEM_DIR/aerospace_controls.sh
+# source $ITEM_DIR/aerospace_controls.sh
 
 ##### Left Side Of Notch Items #####
 # not relevant on vertical layout

@@ -18,6 +18,11 @@ return {
         lua = { 'stylua' },
         dart = { 'dartfmt' },
       },
+      format_on_save = {
+        enabled = true,
+        async = false,
+        timeout = 1000,
+      },
     })
 
     vim.keymap.set(

@@ -1,9 +1,7 @@
 background = 000000 
 foreground = ffffff 
 
-keybind = ctrl+d=new_split:right
 macos-titlebar-style = hidden
 macos-non-native-fullscreen = true
 
 font-family = IBM Plex Mono
-
