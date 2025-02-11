@@ -12,8 +12,6 @@ brew "jq"
 brew "mas"
 # Modern shell for the GitHub era
 brew "nushell"
-# Create, run, and share large language models (LLMs)
-brew "ollama"
 # Terminal multiplexer
 brew "tmux"
 # A window border system for macOS
