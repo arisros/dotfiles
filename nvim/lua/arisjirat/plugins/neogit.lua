@@ -9,5 +9,14 @@ return {
 		"ibhagwan/fzf-lua", -- optional
 		"echasnovski/mini.pick", -- optional
 	},
-	config = true,
+	config = function()
+		require("neogit").setup({
+			kind = "floating",
+			integrations = {
+				diffview = true,
+				git_blame = true,
+			},
+		})
+		vim.api.nvim_set_keymap("n", "<leader>gg", ":Neogit<CR>", { noremap = true, silent = true })
+	end,
 }

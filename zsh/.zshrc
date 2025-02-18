@@ -1,5 +1,6 @@
 export CONFIG_DIR="$HOME/.config/sketchybar"
 export ITEM_DIR="$CONFIG_DIR/items"
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # git-prompt
 source ~/git-prompt.zsh
@@ -10,6 +11,8 @@ source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighti
 
 # PROMPT='%n@%m %~ $(git_prompt_info) $ '
 setopt HIST_IGNORE_DUPS
+
+set -o vi
 
 # Don't store redundant commands (like `ls` or `cd`)
 setopt HIST_IGNORE_ALL_DUPS
@@ -35,6 +38,9 @@ export ANDROID_SDK_ROOT="$ANDROID_HOME"
 export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 export PATH="$ANDROID_HOME/platform-tools:$PATH"
 export PATH="$ANDROID_HOME/emulator:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/opt/homebrew/sbin:$PATH"
+export PATH="$HOME/.pub-cache/bin:$PATH"
 
 ## [dart][Completion]
 ## Completion scripts setup. Remove the following line to uninstall
@@ -50,4 +56,10 @@ source ~/.fs_aliases
 source ~/.functions
 # [ZSH] git_aliases
 source ~/.git_aliases
+
+
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /Users/justtest/.dart-cli-completion/zsh-config.zsh ]] && . /Users/justtest/.dart-cli-completion/zsh-config.zsh || true
+## [/Completion]
 
