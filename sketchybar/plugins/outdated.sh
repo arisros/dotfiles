@@ -11,9 +11,9 @@ sketchybar --set "$NAME" "${props[@]}"
 
 sum=0
 
-count=$(mise list | grep -o '\boutdated\b' | wc -l | tr -d '[:space:]')
-sleep 3
-sum=$((sum + count))
+# count=$(mise list | grep -o '\boutdated\b' | wc -l | tr -d '[:space:]')
+# sleep 3
+# sum=$((sum + count))
 
 count=$(brew outdated | wc -l | tr -d ' ')
 sleep 1

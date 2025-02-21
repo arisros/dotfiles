@@ -1,12 +1,12 @@
 #!/bin/bash
 # Install Xcode Command Line Tools
-xcode-select --install
-
-# Install Homebrew
-curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
-
-# Install Stow
-brew install stow git
+# xcode-select --install
+#
+# # Install Homebrew
+# curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
+#
+# # Install Stow
+# brew install stow git
 
 
 mkdir -p ~/.config/aerospace
@@ -35,13 +35,13 @@ stow -t ~ zsh
 echo "Dotfiles successfully stowed!"
 
 # Install Homebrew packages
-brew bundle --file=__scripts__/Brewfile
+# brew bundle --file=__scripts__/Brewfile
 
 # run __scripts__
-./__scripts__/install_version_manager.sh
-./__scripts__/install_zsh_plugins.sh
+# ./__scripts__/install_version_manager.sh
+# ./__scripts__/install_zsh_plugins.sh
 
-./__macos__/defaults.sh
+# ./__macos__/defaults.sh
 
 
 

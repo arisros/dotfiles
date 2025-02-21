@@ -96,10 +96,10 @@ remove_unmatched_items() {
 }
 
 aerospace_highlight_focused_window() {
-  local window_id=$(yabai_get_focused_window_id)
-  if [ -n "$window_id" ]; then
-    aerospace_highlight_window_id "$window_id"
-  fi
+  # local window_id=$(yabai_get_focused_window_id)
+  # if [ -n "$window_id" ]; then
+  #   aerospace_highlight_window_id "$window_id"
+  # fi
   local sid=$(aerospace_focused_workspace)
   aerospace_workspace_focus "$sid"
 }
