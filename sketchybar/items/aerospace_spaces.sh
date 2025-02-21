@@ -10,11 +10,11 @@ mkdir -p "$CACHE_DIR"
 : > "$CACHE_DIR/$LOG_FILE"
 
 sketchybar --add event aerospace_workspace_change
-sketchybar --add event yabai_window_created
-sketchybar --add event yabai_window_destroyed
-sketchybar --add event yabai_window_focused
-sketchybar --add event yabai_window_minimized
-sketchybar --add event yabai_window_deminimized
+# sketchybar --add event yabai_window_created
+# sketchybar --add event yabai_window_destroyed
+# sketchybar --add event yabai_window_focused
+# sketchybar --add event yabai_window_minimized
+# sketchybar --add event yabai_window_deminimized
 
 props=(
   icon.drawing=off
@@ -25,12 +25,12 @@ sketchy_add_item space_listener left \
   --set space_listener "${props[@]}" \
   script="$PLUGIN_DIR/aerospace_spaces.sh" \
   --subscribe space_listener \
-  aerospace_workspace_change \
-  yabai_window_created \
-  yabai_window_destroyed \
-  yabai_window_focused \
-  yabai_window_minimized \
-  yabai_window_deminimized
+  aerospace_workspace_change 
+  # yabai_window_created \
+  # yabai_window_destroyed \
+  # yabai_window_focused \
+  # yabai_window_minimized \
+  # yabai_window_deminimized
 
 # add dividers as anchor points for the workspaces
 workspaces=("0" $(aerospace_workspaces))

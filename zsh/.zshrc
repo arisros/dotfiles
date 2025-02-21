@@ -1,6 +1,7 @@
 export CONFIG_DIR="$HOME/.config/sketchybar"
 export ITEM_DIR="$CONFIG_DIR/items"
 eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(~/.local/bin/mise activate zsh)"
 
 # git-prompt
 source ~/git-prompt.zsh
@@ -31,6 +32,8 @@ setopt HIST_FCNTL_LOCK            # Prevent corruption when multiple shells writ
 setopt HIST_VERIFY                # Show command before running on history expansion
 
 export PATH="$HOME/.bun/bin:$PATH"
+
+# [nvm] will replace with mise
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -52,6 +55,9 @@ export PATH="$ANDROID_HOME/emulator:$PATH"
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
 export PATH="$HOME/.pub-cache/bin:$PATH"
+
+# [mise]
+export PATH="$HOME/.local/bin:$PATH"
 
 ## [dart][Completion]
 ## Completion scripts setup. Remove the following line to uninstall
