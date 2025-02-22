@@ -11,10 +11,10 @@ props=(
 	icon.drawing=off
 	background.height="$LABEL_ONLY_HEIGHT"
   icon="$ICON_CPU"
-  icon.color="$SAPPHIRE"
+  icon.color="$WHITE"
   icon.font="$FONT:$((ICON_FONTSIZE - 2))"
   label="$cpuload"
-  label.color="$SAPPHIRE"
+  label.color="$WHITE"
 )
 
 if [ -n "$cpuload" ]; then

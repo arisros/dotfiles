@@ -171,10 +171,10 @@ automatically-unhide-macos-hidden-apps = true
     w = ['built-in', 'main']
     e = ['built-in', 'main']
     r = ['built-in', 'main']
-    a = 'dell'
-    s = 'dell'
-    d = 'dell'
-    f = 'dell'
+    a = 'DELL 1908WFP'
+    s = 'DELL 1908WFP'
+    d = 'DELL 1908WFP'
+    f = 'DELL 1908WFP'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes

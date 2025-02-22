@@ -3,10 +3,13 @@
 source "$PLUGIN_DIR/helpers/sketchy.sh"
 
 props=(
-  background.height="$ITEM_HEIGHT_WITH_LABEL"
-  label.color="$MAUVE"
+  background.height=30
+  label.color="$WHITE"
+  icon.width=30
   icon.font="$FONT:$((FONTSIZE - 2))"
   label.font="$FONT:$((FONTSIZE - 4))"
+  label.width=30
+  
   update_freq=1
   script="$PLUGIN_DIR/clock.sh"
 )
