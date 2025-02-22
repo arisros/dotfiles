@@ -17,6 +17,7 @@ mkdir -p ~/.config/sketchybar
 mkdir -p ~/.config/tmux
 mkdir -p ~/.config/ghostty
 mkdir -p ~/.ssh
+mkdir -p ~/.config/mise
 
 stow -t ~/.config/aerospace aerospace
 stow -t ~/.config/alacritty alacritty
@@ -26,6 +27,7 @@ stow -t ~/.config/sketchybar sketchybar
 stow -t ~/.config/tmux tmux
 stow -t ~/.config/ghostty ghostty
 stow -t ~/.ssh ssh
+stow -t ~/.config/mise mise
 stow -t ~ git
 stow -t ~ vim
 stow -t ~ zsh
