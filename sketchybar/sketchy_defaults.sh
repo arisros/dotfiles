@@ -25,8 +25,8 @@ bar=(
   border_width=0
   position=right
   height=$BAR_WIDTH # height is width when bar on left/right
-  margin=0
-  y_offset=-2
+  # margin=0
+  y_offset=10
   corner_radius=0
   blur_radius=0
   padding_left=1
@@ -42,27 +42,17 @@ bar=(
 )
 sketchybar --bar "${bar[@]}"
 
-##### Changing Defaults #####
 default=(
-  background.height=$ITEM_HEIGHT
   background.color=$TRANSPARENT
-  background.corner_radius=5
+  background.corner_radius=10
   icon.font="$FONT:$ICON_FONTSIZE"
   icon.color=$TEXT
   label.font="$FONT:$FONTSIZE"
   label.color=$TEXT
-  padding_left=0
-  padding_right=0
-
-  icon.width=$BAR_WIDTH
+  icon.color=$TEXT
   icon.align="center"
   icon.padding_left=0
   icon.padding_right=0
-
-  label.width=$BAR_WIDTH
   label.align="center"
-  label.y_offset=$LABEL_Y_OFFSET # hack since on next line
-  label.padding_left=-$BAR_WIDTH # each item needs to be pulled left using negative number
-  label.padding_right=$BAR_WIDTH # but needs to double in width because center aligned
 )
 sketchybar --default "${default[@]}"
