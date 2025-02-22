@@ -15,7 +15,18 @@ setopt HIST_IGNORE_DUPS
 set -o vi
 
 # Don't store redundant commands (like `ls` or `cd`)
-setopt HIST_IGNORE_ALL_DUPS
+# Increase history size
+HISTSIZE=100000            # Number of commands stored in memory
+SAVEHIST=100000            # Number of commands saved to file
+HISTFILE=~/.zsh_history    # Location of the history file
+
+# Enhance history behavior
+setopt HIST_IGNORE_DUPS    # Ignore duplicate commands
+setopt HIST_IGNORE_ALL_DUPS # Remove older duplicate entries, keeping latest
+setopt HIST_REDUCE_BLANKS  # Remove unnecessary spaces before saving
+setopt HIST_SAVE_NO_DUPS   # Don't save duplicate commands in history
+setopt HIST_EXPIRE_DUPS_FIRST # Remove oldest duplicate first when trimming
+setopt SHARE_HISTORY       # Share history across multiple Zsh sessions
 setopt HIST_REDUCE_BLANKS
 
 
