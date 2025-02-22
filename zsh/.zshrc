@@ -9,26 +9,26 @@ source "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-a
 # syntax-highlighting
 source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-# PROMPT='%n@%m %~ $(git_prompt_info) $ '
-setopt HIST_IGNORE_DUPS
-
 set -o vi
 
 # Don't store redundant commands (like `ls` or `cd`)
-# Increase history size
-HISTSIZE=100000            # Number of commands stored in memory
-SAVEHIST=100000            # Number of commands saved to file
-HISTFILE=~/.zsh_history    # Location of the history file
+# History Size (Balanced for Performance)
+HISTSIZE=50000            # Commands stored in memory
+SAVEHIST=50000            # Commands saved to file
+HISTFILE=~/.zsh_history   # Location of the history file
 
-# Enhance history behavior
-setopt HIST_IGNORE_DUPS    # Ignore duplicate commands
-setopt HIST_IGNORE_ALL_DUPS # Remove older duplicate entries, keeping latest
-setopt HIST_REDUCE_BLANKS  # Remove unnecessary spaces before saving
-setopt HIST_SAVE_NO_DUPS   # Don't save duplicate commands in history
-setopt HIST_EXPIRE_DUPS_FIRST # Remove oldest duplicate first when trimming
-setopt SHARE_HISTORY       # Share history across multiple Zsh sessions
-setopt HIST_REDUCE_BLANKS
+# History Behavior Optimizations
+setopt HIST_IGNORE_DUPS         # Ignore duplicate commands
+setopt HIST_IGNORE_ALL_DUPS      # Remove older duplicates, keep latest
+setopt HIST_REDUCE_BLANKS        # Trim unnecessary spaces before saving
+setopt HIST_EXPIRE_DUPS_FIRST    # Remove oldest duplicate first when trimming
+setopt HIST_SAVE_NO_DUPS         # Don't save duplicate commands in history
 
+# History Performance Tweaks
+setopt APPEND_HISTORY            # Append commands to history file, not overwrite
+setopt INC_APPEND_HISTORY         # Write new commands immediately (no full reload)
+setopt HIST_FCNTL_LOCK            # Prevent corruption when multiple shells write
+setopt HIST_VERIFY                # Show command before running on history expansion
 
 export PATH="$HOME/.bun/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
