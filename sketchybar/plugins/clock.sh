@@ -2,16 +2,12 @@
 
 source "$CONFIG_DIR/env.sh"
 
-datetime=$(date +"%-I:%M %p")
-time=$(echo "$datetime" | awk '{print $1}')
-period=$(echo "$datetime" | awk '{print $2}')
+time_hour=$(date +"%H")
+time_minute_second=$(date +"%M:%S")
 
 props=(
-  icon="$time"
-  label="$period"
+    icon="$time_hour"
+    label="$time_minute_second"
 )
-sketchybar --set "$NAME" "${props[@]}"
 
-if [ "$SENDER" = "mouse.clicked" ]; then
-  open "x-apple.systempreferences:com.apple.preferences.datetime"
-fi
+sketchybar --set "time" "${props[@]}"

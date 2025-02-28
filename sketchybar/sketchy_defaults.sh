@@ -20,39 +20,38 @@
 # shadow	        <boolean>	off	If the bar should draw a shadow
 
 bar=(
-  color=$BAR
-  border_color=$BAR
-  border_width=0
-  position=right
-  height=$BAR_WIDTH # height is width when bar on left/right
-  # margin=0
-  y_offset=10
-  corner_radius=0
-  blur_radius=0
-  padding_left=1
-  padding_right=10
-  notch_width=0
-  notch_offset=0
-  display=all
-  hidden=off
-  topmost=off
-  sticky=off
-  font_smoothing=off
-  shadow=on
+    color=$BAR
+    border_color=$BAR
+    border_width=0
+    position=right
+    height=$BAR_WIDTH # height is width when bar on left/right
+    y_offset=0
+    corner_radius=0
+    blur_radius=0
+    padding_left=1
+    padding_right=10
+    notch_width=0
+    notch_offset=0
+    display=all
+    hidden=off
+    topmost=off
+    sticky=off
+    font_smoothing=off
+    shadow=on
 )
 sketchybar --bar "${bar[@]}"
 
 default=(
-  background.color=$TRANSPARENT
-  background.corner_radius=10
-  icon.font="$FONT:$ICON_FONTSIZE"
-  icon.color=$TEXT
-  label.font="$FONT:$FONTSIZE"
-  label.color=$TEXT
-  icon.color=$TEXT
-  icon.align="center"
-  icon.padding_left=0
-  icon.padding_right=0
-  label.align="center"
+    background.color=$TRANSPARENT
+    background.corner_radius=0
+    icon.font="$FONT:$ICON_FONTSIZE"
+    icon.color=$TEXT
+    label.font="$FONT:$FONTSIZE"
+    label.color=$TEXT
+    icon.color=$TEXT
+    icon.align="center"
+    icon.padding_left=0
+    icon.padding_right=0
+    label.align="center"
 )
 sketchybar --default "${default[@]}"

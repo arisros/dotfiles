@@ -17,6 +17,8 @@ return {
 				markdown = { "prettier" },
 				lua = { "stylua" },
 				dart = { "dart_format" },
+				bash = { "beautysh" },
+				sh = { "beautysh" },
 			},
 			format_on_save = {
 				enabled = true,

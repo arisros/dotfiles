@@ -25,6 +25,8 @@ return {
 				"lua_ls",
 				"ts_ls",
 				"buf_ls",
+				"bashls",
+				"gopls",
 			},
 		})
 
@@ -33,6 +35,7 @@ return {
 				"stylua",
 				"eslint",
 				"prettier",
+				"gopls",
 			},
 		})
 	end,

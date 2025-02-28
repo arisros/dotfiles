@@ -80,3 +80,7 @@ source ~/.git_aliases
 [[ -f /Users/justtest/.dart-cli-completion/zsh-config.zsh ]] && . /Users/justtest/.dart-cli-completion/zsh-config.zsh || true
 ## [/Completion]
 
+# if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
+#   . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+# fi
+
