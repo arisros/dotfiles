@@ -18,6 +18,7 @@ mkdir -p ~/.config/tmux
 mkdir -p ~/.config/ghostty
 mkdir -p ~/.ssh
 mkdir -p ~/.config/mise
+mkdir -p ~/.config/nix
 
 stow -t ~/.config/aerospace aerospace
 stow -t ~/.config/alacritty alacritty
@@ -31,6 +32,7 @@ stow -t ~/.config/mise mise
 stow -t ~ git
 stow -t ~ vim
 stow -t ~ zsh
+stow -t ~/.config/nix nix
 
 echo "Dotfiles successfully stowed!"
 
