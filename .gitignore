@@ -33,3 +33,6 @@
 # Ignore logs
 *.log
 
+.gitsecret/keys/random_seed
+!*.secret
+zsh/.secrets
