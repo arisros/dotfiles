@@ -88,3 +88,5 @@ fi
 [ -f ~/.secrets ] && source ~/.secrets
 
 
+export GOPRIVATE=github.com/bfi-finance
+
