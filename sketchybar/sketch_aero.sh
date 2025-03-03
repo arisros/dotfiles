@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
+source "$CONFIG_DIR/helper_sketchybar.sh"
 
+workspace="$1"
+monitor="$2"
 
 if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
-    sketchybar --set $NAME \
-        background.color=0xFFCC6766 \
-        label.color=0xFF000000
-else
-    sketchybar --set $NAME \
-        background.color=0xFF000000 \
-        label.color=0xFFFFFFFF
+    focus_workspace $workspace $monitor
+    find_windows_in_workspace $workspace $monitor
 fi
