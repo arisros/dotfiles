@@ -145,8 +145,8 @@ find_windows_in_workspace() {
         bar=$(sketchybar --query bar | jq -r --arg window_id "$window_id" '.items[] | select(test("^app\\." + $window_id + "$"))')
         window_app_bar_id="app.$window_id"
         if [[ "$bar" == "$window_app_bar_id" ]]; then
-            sketchybar --move "$bar" after "space.$sid"
-            sketchybar --set "$bar" display="$monitor"
+            sketchybar --set "$bar" display="$monitor" \
+                --move "$bar" after "space.$sid"
             continue
         fi
         if [[ ! -z "$window_app_bar_id" ]]; then
@@ -155,6 +155,29 @@ find_windows_in_workspace() {
 
     done
 
+    all_win=$(aerospace list-windows --all --json --format '%{monitor-id}%{workspace}%{app-bundle-id}%{window-id}%{app-name}')
+    all_win_count=$(jq length <<< "$all_win" 2>/dev/null || echo 0)
+    if [[ "$count" < 1 ]]; then
+        return
+    fi
+
+    for item in $(sketchybar --query bar | jq -r '.items[] | select(test("^app\\."))'); do
+        # extract window_id from bar
+        window_id=$(awk -F'.' '{print $2}' <<< "$item")
+        found=0
+        for ((i = 0; i < all_win_count; i++)); do
+            window_id_aerospace=$(jq -r --argjson i "$i" '.[$i]["window-id"] // empty' <<< "$all_win")
+            if [[ "$window_id" == "$window_id_aerospace" ]]; then
+                ((found++))
+                continue
+            fi
+        done
+
+        # if found is 0, remove window
+        if [[ "$found" == 0 ]]; then
+            sketchybar --remove "app.$window_id"
+        fi
+    done
 }
 
 add_windows_to_workspace() {
