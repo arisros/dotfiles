@@ -89,4 +89,5 @@ fi
 
 
 export GOPRIVATE=github.com/bfi-finance
-
+chpwd() {
+}

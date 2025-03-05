@@ -14,6 +14,10 @@ return {
 			autotag = {
 				enable = true,
 			},
+			highlight = {
+				enable = true,
+				additional_vim_regex_highlighting = false,
+			},
 			-- ensure these language parsers are installed
 			ensure_installed = {
 				"json",
@@ -35,6 +39,8 @@ return {
 				"python",
 				"java",
 				"go",
+				"templ",
+				"http",
 			},
 		})
 	end,

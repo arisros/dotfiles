@@ -4,6 +4,13 @@ return {
 	config = function()
 		local conform = require("conform")
 		conform.setup({
+			formatters = {
+				kulala = {
+					command = "kulala-fmt",
+					args = { "format", "$FILENAME" },
+					stdin = false,
+				},
+			},
 			formatters_by_ft = {
 				javascript = { "prettier" },
 				typescript = { "prettier" },
@@ -19,6 +26,9 @@ return {
 				dart = { "dart_format" },
 				bash = { "beautysh" },
 				sh = { "beautysh" },
+				go = { "gofmt" },
+				templ = { "gofmt" },
+				http = { "kulala" },
 			},
 			format_on_save = {
 				enabled = true,
