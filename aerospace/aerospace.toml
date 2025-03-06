@@ -196,7 +196,6 @@ automatically-unhide-macos-hidden-apps = true
     up = 'volume up'
     shift-down = ['volume set 0', 'mode main']
 
-# TODO: will add other assignment, brave, chrome etc
 [[on-window-detected]]
     if.app-id = 'org.alacritty'
     run = 'move-node-to-workspace 1'
@@ -205,6 +204,26 @@ automatically-unhide-macos-hidden-apps = true
     run = 'move-node-to-workspace 1'
 [[on-window-detected]]
     if.app-id = 'com.spotify.client'
-    run = 'move-node-to-workspace a'
-
+    run = 'move-node-to-workspace d'
+[[on-window-detected]]
+    if.app-id = 'com.apple.dt.Xcode'
+    run = 'move-node-to-workspace s'
+[[on-window-detected]]
+    if.app-id = 'com.microsoft.VSCode'
+    run = 'move-node-to-workspace w'
+[[on-window-detected]]
+    if.app-id = 'com.google.Chrome'
+    run = 'move-node-to-workspace e'
+[[on-window-detected]]
+    if.app-id = 'com.brave.Browser'
+    run = 'move-node-to-workspace r'
+[[on-window-detected]]
+    if.app-id = 'com.apple.Safari'
+    run = 'move-node-to-workspace f'
+[[on-window-detected]]
+    if.app-id = 'com.apple.mail'
+    run = 'move-node-to-workspace f'
+[[on-window-detected]]
+    if.app-id = 'com.apple.iCal'
+    run = 'move-node-to-workspace f'
 
