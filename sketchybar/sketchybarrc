@@ -6,11 +6,11 @@ source $CONFIG_DIR/env.sh # Loads all defined colors
 source $CONFIG_DIR/sketchy_defaults.sh
 source $CONFIG_DIR/aerospaces.sh
 source $ITEM_DIR/apple.sh
-source $ITEM_DIR/clock.sh
+source $ITEM_DIR/date.sh
 source $ITEM_DIR/cpu.sh
 source $ITEM_DIR/disk.sh
 source $ITEM_DIR/battery.sh
-
+source $ITEM_DIR/clock.sh
 
 ##### Finalizing Setup #####
 sketchybar --update
