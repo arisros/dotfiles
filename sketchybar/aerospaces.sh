@@ -19,13 +19,22 @@ for monitor_ in $(aerospace list-monitors | awk '{print $1}'); do
 
     [[ "$count_monitors" -gt 1 || "$monitor_" == 1 ]] && add_empty_space "$monitor_" "$monitor"
 
-    for sid in $(aerospace list-workspaces --monitor "$monitor_"); do
-        add_workspace "$sid" "$monitor"
+    workspace_list=$(aerospace list-workspaces --monitor "$monitor_")
+    ordered=("q" "w" "e" "r" "t" "y" "u" "i" "o" "p", "a" "s" "d" "f" "g" "h" "j" "k" "l" "z" "x" "c" "v" "b" "n" "m" "z" "x" "c" "v" "b" "n" "m" "1" "2" "3" "4" "5" "6" "7" "8" "9")
+    local sorted_workspaces=()
 
-        add_windows_to_workspace "$sid" "$monitor"
+    for id in "${ordered[@]}"; do
+        while IFS= read -r sid; do
+            if [[ "$sid" == "$id" ]]; then
+                add_workspace "$sid" "$monitor"
+                add_windows_to_workspace "$sid" "$monitor"
 
-        ((divider_count++))
-        ((divider_count % divider_every == 0)) && add_divider "$sid" "$monitor"
+                ((divider_count++))
+                ((divider_count % divider_every == 0)) && add_divider "$sid" "$monitor"
+            else
+                continue
+            fi
+        done <<< "$workspace_list"
     done
 done
 
