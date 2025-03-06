@@ -2,40 +2,44 @@
 
 source "$PLUGIN_DIR/helpers/sketchy.sh"
 
-sketchy_add_item dateday right \
-    --set dateday update_freq=1 \
-    label="$(date +"%a")" \
-    icon="$(date +"%d")" \
+sketchy_add_item second right \
+    --set second update_freq=1 \
+    icon="a" \
+    label="$(date +"%S")" \
     icon.width=30 \
-    icon.y_offset=12 \
+    icon.y_offset=2 \
     icon.padding_right=10 \
     icon.padding_left=10 \
     label.y_offset=-0 \
     label.width=30 \
-    label.padding_left=-41 \
+    label.padding_left=-40 \
     label.align="center" \
-    label.font="$FONT:$((FONTSIZE + 0))" \
+    icon.font="$FONT:$((FONTSIZE + 4))" \
     icon.color="$WHITE" \
+    label.font="$FONT:$((FONTSIZE + 4))" \
     label.color="$WHITE" \
     background.height=35 \
-    background.padding_left=0 \
-    --subscribe dateday mouse.clicked
+    background.padding_left=-2 \
+    update_freq=1 \
+    script="$PLUGIN_DIR/clock.sh" \
+    --subscribe time mouse.clicked
+
 
 sketchy_add_item time right \
     --set time update_freq=1 \
     icon="$(date +"%H")" \
-    label="$(date +"%M:%S")" \
+    label="$(date +"%M")" \
     icon.width=30 \
     icon.y_offset=12 \
     icon.padding_right=10 \
     icon.padding_left=10 \
-    label.y_offset=-0 \
+    label.y_offset=-10 \
     label.width=30 \
-    label.padding_left=-43 \
+    label.padding_left=-40 \
     label.align="center" \
-    icon.font="$FONT:$((FONTSIZE + 4))" \
+    icon.font="IBM Plex Mono:Bold:$((FONTSIZE + 4))" \
     icon.color="$WHITE" \
-    label.font.size=8 \
+    label.font="IBM Plex Mono:Bold:$((FONTSIZE + 4))" \
     label.color="$WHITE" \
     background.height=35 \
     background.padding_left=10 \

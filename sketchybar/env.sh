@@ -11,7 +11,7 @@ export LOG_FILE="aerospace.log"
 
 export ICON_FONT="sketchybar-app-font:Regular"
 export ICON_FONTSIZE=14
-export FONT="IBM Plex Mono:Semibold"
+export FONT="IBM Plex Mono:Regular"
 export FONTSIZE=12
 export NERD="Symbols Nerd Font:Regular"
 export ICOMOON="Icomoon:Regular"

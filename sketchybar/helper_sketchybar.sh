@@ -52,6 +52,8 @@ add_empty_space() {
 add_workspace() {
     local sid="$1"
     local monitor="$2"
+    # sid to uppercase label
+    local label=$(tr '[:lower:]' '[:upper:]' <<< "$sid")
 
     sketchybar --add item "space.$sid" left \
         --subscribe "space.$sid" aerospace_workspace_change \
@@ -60,7 +62,7 @@ add_workspace() {
         width=30 \
         icon.padding_right=0 \
         icon.padding_left=0 \
-        label="$sid" \
+        label="$label" \
         label.width=30 \
         label.color=0xFFFFFFFF \
         label.font="IBM Plex Mono:Regular:12.0" \
