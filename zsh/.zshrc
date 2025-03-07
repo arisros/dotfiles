@@ -9,6 +9,10 @@ source ~/git-prompt.zsh
 source "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 # syntax-highlighting
 source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+source "$(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 set -o vi
 
@@ -91,3 +95,6 @@ fi
 export GOPRIVATE=github.com/bfi-finance
 chpwd() {
 }
+
+
+
