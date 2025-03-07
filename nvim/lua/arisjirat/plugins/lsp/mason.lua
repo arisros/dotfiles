@@ -27,7 +27,6 @@ return {
 				"buf_ls",
 				"bashls",
 				"gopls",
-				"kulala-fmt",
 				"templ",
 			},
 		})
@@ -38,7 +37,6 @@ return {
 				"eslint",
 				"prettier",
 				"gopls",
-				"kulala-fmt",
 				"templ",
 			},
 		})

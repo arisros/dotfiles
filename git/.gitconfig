@@ -6,12 +6,12 @@
 [includeIf "gitdir:~/dotfiles/"]
     path = ~/.gitconfig-personal
 
-; # TODO: swictcher
-[user]
-    name = "Aris Kurniawan_098183"
-    email = "aris.kurniawan@bfi.co.id"
-[core]
-    sshCommand = "ssh -i ~/.ssh/id_github_bfi -F /dev/null"
+; ; # TODO: swictcher
+; [user]
+;     name = "Aris Kurniawan_098183"
+;     email = "aris.kurniawan@bfi.co.id"
+; [core]
+;     sshCommand = "ssh -i ~/.ssh/id_github_bfi -F /dev/null"
 ;     
 ; [user]
 ;   name = "Aris Jirat"
@@ -23,3 +23,4 @@
 ; ssh instead of https
 [url "git@github.com:"]
     insteadOf = https://github.com/
+

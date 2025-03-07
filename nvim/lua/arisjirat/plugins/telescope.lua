@@ -13,11 +13,43 @@ return {
 		telescope.setup({
 			defaults = {
 				path_display = { "smart" },
+				theme = "ivy",
+				previewer = true,
+				find_files = {
+					-- hidden = true,
+					theme = "ivy",
+					previewer = true,
+				},
 				mappings = {
 					i = {
 						["<C-k>"] = actions.move_selection_previous, -- move to prev result
 						["<C-j>"] = actions.move_selection_next, -- move to next result
 						["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+					},
+				},
+			},
+			pickers = {
+				find_files = {
+					theme = "ivy",
+					previewer = true,
+					find_command = { "rg", "--ignore", "--hidden", "--files" }, -- Show hidden files
+					prompt_prefix = "🔍",
+				},
+				live_grep = {
+					theme = "ivy",
+					previewer = true,
+				},
+				buffers = {
+					theme = "ivy",
+					sort_lastused = true,
+					previewer = true,
+					mappings = {
+						i = {
+							["<C-d>"] = actions.delete_buffer,
+						},
+						n = {
+							["<C-d>"] = actions.delete_buffer,
+						},
 					},
 				},
 			},
@@ -61,7 +93,7 @@ return {
 
 			-- Use Telescope to show unsaved buffers
 			pickers
-				.new({}, {
+				.new(require("telescope.themes").get_ivy({
 					prompt_title = "Unsaved Buffers",
 					finder = finders.new_table({
 						results = buffers,
@@ -97,7 +129,7 @@ return {
 
 						return true
 					end,
-				})
+				}))
 				:find()
 		end
 
