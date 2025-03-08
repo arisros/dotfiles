@@ -38,6 +38,7 @@ return {
 				"prettier",
 				"gopls",
 				"templ",
+				"prettierd",
 			},
 		})
 	end,

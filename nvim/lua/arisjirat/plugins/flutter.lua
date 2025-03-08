@@ -55,19 +55,19 @@ return {
 
 		local map = vim.keymap.set
 
-		map("n", "<leader>rrd", "<cmd>FlutterDevices<CR>", { desc = "Run on device" })
-		map("n", "<leader>rrh", "<cmd>FlutterHotReload<CR>", { desc = "Hot reload" })
-		map("n", "<leader>rrs", "<cmd>FlutterHotRestart<CR>", { desc = "Hot restart" })
-		map("n", "<leader>rrQ", "<cmd>FlutterQuit<CR>", { desc = "Quit flutter app" })
-		map("n", "<leader>rrt", "<cmd>FlutterTest<CR>", { desc = "Run tests" })
+		map("n", "<leader>bfd", "<cmd>FlutterDevices<CR>", { desc = "Run on device" })
+		map("n", "<leader>bfh", "<cmd>FlutterHotReload<CR>", { desc = "Hot reload" })
+		map("n", "<leader>bfr", "<cmd>FlutterHotRestart<CR>", { desc = "Hot restart" })
+		map("n", "<leader>bfQ", "<cmd>FlutterQuit<CR>", { desc = "Quit flutter app" })
+		map("n", "<leader>bfT", "<cmd>FlutterTest<CR>", { desc = "Run tests" })
 		-- log clear
-		map("n", "<leader>rrc", "<cmd>FlutterLogClear<CR>", { desc = "Clear log" })
+		map("n", "<leader>bfc", "<cmd>FlutterLogClear<CR>", { desc = "Clear log" })
 		-- toggle log
-		map("n", "<leader>rrg", "<cmd>FlutterLogToggle<CR>", { desc = "Toggle log" })
+		map("n", "<leader>bflt", "<cmd>FlutterLogToggle<CR>", { desc = "Toggle log" })
 		-- open dev tools
-		map("n", "<leader>rrb", "<cmd>FlutterDevTools<CR>", { desc = "Open dev tools" })
+		map("n", "<leader>bfdt", "<cmd>FlutterDevTools<CR>", { desc = "Open dev tools" })
 		-- toggle outline
-		map("n", "<leader>rro", "<cmd>FlutterOutlineToggle<CR>", { desc = "Toggle outline" })
+		map("n", "<leader>bfot", "<cmd>FlutterOutlineToggle<CR>", { desc = "Toggle outline" })
 	end,
 
 	-- config = function ()

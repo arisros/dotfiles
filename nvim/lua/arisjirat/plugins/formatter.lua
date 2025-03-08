@@ -19,7 +19,7 @@ return {
 				css = { "prettier" },
 				scss = { "prettier" },
 				html = { "prettier" },
-				json = { "prettier" },
+				json = { "prettierd" },
 				yaml = { "prettier" },
 				markdown = { "prettier" },
 				lua = { "stylua" },
