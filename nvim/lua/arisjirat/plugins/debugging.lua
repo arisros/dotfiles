@@ -9,9 +9,8 @@ return {
 		local dap, dapui = require("dap"), require("dapui")
 
 		require("dapui").setup()
-		require("dap-go").setup()
-		require("dap.ext.vscode").load_launchjs()
-
+		require("dap-go").setup({})
+		-- 🔹 DAP UI Auto Open/Close
 		dap.listeners.before.attach.dapui_config = function()
 			dapui.open()
 		end
@@ -25,11 +24,12 @@ return {
 			dapui.close()
 		end
 
-		vim.keymap.set("n", "<Leader>dt", ":DapUiToggle<CR>", {})
-		vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint, {})
-		vim.keymap.set("n", "<Leader>dc", dap.continue, {})
-		vim.keymap.set("n", "<Leader>dr", ":lua require('dapui').open({reset = true})<CR>", {})
+		-- 🔹 Keybindings
+		vim.keymap.set("n", "<Leader>bb", dap.toggle_breakpoint, {})
+		vim.keymap.set("n", "<Leader>bc", dap.continue, {})
+		vim.keymap.set("n", "<Leader>br", ":lua require('dapui').open({reset = true})<CR>", {})
 
+		-- 🔹 Customize Breakpoint Symbol
 		vim.fn.sign_define(
 			"DapBreakpoint",
 			{ text = "⏺", texthl = "DapBreakpoint", linehl = "DapBreakpoint", numhl = "DapBreakpoint" }
