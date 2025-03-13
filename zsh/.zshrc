@@ -9,10 +9,6 @@ source ~/git-prompt.zsh
 source "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 # syntax-highlighting
 source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-source "$(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
-
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
 
 set -o vi
 
@@ -34,6 +30,12 @@ setopt APPEND_HISTORY            # Append commands to history file, not overwrit
 setopt INC_APPEND_HISTORY         # Write new commands immediately (no full reload)
 setopt HIST_FCNTL_LOCK            # Prevent corruption when multiple shells write
 setopt HIST_VERIFY                # Show command before running on history expansion
+
+# history-substring-search
+source "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 export PATH="$HOME/.bun/bin:$PATH"
 
