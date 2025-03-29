@@ -51,6 +51,11 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
     ssh-add ~/.ssh/id_github_bfi
 fi
 
+# [usr/local/bin]
+export PATH="/usr/local/bin:$PATH"
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
+export CGO_CFLAGS_ALLOW="-I"
+ 
 # [flutter]
 export PATH="$HOME/fvm/default/bin:$PATH"
 export ANDROID_HOME="$HOME/Library/Android/sdk"
@@ -79,6 +84,10 @@ source ~/.fs_aliases
 source ~/.functions
 # [ZSH] git_aliases
 source ~/.git_aliases
+# [ZSH] docker_aliases
+source ~/.docker_aliases
+# [ZSH] blue_dev
+source ~/.blue_dev
 
 
 ## [Completion]

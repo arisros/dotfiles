@@ -3,7 +3,7 @@
 
 [includeIf "gitdir:~/work/"]
     path = ~/.gitconfig-work
-[includeIf "gitdir:~/dotfiles/"]
+[includeIf "gitdir:~/sandbox/"]
     path = ~/.gitconfig-personal
 
 ; ; # TODO: swictcher
@@ -12,7 +12,7 @@
     email = "aris.kurniawan@bfi.co.id"
 [core]
     sshCommand = "ssh -i ~/.ssh/id_github_bfi -F /dev/null"
-    
+;     
 ; [user]
 ;   name = "Aris Jirat"
 ;   email = "arisjiratkurniawan@gmail.com"

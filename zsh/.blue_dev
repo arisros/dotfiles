@@ -1,0 +1,36 @@
+# vars
+workdir=~/work
+lora_dir=$workdir/lora
+lora_toolkit_dir=$lora_dir/real-atletico
+
+# go to each work directory
+alias glbofe="cd $lora_dir/lora-backoffice-fe"
+alias glc="cd $lora_dir/lora-collection"
+alias glgs="cd $lora_dir/lora-gateway-service"
+alias glndfw="cd $lora_dir/lora-partnership-ndf"
+alias glndftw="cd $lora_dir/lora-partnership-task-ndf"
+alias glss="cd $lora_dir/lora-schema-service"
+alias glts="cd $lora_dir/lora-task-service"
+alias glt="cd $lora_dir/lora-tools"
+alias gltn="cd $lora_dir/lora-tools-nix"
+alias gl="cd $lora_dir"
+
+# run all services
+alias rlss="glss && export \$(grep -v '^#' .env | xargs -0) && HTTP_SERVER_PORT=8080 go run -trimpath cmd/http/main.go"
+alias rlgs="glgs && export \$(grep -v '^#' .env | xargs -0) && HTTP_SERVER_PORT=8081 go run -trimpath cmd/http/main.go"
+alias rlbofe="glbofe && pnpm run dev"
+alias rlts="glts && export \$(grep -v '^#' .env | xargs -0) && go run -trimpath cmd/http/main.go"
+alias rlndfw="glndfw && export \$(grep -v '^#' .env | xargs -0) && go run -trimpath cmd/main.go"
+alias rlndftw="glndftw && export \$(grep -v '^#' .env | xargs -0) && go run -trimpath cmd/main.go"
+
+# run all services one command
+alias rlora="gl && ./real_atletico/run_services.sh"
+
+# arangoshell
+# alias arango="docker exec -it arangodb arangosh"
+
+alias arango="tmux split-window -h -p 30 'nvim $lora_toolkit_dir/arango_cht.sh' && docker exec -it arangodb arangosh"
+
+# lora-schemagen
+alias pwdoc="lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_0_1.schema.json?bundled=1' -t $lora_dir/lora-partnership-ndf/internal/process/document"
+alias twdoc="lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_0_1.schema.json?bundled=1' -t $lora_dir/lora-partnership-task-ndf/internal/process/common"
