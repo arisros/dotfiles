@@ -10,6 +10,27 @@ return {
 					args = { "format", "$FILENAME" },
 					stdin = false,
 				},
+				-- templfmt = {
+				-- 	command = "templ",
+				-- 	args = { "fmt", "--tab-width=4" },
+				-- 	stdin = true,
+				-- },
+				templfmt = {
+					command = "templ",
+					args = { "fmt" },
+					stdin = true,
+				},
+				indentfix = {
+					command = "sed",
+					args = { "-i", "s/  /    /g" },
+					stdin = false,
+				},
+				-- templ = {
+				-- 	prepend_args = { "--tab-width", "4" },
+				-- 	-- command = "templ",
+				-- 	-- args = { "format", "$FILENAME" },
+				-- 	-- stdin = false,
+				-- },
 			},
 			formatters_by_ft = {
 				javascript = { "prettier" },
@@ -27,6 +48,9 @@ return {
 				bash = { "beautysh" },
 				sh = { "beautysh" },
 				go = { "gofmt" },
+				-- templ = { "templfmt" },
+				-- templ = { "templfmt", "indentfix" },
+				-- templ = { "templ" },
 				templ = { "gofmt" },
 				http = { "kulala" },
 			},

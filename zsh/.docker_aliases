@@ -1,0 +1,4 @@
+alias dcup='docker compose up'
+
+# Specific for dev
+alias darango='docker exec -it arangodb arangosh'

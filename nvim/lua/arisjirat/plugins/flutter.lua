@@ -8,7 +8,7 @@ return {
 	},
 	-- config = true,
 	config = function()
-		local ft = require("flutter-tools").setup({
+		require("flutter-tools").setup({
 			decorations = {
 				statusline = {
 					-- set to true to be able use the 'flutter_tools_decorations.app_version' in your statusline
@@ -65,7 +65,7 @@ return {
 		-- toggle log
 		map("n", "<leader>bflt", "<cmd>FlutterLogToggle<CR>", { desc = "Toggle log" })
 		-- open dev tools
-		map("n", "<leader>bfdt", "<cmd>FlutterDevTools<CR>", { desc = "Open dev tools" })
+		-- map("n", "<leader>bfdt", "<cmd>FlutterDevTools<CR>", { desc = "Open dev tools" })
 		-- toggle outline
 		map("n", "<leader>bfot", "<cmd>FlutterOutlineToggle<CR>", { desc = "Toggle outline" })
 	end,
