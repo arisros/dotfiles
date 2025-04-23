@@ -1,12 +1,12 @@
-[includeIf "gitdir:~/personal/"]
-    path = ~/.gitconfig-personal
-
+; [includeIf "gitdir:~/personal/"]
+;     path = ~/.gitconfig-personal
+;
 [includeIf "gitdir:~/work/"]
     path = ~/.gitconfig-work
-[includeIf "gitdir:~/sandbox/"]
-    path = ~/.gitconfig-personal
-
-; ; # TODO: swictcher
+; [includeIf "gitdir:~/sandbox/"]
+;     path = ~/.gitconfig-personal
+;
+; ; ; # TODO: swictcher
 [user]
     name = "Aris Kurniawan_098183"
     email = "aris.kurniawan@bfi.co.id"

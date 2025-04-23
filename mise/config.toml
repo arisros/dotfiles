@@ -1,5 +1,15 @@
 [tools]
 node = "20.13.1"
 # need go
-go = "1.23.7"
+go = "1.24.0"
 bun = "1.2.7"
+
+java = "zulu-21"
+maven = "latest"
+tomcat = "11.0.0"
+
+# php = "latest"
+
+python = "3.13.0"
+
+arduino = "1.2.0"

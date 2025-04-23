@@ -37,8 +37,14 @@ source "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-subs
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
-export PATH="$HOME/.bun/bin:$PATH"
+autoload -Uz compinit && compinit
 
+export PATH="$HOME/.bun/bin:$PATH"
+# Add phpenv to PATH for PHP version management
+# export PATH="$HOME/.phpenv/bin:$PATH"
+
+# export PHPVM_DIR="$HOME/.phpvm"
+ 
 # [nvm] will replace with mise
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -67,6 +73,10 @@ export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
 export PATH="$HOME/.pub-cache/bin:$PATH"
 
+# [java]
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+export PATH=$JAVA_HOME/bin:$PATH
+
 # [mise]
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -89,6 +99,8 @@ source ~/.docker_aliases
 # [ZSH] blue_dev
 source ~/.blue_dev
 
+# [ZSH] arduino
+source ~/.arduino-cli-completion
 
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall
@@ -104,8 +116,14 @@ fi
 
 
 export GOPRIVATE=github.com/bfi-finance
-chpwd() {
-}
 
 
+export CATALINA_HOME="/opt/homebrew/opt/tomcat/libexec"
 
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+export PHPVM_DIR="/Users/justtest/.phpvm"
+export PATH="$PHPVM_DIR/bin:$PATH"
+[ -s "$PHPVM_DIR/phpvm.sh" ] && . "$PHPVM_DIR/phpvm.sh"

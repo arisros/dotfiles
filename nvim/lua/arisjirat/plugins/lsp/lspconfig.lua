@@ -86,9 +86,48 @@ return {
 				local cmp_nvim_lsp = require("cmp_nvim_lsp")
 				cmp_nvim_lsp.default_capabilities()
 				local capabilities = cmp_nvim_lsp.default_capabilities()
-				lspconfig[server].setup({
-					capabilities,
-				})
+
+				if server == "arduino_language_server" then
+					lspconfig.arduino_language_server.setup({
+						cmd = {
+							"/Users/justtest/.local/share/nvim/mason/bin/arduino-language-server",
+							"-cli",
+							"/Users/justtest/.local/share/mise/installs/arduino/1.2.0/arduino-cli",
+							"-cli-config",
+							"/Users/justtest/Library/Arduino15/arduino-cli.yaml",
+							"-fqbn",
+							"arduino:avr:uno",
+							"-clangd",
+							"/usr/bin/clang",
+						},
+						capabilities,
+						filetypes = { "arduino", "cpp", "c" }, -- Arduino code is usually .ino, but .cpp is used internally
+						root_dir = lspconfig.util.root_pattern("*.ino", ".git", "arduino.json"),
+					})
+				else
+					lspconfig[server].setup({
+						capabilities,
+					})
+				end
+
+				-- if vim.lsp.protocol.make_client_capabilities then
+				-- 	capabilities = vim.lsp.protocol.make_client_capabilities()
+				-- end
+				-- if server == "jdtls" then
+				-- 	if not vim.fn.executable("jdtls") then
+				-- 		vim.notify("jdtls is not installed or not in PATH", vim.log.levels.ERROR)
+				-- 		return
+				-- 	end
+				-- 	lspconfig.jdtls.setup({
+				-- 		root_dir = lspconfig.util.root_pattern("pom.xml", ".git"),
+				-- 		cmd = { "jdtls" }, -- Ensure jdtls command is correct, or provide full path if needed
+				-- 		capabilities = capabilities,
+				-- 	})
+				-- else
+				-- 	lspconfig[server].setup({
+				-- 		capabilities,
+				-- 	})
+				-- end
 			end,
 		})
 	end,
