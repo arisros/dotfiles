@@ -39,6 +39,9 @@ return {
 				"gopls",
 				"templ",
 				"prettierd",
+				"arduino_language_server",
+				-- We need to install clangd for arduino_language_server to work
+				"clangd",
 			},
 		})
 	end,

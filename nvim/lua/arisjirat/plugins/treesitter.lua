@@ -7,6 +7,11 @@ return {
 		"windwp/nvim-ts-autotag",
 	},
 	config = function()
+		vim.filetype.add({
+			extension = {
+				jsp = "html",
+			},
+		})
 		require("nvim-treesitter.configs").setup({
 			-- enable indentation
 			indent = { enable = true },
