@@ -45,7 +45,15 @@ echo "Dotfiles successfully stowed!"
 
 # ./__macos__/defaults.sh
 
+# Restore Brew
+# brew bundle --file=Brewfile
 
+
+# Restore defaults macos
+# // restore not tested
+# defaults import ~/macos-defaults-backup.plist
+# // backup
+# defaults read > ~/macos-defaults-backup.plist
 
 # Load SSH Agent
 # sudo launchctl load ~/Library/LaunchAgents/com.user.ssh-agent.plist
