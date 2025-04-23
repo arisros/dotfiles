@@ -1,0 +1,45 @@
+AI Studio 2024.1.0.app
+AeroSpace.app
+Alacritty.app
+Android Studio.app
+Apache NetBeans.app
+Arduino IDE.app
+Blender.app
+Brave Browser.app
+Charles.app
+CleanMyMac X.app
+DBeaver.app
+DisplayLink Manager.app
+Falcon.app
+Ghostty.app
+GlobalProtect.app
+Google Chrome.app
+Insomnia.app
+Karabiner-Elements.app
+Karabiner-EventViewer.app
+KeyCastr.app
+Keynote.app
+LansweeperAgent
+LetsView.app
+Numbers.app
+OBS.app
+Obsidian.app
+OrbStack.app
+Pages.app
+Python 3.11
+QMK Toolbox.app
+SF Symbols.app
+Safari.app
+Shortcat.app
+SketchUp 2023
+Slack.app
+SpaceLauncher.app
+Spotify.app
+Utilities
+Visual Studio Code.app
+Xcode.app
+iTerm.app
+imagebase64
+pgAdmin 4.app
+uTorrent Web.app
+zoom.us.app
