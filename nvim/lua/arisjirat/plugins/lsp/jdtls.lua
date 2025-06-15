@@ -1,0 +1,47 @@
+-- local jdtls = require("jdtls")
+--
+-- local root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
+-- local root_dir = require("jdtls.setup").find_root(root_markers)
+-- if root_dir == nil then
+-- 	return
+-- end
+--
+-- local home = os.getenv("HOME")
+-- local workspace_folder = home .. "/.local/share/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
+--
+-- local config = {
+-- 	cmd = {
+-- 		"jdtls",
+-- 		"-data",
+-- 		workspace_folder,
+-- 	},
+-- 	root_dir = root_dir,
+-- 	settings = {
+-- 		java = {
+-- 			eclipse = {
+-- 				downloadSources = true,
+-- 			},
+-- 			configuration = {
+-- 				updateBuildConfiguration = "interactive",
+-- 			},
+-- 			maven = {
+-- 				downloadSources = true,
+-- 			},
+-- 			referencesCodeLens = {
+-- 				enabled = true,
+-- 			},
+-- 			implementationsCodeLens = {
+-- 				enabled = true,
+-- 			},
+-- 			format = {
+-- 				enabled = true,
+-- 			},
+-- 		},
+-- 	},
+-- 	init_options = {
+-- 		bundles = {},
+-- 	},
+-- }
+--
+-- jdtls.start_or_attach(config)
+return {}

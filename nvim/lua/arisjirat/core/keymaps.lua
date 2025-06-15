@@ -11,10 +11,10 @@ keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" }) -- 
 keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" }) -- close current split window
 
 -- Resize windows with h, l, j, k
-keymap.set("n", "<leader>rh", "<cmd>vertical resize -2<CR>", { desc = "Decrease window width" })
-keymap.set("n", "<leader>rl", "<cmd>vertical resize +2<CR>", { desc = "Increase window width" })
-keymap.set("n", "<leader>rj", "<cmd>resize -2<CR>", { desc = "Decrease window height" })
-keymap.set("n", "<leader>rk", "<cmd>resize +2<CR>", { desc = "Increase window height" })
+keymap.set("n", "<leader>rh", "<cmd>vertical resize -10<CR>", { desc = "Decrease window width" })
+keymap.set("n", "<leader>rl", "<cmd>vertical resize +10<CR>", { desc = "Increase window width" })
+keymap.set("n", "<leader>rj", "<cmd>resize -10<CR>", { desc = "Decrease window height" })
+keymap.set("n", "<leader>rk", "<cmd>resize +10<CR>", { desc = "Increase window height" })
 
 keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" }) -- open new tab
 keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" }) -- close current tab

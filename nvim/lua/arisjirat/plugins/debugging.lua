@@ -45,11 +45,14 @@ return {
 		vim.keymap.set("n", "<Leader>bb", dap.toggle_breakpoint, {})
 		-- add variable to watch
 
-		vim.keymap.set("n", "<Leader>bc", dap.continue, {})
+		vim.keymap.set("n", "bc", dap.continue, {})
 		-- continue to next line
 		vim.keymap.set("n", "<Leader>bn", dap.step_over, {})
 		vim.keymap.set("n", "<Leader>bs", dap.step_into, {})
 		vim.keymap.set("n", "<Leader>bo", dap.step_out, {})
+		vim.keymap.set("n", "gk", function()
+			require("dap.ui.widgets").hover()
+		end)
 
 		vim.api.nvim_create_autocmd("BufEnter", {
 			callback = function()
@@ -67,6 +70,8 @@ return {
 		-- vim.keymap.set("n", "<Leader>br", ":lua require('dapui').open({reset = true})<CR>", {})
 
 		-- 🔹 Customize Breakpoint Symbol
+
+		vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#ff0000" })
 		vim.fn.sign_define(
 			"DapBreakpoint",
 			{ text = "⏺", texthl = "DapBreakpoint", linehl = "DapBreakpoint", numhl = "DapBreakpoint" }

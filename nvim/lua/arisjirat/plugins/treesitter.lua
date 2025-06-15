@@ -43,6 +43,7 @@ return {
 				"dart",
 				"python",
 				"java",
+				"xml",
 				"go",
 				"templ",
 				"http",
