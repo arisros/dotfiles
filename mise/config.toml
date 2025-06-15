@@ -1,10 +1,10 @@
 [tools]
-node = "20.13.1"
+node = "22"
 # need go
 go = "1.24.0"
 bun = "1.2.7"
 
-java = "zulu-21"
+# java = "zulu-21"
 maven = "latest"
 tomcat = "11.0.0"
 
@@ -13,3 +13,7 @@ tomcat = "11.0.0"
 python = "3.13.0"
 
 arduino = "1.2.0"
+golangci-lint = "1.64.8"
+rust = "latest"
+lf = "latest"
+ruby = "latest"

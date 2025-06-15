@@ -28,6 +28,10 @@ return {
 				"bashls",
 				"gopls",
 				"templ",
+				"jdtls",
+				"lemminx",
+				"intelephense",
+				"pyright",
 			},
 		})
 
@@ -40,8 +44,11 @@ return {
 				"templ",
 				"prettierd",
 				"arduino_language_server",
+				"jdtls",
 				-- We need to install clangd for arduino_language_server to work
 				"clangd",
+				"intelephense",
+				"pyright",
 			},
 		})
 	end,

@@ -10,11 +10,7 @@ return {
 					args = { "format", "$FILENAME" },
 					stdin = false,
 				},
-				-- templfmt = {
-				-- 	command = "templ",
-				-- 	args = { "fmt", "--tab-width=4" },
-				-- 	stdin = true,
-				-- },
+
 				templfmt = {
 					command = "templ",
 					args = { "fmt" },
@@ -25,6 +21,12 @@ return {
 					args = { "-i", "s/  /    /g" },
 					stdin = false,
 				},
+				["blade-formatter"] = {
+					command = "blade-formatter",
+					args = { "--stdin" },
+					stdin = true,
+				},
+
 				-- templ = {
 				-- 	prepend_args = { "--tab-width", "4" },
 				-- 	-- command = "templ",
@@ -33,6 +35,8 @@ return {
 				-- },
 			},
 			formatters_by_ft = {
+				php = { "pint", "php_cs_fixer" }, -- sesuaikan dengan yang kamu punya
+				blade = { "blade-formatter" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },
 				typescriptreact = { "prettier" },
@@ -51,7 +55,7 @@ return {
 				-- templ = { "templfmt" },
 				-- templ = { "templfmt", "indentfix" },
 				-- templ = { "templ" },
-				templ = { "gofmt" },
+				-- templ = { "gofmt" },
 				http = { "kulala" },
 			},
 			format_on_save = {

@@ -110,6 +110,21 @@ return {
 					})
 				end
 
+				--  if java then stop
+				if server == "jdtls" then
+					-- You should not use `mason-lspconfig` for jdtls attach directly here
+					return
+				end
+
+				if server == "php" then
+					lspconfig.intelephense.setup({
+						capabilities = capabilities,
+						filetypes = { "php" },
+						root_dir = lspconfig.util.root_pattern("composer.json", ".git"),
+					})
+					return
+				end
+
 				-- if vim.lsp.protocol.make_client_capabilities then
 				-- 	capabilities = vim.lsp.protocol.make_client_capabilities()
 				-- end

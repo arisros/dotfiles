@@ -80,6 +80,11 @@ export PATH=$JAVA_HOME/bin:$PATH
 # [mise]
 export PATH="$HOME/.local/bin:$PATH"
 
+# [composer]
+export PATH="$HOME/.composer/vendor/bin:$PATH"
+#
+
+eval "$(~/.local/bin/mise activate zsh)"
 ## [dart][Completion]
 ## Completion scripts setup. Remove the following line to uninstall
 [[ -f /Users/arisjirat/.dart-cli-completion/zsh-config.zsh ]] && . /Users/arisjirat/.dart-cli-completion/zsh-config.zsh || true
@@ -124,6 +129,19 @@ export CATALINA_HOME="/opt/homebrew/opt/tomcat/libexec"
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
+export JAVA_HOME="$HOME/.sdkman/candidates/java/current"
+export PATH="$JAVA_HOME/bin:$PATH"
+
 export PHPVM_DIR="/Users/justtest/.phpvm"
 export PATH="$PHPVM_DIR/bin:$PATH"
 [ -s "$PHPVM_DIR/phpvm.sh" ] && . "$PHPVM_DIR/phpvm.sh"
+
+
+#c[mysql]
+export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"
+
+export PHPVM_DIR="~/.phpvm"
+export PATH="$PHPVM_DIR/bin:$PATH"
+[ -s "$PHPVM_DIR/phpvm.sh" ] && . "$PHPVM_DIR/phpvm.sh"
+
+

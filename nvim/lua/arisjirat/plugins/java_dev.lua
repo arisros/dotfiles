@@ -1,135 +1,112 @@
+return {
+	"mfussenegger/nvim-jdtls",
+	ft = "java",
+	dependencies = {
+		"williamboman/mason.nvim",
+		"neovim/nvim-lspconfig",
+	},
+}
 -- return {
 -- 	"mfussenegger/nvim-jdtls",
 -- 	ft = { "java" },
 -- 	config = function()
 -- 		local jdtls = require("jdtls")
--- 		local home = os.getenv("HOME")
--- 		local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
--- 		local workspace_dir = home .. "/.local/share/eclipse/" .. project_name
 --
--- 		-- Use mise-managed Java
--- 		local java_home = vim.fn.trim(vim.fn.system("mise which java | xargs dirname | xargs dirname"))
---
--- 		-- Root detection
--- 		local root_markers = { "pom.xml", ".git", "build.gradle", "gradlew" }
--- 		local root_dir = require("jdtls.setup").find_root(root_markers)
--- 		if root_dir == nil then
+-- 		-- Find project root (looks for git, gradlew, mvnw)
+-- 		local root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1])
+-- 		if not root_dir then
 -- 			return
 -- 		end
 --
--- 		local config = {
--- 			cmd = {
--- 				java_home .. "/bin/java",
--- 				"-Declipse.application=org.eclipse.jdt.ls.core.id1",
--- 				"-Dosgi.bundles.defaultStartLevel=4",
--- 				"-Declipse.product=org.eclipse.jdt.ls.core.product",
--- 				"-Dlog.protocol=true",
--- 				"-Dlog.level=ALL",
--- 				"-Xms1g",
--- 				"--add-modules=ALL-SYSTEM",
--- 				"--add-opens",
--- 				"java.base/java.util=ALL-UNNAMED",
--- 				"--add-opens",
--- 				"java.base/java.lang=ALL-UNNAMED",
--- 				"-jar",
--- 				vim.fn.glob(
--- 					vim.fn.stdpath("data") .. "/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
--- 				),
--- 				"-configuration",
--- 				vim.fn.stdpath("data") .. "/mason/packages/jdtls/config_mac",
--- 				"-data",
--- 				workspace_dir,
--- 			},
+-- 		-- Workspace dir (used by jdtls for storing metadata)
+-- 		local workspace_dir = vim.fn.stdpath("data")
+-- 			.. "/site/java/workspace/"
+-- 			.. vim.fn.fnamemodify(root_dir, ":p:h:t")
 --
+-- 		-- Start jdtls
+-- 		jdtls.start_or_attach({
+-- 			cmd = { vim.fn.stdpath("data") .. "/mason/bin/jdtls" },
 -- 			root_dir = root_dir,
---
--- 			settings = {
--- 				java = {
--- 					configuration = {
--- 						runtimes = {
--- 							{
--- 								name = "JavaSE-17",
--- 								path = java_home,
--- 							},
--- 						},
--- 					},
--- 				},
--- 			},
---
--- 			init_options = {
--- 				bundles = {},
--- 			},
--- 		}
---
--- 		vim.api.nvim_create_autocmd("FileType", {
--- 			pattern = "java",
--- 			callback = function()
--- 				jdtls.start_or_attach(config)
--- 			end,
+-- 			workspace_folder = workspace_dir,
 -- 		})
 -- 	end,
 -- }
+-- return {
+-- 	"mfussenegger/nvim-jdtls",
+-- 	ft = { "java" },
+-- 	config = function()
+-- 		-- local config = {
+-- 		-- 	cmd = { "~/.local/share/nvim/mason/bin/jdtls" },
+-- 		-- 	root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1]),
+-- 		-- }
+-- 		-- require("jdtls").start_or_attach(config)
+-- 	end,
+-- }
+-- return {
 --
-return {
-	"nvim-java/nvim-java",
-	dependencies = {
-		"nvim-java/lua-async-await",
-		"nvim-java/nvim-java-core",
-		"nvim-java/nvim-java-test",
-		"nvim-java/nvim-java-dap",
-		"mfussenegger/nvim-jdtls",
-		"neovim/nvim-lspconfig",
-	},
-	ft = { "java" },
-	config = function()
-		local java_opts = {
-			root_markers = {
-				"settings.gradle",
-				"settings.gradle.kts",
-				"pom.xml",
-				"build.gradle",
-				"mvnw",
-				"gradlew",
-				"build.gradle.kts",
-			},
-			jdk = {
-				auto_install = false,
-				home = "/Users/justtest/.local/share/mise/installs/java/temurin-21.0.6+7.0.LTS",
-			},
-			java_debug_adapter = {
-				enable = true, -- set false if you don't want DAP
-			},
-		}
-
-		vim.api.nvim_create_autocmd("FileType", {
-			pattern = "java",
-			callback = function()
-				require("java").setup(java_opts)
-			end,
-		})
-	end,
-}
+-- 	"mfussenegger/nvim-jdtls",
+-- 	ft = { "java" },
+-- 	config = function()
+-- 		-- Set JAVA_HOME from SDKMAN (Java 17)
+-- 		vim.env.JAVA_HOME = os.getenv("HOME") .. "/.sdkman/candidates/java/current"
+-- 		vim.env.PATH = vim.env.JAVA_HOME .. "/bin:" .. vim.env.PATH
+--
+-- 		-- Use manually installed jdtls version (e.g., 1.20)
+-- 		local jdtls_path = vim.fn.expand("~/.local/share/jdtls/jdtls")
+--
+-- 		local config = {
+-- 			cmd = { jdtls_path .. "/bin/jdtls" },
+-- 			root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1]),
+-- 		}
+--
+-- 		require("jdtls").start_or_attach(config)
+-- 	end,
+-- }
 --
 -- return {
--- 	"nvim-java/nvim-java",
--- 	config = false,
--- 	dependencies = {
--- 		{
--- 			"neovim/nvim-lspconfig",
--- 			opts = {
--- 				servers = {
--- 					jdtls = {
--- 						-- Your custom jdtls settings goes here
--- 					},
+-- "mfussenegger/nvim-jdtls",
+-- ft = { "java" },
+-- config = function()
+-- 	-- Set JAVA_HOME from SDKMAN (Java 17)
+-- 	vim.env.JAVA_HOME = os.getenv("HOME") .. "/.sdkman/candidates/java/current"
+-- 	vim.env.PATH = vim.env.JAVA_HOME .. "/bin:" .. vim.env.PATH
+--
+-- 	-- Set up the workspace directory
+-- 	local home = os.getenv("HOME")
+-- 	local workspace_path = home .. "/.local/share/nvim/jdtls-workspace/"
+-- 	local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t") -- Get project name from current directory
+-- 	local workspace_dir = workspace_path .. project_name
+--
+-- 	-- Use manually installed jdtls version (e.g., 1.20)
+-- 	local jdtls_path = vim.fn.expand("~/.local/share/jdtls/jdtls")
+--
+-- 	-- Define jdtls configuration
+-- 	local config = {
+-- 		cmd = { jdtls_path .. "/bin/jdtls" },
+-- 		root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1]),
+-- 		settings = {
+-- 			java = {
+-- 				signatureHelp = { enabled = true },
+-- 				-- extendedClientCapabilities = jdtls.extendedClientCapabilities,
+-- 				maven = { downloadSources = true },
+-- 				referencesCodeLens = { enabled = true },
+-- 				references = { includeDecompiledSources = true },
+-- 				inlayHints = {
+-- 					parameterNames = { enabled = "all" },
 -- 				},
--- 				setup = {
--- 					jdtls = function()
--- 						require("java").setup({
--- 							-- Your custom nvim-java configuration goes here
--- 						})
--- 					end,
--- 				},
+-- 				format = { enabled = false },
 -- 			},
 -- 		},
--- 	},
+-- 		init_options = {
+-- 			bundles = {},
+-- 		},
+-- 		-- Set workspace location
+-- 		-- init_options = {
+-- 		-- 	workspace = workspace_dir,
+-- 		-- },
+-- 	}
+--
+-- 	-- Start or attach jdtls
+-- 	require("jdtls").start_or_attach(config)
+-- end,
 -- }
