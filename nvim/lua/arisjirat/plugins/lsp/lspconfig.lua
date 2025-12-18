@@ -87,6 +87,26 @@ return {
 				cmp_nvim_lsp.default_capabilities()
 				local capabilities = cmp_nvim_lsp.default_capabilities()
 
+				-- Override untuk OmniSharp (Unity)
+				if server == "omnisharp" then
+					local omnisharp_bin = vim.fn.expand("~/.local/share/nvim/mason/bin/omnisharp")
+					local omnisharp_extended = require("omnisharp_extended")
+
+					lspconfig.omnisharp.setup({
+						cmd = { omnisharp_bin, "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
+
+						handlers = {
+							["textDocument/definition"] = omnisharp_extended.handler,
+						},
+
+						enable_roslyn_analyzers = true,
+						organize_imports_on_format = true,
+						enable_import_completion = true,
+					})
+
+					return
+				end
+
 				if server == "arduino_language_server" then
 					lspconfig.arduino_language_server.setup({
 						cmd = {
