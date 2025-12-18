@@ -10,12 +10,6 @@ return {
 					args = { "format", "$FILENAME" },
 					stdin = false,
 				},
-
-				templfmt = {
-					command = "templ",
-					args = { "fmt" },
-					stdin = true,
-				},
 				indentfix = {
 					command = "sed",
 					args = { "-i", "s/  /    /g" },
@@ -26,16 +20,27 @@ return {
 					args = { "--stdin" },
 					stdin = true,
 				},
-
-				-- templ = {
-				-- 	prepend_args = { "--tab-width", "4" },
-				-- 	-- command = "templ",
-				-- 	-- args = { "format", "$FILENAME" },
-				-- 	-- stdin = false,
-				-- },
+				csharpier = {
+					-- Pakai global tool yang sudah terbukti ada
+					command = vim.fn.expand("~/.dotnet/tools/csharpier"),
+					args = { "format" },
+					stdin = true,
+				},
+				prettier_yaml = {
+					command = "prettier",
+					args = {
+						"--no-semi",
+						"--arrow-parens=avoid",
+						"--single-quote=true",
+						"--stdin-filepath",
+						"$FILENAME",
+					},
+					stdin = true,
+				},
 			},
 			formatters_by_ft = {
-				php = { "pint", "php_cs_fixer" }, -- sesuaikan dengan yang kamu punya
+				cs = { "csharpier" },
+				php = { "pint", "php_cs_fixer" },
 				blade = { "blade-formatter" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },
@@ -45,17 +50,13 @@ return {
 				scss = { "prettier" },
 				html = { "prettier" },
 				json = { "prettierd" },
-				yaml = { "prettier" },
+				yaml = { "prettier_yaml" },
 				markdown = { "prettier" },
 				lua = { "stylua" },
 				dart = { "dart_format" },
 				bash = { "beautysh" },
 				sh = { "beautysh" },
 				go = { "gofmt" },
-				-- templ = { "templfmt" },
-				-- templ = { "templfmt", "indentfix" },
-				-- templ = { "templ" },
-				-- templ = { "gofmt" },
 				http = { "kulala" },
 			},
 			format_on_save = {

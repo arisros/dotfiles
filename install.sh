@@ -19,6 +19,7 @@ mkdir -p ~/.config/ghostty
 mkdir -p ~/.ssh
 mkdir -p ~/.config/mise
 mkdir -p ~/.config/nix
+mkdir -p ~/.config/yazi
 
 stow -t ~/.config/aerospace aerospace
 stow -t ~/.config/alacritty alacritty
@@ -29,6 +30,7 @@ stow -t ~/.config/tmux tmux
 stow -t ~/.config/ghostty ghostty
 stow -t ~/.ssh ssh
 stow -t ~/.config/mise mise
+stow -t ~/.config/yazi yazi
 stow -t ~ git
 stow -t ~ vim
 stow -t ~ zsh

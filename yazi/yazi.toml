@@ -1,0 +1,20 @@
+
+[opener]
+edit = [
+  { run = 'nvim "$@"', block = true },
+]
+play = [
+  { run = 'mpv "$@"', orphan = true },
+]
+open = [
+  { run = 'open "$@"' },
+]
+
+[open]
+rules = [
+  { mime = "text/*", use = "edit" },
+  { mime = "video/*", use = "play" },
+  { mime = "image/*", use = "open" },
+  { name = "*", use = "open" },
+]
+

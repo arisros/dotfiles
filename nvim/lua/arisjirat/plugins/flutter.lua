@@ -29,7 +29,7 @@ return {
 			--   cmd = { "~/fvm/default/bin/dart", "language-server", "--protocol=lsp" },
 			-- },
 			-- flutter_lookup_cmd = "dirname $(which flutter)",
-			-- fvm = false,
+			fvm = false,
 			-- fvm = {
 			--   sdk = "~/fvm/versions/3.24.0",
 			-- },

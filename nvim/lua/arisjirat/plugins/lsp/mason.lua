@@ -32,11 +32,13 @@ return {
 				"lemminx",
 				"intelephense",
 				"pyright",
+				"omnisharp",
 			},
 		})
 
 		mason_tool_installer.setup({
 			ensure_installed = {
+				"omnisharp",
 				"stylua",
 				"eslint",
 				"prettier",
