@@ -32,5 +32,8 @@ alias rlora="gl && ./real_atletico/run_services.sh"
 alias arango="tmux split-window -h -p 30 'nvim $lora_toolkit_dir/arango_cht.sh' && docker exec -it arangodb arangosh"
 
 # lora-schemagen
-alias pwdoc="lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_0_1.schema.json?bundled=1' -t $lora_dir/lora-partnership-ndf/internal/process/document"
-alias twdoc="lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_0_1.schema.json?bundled=1' -t $lora_dir/lora-partnership-task-ndf/internal/process/common"
+alias pwdoc="lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_8_0.schema.json?bundled=1' -t $lora_dir/lora-partnership-ndf/internal/process/document"
+alias twdoc="lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_8_0.schema.json?bundled=1' -t $lora_dir/lora-partnership-task-ndf/internal/process/common"
+
+alias pwdoc6="lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_7_0.schema.json?bundled=1' -t $lora_dir/lora-partnership-ndf/internal/process/document"
+alias twdoc6="lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_7_0.schema.json?bundled=1' -t $lora_dir/lora-partnership-task-ndf/internal/process/common"

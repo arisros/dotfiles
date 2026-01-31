@@ -10,17 +10,14 @@ export PATH="/opt/homebrew/bin:$PATH"
 export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
 export CGO_CPPFLAGS="$(pkg-config --cflags lept tesseract)"
 export CGO_LDFLAGS="$(pkg-config --libs lept tesseract)"
-export GOTOOLCHAIN=local
+
 # .NET tools
 export PATH="$HOME/.dotnet/tools:$PATH"
 
-# source ~/.zshrc
+source ~/.zshrc
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(~/.local/bin/mise activate zsh)"
-# eval "$(mise activate zsh)"
-export PATH="$(go env GOPATH)/bin:$PATH"
-export NODE_OPTIONS="--max-old-space-size=8096"
 
 # git-prompt
 source ~/git-prompt.zsh
@@ -160,6 +157,3 @@ export PATH="$PHPVM_DIR/bin:$PATH"
 
 
 
-
-# opencode
-export PATH=/Users/mac-098183/.opencode/bin:$PATH

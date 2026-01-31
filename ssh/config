@@ -14,4 +14,35 @@ Host github.com-bfi-finance
     HostName github.com
     User git
     IdentityFile ~/.ssh/id_github_bfi
+Host bi
+    Hostname 188.166.188.121
+    StrictHostKeyChecking yes
+    User root
+    IdentityFile ~/.ssh/id_bi
+
+Host westjava
+    HostName 103.175.219.11
+    StrictHostKeyChecking yes
+    User arisjirat
+    IdentityFile ~/.ssh/id_rsa_bpro
+
+# Host arkdefender
+#     HostName 103.76.120.113
+#     StrictHostKeyChecking yes
+#     User arkdefender
+#     IdentityFile ~/.ssh/id_ed25519_fti_ci
+
+Host marcom
+    HostName 188.166.188.121
+    # StrictHostKeyChecking yes
+    User root
+    IdentityFile ~/.ssh/id_rsa_git_arisjirat
+
+
+Host arkdefender
+    HostName 159.65.15.126
+    User root
+    IdentityFile ~/.ssh/id_rsa_bpro
+
+
 

@@ -1,15 +1,15 @@
 ; [includeIf "gitdir:~/personal/"]
 ;     path = ~/.gitconfig-personal
 ;
-[includeIf "gitdir:~/work/"]
-    path = ~/.gitconfig-work
+; [includeIf "gitdir:~/work/"]
+;     path = ~/.gitconfig-work
 ; [includeIf "gitdir:~/sandbox/"]
 ;     path = ~/.gitconfig-personal
 ;
 ; ; ; # TODO: swictcher
 [user]
-    name = "Aris Kurniawan_098183"
-    email = "aris.kurniawan@bfi.co.id"
+	name = arisbfi
+	email = 123381019+arisbfi@users.noreply.github.com
 [core]
     sshCommand = "ssh -i ~/.ssh/id_github_bfi -F /dev/null"
 ;     

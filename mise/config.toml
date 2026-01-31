@@ -1,7 +1,8 @@
 [tools]
 node = "22"
 # need go
-go = "1.24.0"
+go = "1.24.9"
+# golangci-lint = "latest"
 bun = "1.2.7"
 
 # java = "zulu-21"
@@ -15,5 +16,9 @@ python = "3.13.0"
 arduino = "1.2.0"
 golangci-lint = "1.64.8"
 rust = "latest"
-lf = "latest"
+# lf = "latest"
 ruby = "latest"
+dotnet = "8"
+
+[settings]
+idiomatic_version_file_enable_tools = ["*"]

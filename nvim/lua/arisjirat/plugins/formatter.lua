@@ -5,6 +5,11 @@ return {
 		local conform = require("conform")
 		conform.setup({
 			formatters = {
+				templ_fmt = {
+					command = "templ",
+					args = { "fmt", "$FILENAME" },
+					stdin = false,
+				},
 				kulala = {
 					command = "kulala-fmt",
 					args = { "format", "$FILENAME" },
@@ -37,6 +42,11 @@ return {
 					},
 					stdin = true,
 				},
+				prettierdd = {
+					command = "npx",
+					args = { "prettier", "--stdin-filepath", "$FILENAME" },
+					stdin = true,
+				},
 			},
 			formatters_by_ft = {
 				cs = { "csharpier" },
@@ -49,7 +59,8 @@ return {
 				css = { "prettier" },
 				scss = { "prettier" },
 				html = { "prettier" },
-				json = { "prettierd" },
+				astro = { "prettier" },
+				json = { "prettier" },
 				yaml = { "prettier_yaml" },
 				markdown = { "prettier" },
 				lua = { "stylua" },
@@ -58,6 +69,7 @@ return {
 				sh = { "beautysh" },
 				go = { "gofmt" },
 				http = { "kulala" },
+				templ = { "templ_fmt" },
 			},
 			format_on_save = {
 				enabled = true,

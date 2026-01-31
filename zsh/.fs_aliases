@@ -9,3 +9,15 @@ alias ~='cd ~'
 alias ls='ls --color=auto'  # macOS: alias ls='ls -G'
 alias ll='ls -lh'
 alias la='ls -lha'
+
+alias gblpres="cd ~/ubl/gostudentubl"
+alias blpres="gblpres && export \$(grep -v '^#' .env | xargs -0) && go run -trimpath cmd/gostudentubl/main.go"
+
+
+
+# blpres() {
+#   gblpres
+#   export $(grep -v '^#' .env | xargs)
+#   go run -trimpath cmd/gostudentubl/main.go
+# }
+

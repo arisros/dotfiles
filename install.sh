@@ -35,6 +35,7 @@ stow -t ~ git
 stow -t ~ vim
 stow -t ~ zsh
 stow -t ~/.config/nix nix
+stow -t ~ lynx
 
 echo "Dotfiles successfully stowed!"
 
