@@ -15,3 +15,28 @@ Host github.com-redacted-org
     User git
     IdentityFile ~/.ssh/id_github_work
 
+Host arkdefender
+    HostName 0.0.0.0
+    User root
+    IdentityFile ~/.ssh/id_ed25519_github
+
+
+Host vps
+    HostName 0.0.0.0
+    User root
+    IdentityFile ~/.ssh/id_ed25519_github
+
+Host hostme
+    HostName 0.0.0.0
+    User root
+    IdentityFile ~/.ssh/id_sys
+    IdentitiesOnly yes
+    ProxyJump vps
+
+
+Host sys_hostme
+    HostName 0.0.0.0
+    User sys_hostme
+    IdentityFile ~/.ssh/id_sys
+    IdentitiesOnly yes
+    ProxyJump vps
