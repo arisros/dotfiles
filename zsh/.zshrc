@@ -109,3 +109,7 @@ chpwd() {
 
 
 
+source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# opencode
+export PATH=/Users/arisjirat/.opencode/bin:$PATH

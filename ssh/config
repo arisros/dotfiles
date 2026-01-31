@@ -15,3 +15,28 @@ Host github.com-bfi-finance
     User git
     IdentityFile ~/.ssh/id_github_bfi
 
+Host arkdefender
+    HostName 159.65.15.126
+    User root
+    IdentityFile ~/.ssh/id_ed25519_github
+
+
+Host vps
+    HostName 159.65.15.126
+    User root
+    IdentityFile ~/.ssh/id_ed25519_github
+
+Host hostme
+    HostName 10.10.0.1
+    User root
+    IdentityFile ~/.ssh/id_sys
+    IdentitiesOnly yes
+    ProxyJump vps
+
+
+Host sys_hostme
+    HostName 10.10.0.1
+    User sys_hostme
+    IdentityFile ~/.ssh/id_sys
+    IdentitiesOnly yes
+    ProxyJump vps
