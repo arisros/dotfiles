@@ -11,3 +11,6 @@ add_to_path() {
   esac
 }
 
+g() {
+  lynx "https://www.google.com/search?q=$(printf '%s' "$*" | sed 's/ /+/g')"
+}

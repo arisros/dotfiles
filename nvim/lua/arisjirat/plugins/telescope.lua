@@ -12,8 +12,14 @@ return {
 
 		telescope.setup({
 			defaults = {
+				layout_config = {
+					prompt_position = "top",
+					vertical = { mirror = false },
+					horizontal = { mirror = false },
+					width = 0.75,
+				},
 				path_display = { "smart" },
-				theme = "ivy",
+				theme = "dropdown",
 				previewer = true,
 				find_files = {
 					-- hidden = true,
@@ -29,6 +35,14 @@ return {
 				},
 			},
 			pickers = {
+				lsp_references = {
+					path_display = { "absolute" },
+					-- path_display = { shorten = { len = 3, exclude = { 1, -1 } } },
+					layout_strategy = "vertical",
+					layout_config = {
+						width = 0.9,
+					},
+				},
 				find_files = {
 					theme = "ivy",
 					previewer = true,

@@ -20,6 +20,24 @@ return {
 		local mason_lspconfig = require("mason-lspconfig")
 		local lspconfig = require("lspconfig")
 		local keymap = vim.keymap
+
+		local function lsp_references_dynamic_width()
+			local fname_width = 30
+
+			-- Coba ambil lebar pane tmux
+			local ok, pane_width = pcall(function()
+				return tonumber(vim.fn.system("tmux display -p '#{pane_width}'"))
+			end)
+
+			if ok and pane_width and pane_width > 0 then
+				fname_width = math.floor(pane_width / 2)
+			end
+
+			require("telescope.builtin").lsp_references({
+				fname_width = fname_width,
+			})
+		end
+
 		mason_lspconfig.setup_handlers({
 			function(server)
 				vim.api.nvim_create_autocmd("LspAttach", {
@@ -31,7 +49,7 @@ return {
 
 						-- set keybinds
 						opts.desc = "Show LSP references"
-						keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
+						keymap.set("n", "gR", lsp_references_dynamic_width, opts) -- show definition, references
 
 						opts.desc = "Go to declaration"
 						keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration

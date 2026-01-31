@@ -22,6 +22,7 @@ return {
 
 		mason_lspconfig.setup({
 			ensure_installed = {
+				"astro",
 				"lua_ls",
 				"ts_ls",
 				"buf_ls",
@@ -38,6 +39,7 @@ return {
 
 		mason_tool_installer.setup({
 			ensure_installed = {
+				"astro-language-server",
 				"omnisharp",
 				"stylua",
 				"eslint",

@@ -1,7 +1,26 @@
 export CONFIG_DIR="$HOME/.config/sketchybar"
 export ITEM_DIR="$CONFIG_DIR/items"
+export CGO_CFLAGS="-I/opt/homebrew/include"
+export CGO_LDFLAGS="-L/opt/homebrew/lib"
+export PATH="/opt/homebrew/opt/libxslt/bin:$PATH"
+export LDFLAGS="-L/opt/homebrew/opt/libxslt/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/libxslt/include"
+export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
+export PATH="/opt/homebrew/bin:$PATH"
+export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
+export CGO_CPPFLAGS="$(pkg-config --cflags lept tesseract)"
+export CGO_LDFLAGS="$(pkg-config --libs lept tesseract)"
+export GOTOOLCHAIN=local
+# .NET tools
+export PATH="$HOME/.dotnet/tools:$PATH"
+
+# source ~/.zshrc
+
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(~/.local/bin/mise activate zsh)"
+# eval "$(mise activate zsh)"
+export PATH="$(go env GOPATH)/bin:$PATH"
+export NODE_OPTIONS="--max-old-space-size=8096"
 
 # git-prompt
 source ~/git-prompt.zsh
@@ -61,6 +80,9 @@ fi
 export PATH="/usr/local/bin:$PATH"
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
 export CGO_CFLAGS_ALLOW="-I"
+
+export FVM_HOME=/Users/mac-098183/fvm
+export PATH="$FVM_HOME/default/bin:$PATH"
  
 # [flutter]
 export PATH="$HOME/fvm/default/bin:$PATH"
@@ -137,11 +159,7 @@ export PATH="$PHPVM_DIR/bin:$PATH"
 [ -s "$PHPVM_DIR/phpvm.sh" ] && . "$PHPVM_DIR/phpvm.sh"
 
 
-#c[mysql]
-export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"
-
-export PHPVM_DIR="~/.phpvm"
-export PATH="$PHPVM_DIR/bin:$PATH"
-[ -s "$PHPVM_DIR/phpvm.sh" ] && . "$PHPVM_DIR/phpvm.sh"
 
 
+# opencode
+export PATH=/Users/mac-098183/.opencode/bin:$PATH
