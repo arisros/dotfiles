@@ -1,0 +1,47 @@
+return {
+	"jackMort/ChatGPT.nvim",
+	event = "VeryLazy",
+	dependencies = {
+		"MunifTanjim/nui.nvim",
+		"nvim-lua/plenary.nvim",
+		"folke/trouble.nvim",
+		"nvim-telescope/telescope.nvim",
+	},
+	config = function()
+			require("chatgpt").setup({
+
+				api_key_cmd = [[sh -c 'if command -v pass >/dev/null 2>&1; then pass show openai/api-key 2>/dev/null || printf "%s" "${OPENAI_API_KEY:-}"; else printf "%s" "${OPENAI_API_KEY:-}"; fi']],
+
+			openai_params = {
+				model = "gpt-4o-mini",
+				temperature = 0.2,
+				max_tokens = 2048,
+			},
+
+			chat = {
+				welcome_message = "ChatGPT.nvim ready.",
+				loading_text = "Thinking...",
+				question_sign = "",
+				answer_sign = "ﮧ",
+				max_line_length = 120,
+			},
+
+			edit_with_instructions = {
+				diff = true,
+				keymaps = {
+					accept = "<C-y>",
+					reject = "<C-n>",
+				},
+			},
+
+			use_openai_functions_for_edits = false,
+		})
+
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = "chatgpt",
+			callback = function()
+				vim.keymap.set("i", "<C-s>", "<CR>", { buffer = true })
+			end,
+		})
+	end,
+}

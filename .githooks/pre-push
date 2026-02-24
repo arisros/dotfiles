@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+if command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-push: running gitleaks scan"
+  gitleaks detect --source . --no-git --redact
+else
+  echo "pre-push: gitleaks not found, running fallback scan"
+  "$repo_root/__scripts__/scan_secrets.sh" --tracked
+fi

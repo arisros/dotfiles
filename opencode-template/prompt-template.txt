@@ -1,0 +1,13 @@
+Set up this repository with a project-local OpenCode orchestration config.
+
+Create:
+1) `.opencode/agent/project-architect.md` with YAML frontmatter and planner-style behavior
+2) `.opencode/skills/` with role-focused skill files relevant to this repo
+3) Rules:
+   - ask clarifying questions when ambiguous
+   - use todo/task tracking for multi-step work
+   - do not implement unless explicitly asked
+   - follow existing repository patterns
+4) `.opencode/README.md` with usage notes
+
+Do not modify application code. Only create OpenCode config files.

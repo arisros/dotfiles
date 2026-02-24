@@ -19,6 +19,9 @@
 .ssh/id_rsa
 .ssh/id_rsa.pub
 .ssh/known_hosts
+ssh/id_*
+ssh/*.pem
+ssh/*.key
 
 # Ignore Vim/Neovim swap and backup files
 .viminfo
@@ -34,5 +37,28 @@
 *.log
 
 .gitsecret/keys/random_seed
-!*.secret
+
+# Ignore env and secret material
+.env
+.env.*
+**/.env
+**/.env.*
+!.env.example
+!.env.sample
+!.env.template
+!**/.env.example
+!**/.env.sample
+!**/.env.template
+*.secret
+*.secrets
+**/*.secret
+**/*.secrets
+
+# Ignore certs and key stores
+*.pem
+*.key
+*.p12
+*.pfx
+*.kdbx
+
 zsh/.secrets

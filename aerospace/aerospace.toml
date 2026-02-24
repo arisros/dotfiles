@@ -153,7 +153,6 @@ automatically-unhide-macos-hidden-apps = true
     alt-shift-s = 'move-node-to-workspace s'
     alt-shift-d = 'move-node-to-workspace d'
     alt-shift-f = 'move-node-to-workspace f'
-
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
