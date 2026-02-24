@@ -9,6 +9,8 @@ OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 APT_UPDATED=0
 SKIP_MISE_INSTALL="${DOTFILES_SKIP_MISE_INSTALL:-0}"
 SKIP_OPTIONAL_TOOLS="${DOTFILES_SKIP_OPTIONAL_TOOLS:-0}"
+INSTALL_ZSH="${DOTFILES_INSTALL_ZSH:-0}"
+INSTALL_DEBIAN_BREW_EQUIV="${DOTFILES_INSTALL_DEBIAN_BREW_EQUIV:-0}"
 
 log() {
   printf '[install] %s\n' "$*"
@@ -145,7 +147,9 @@ ensure_command curl curl curl || warn 'curl is recommended for bootstrap steps.'
 if [ "$SKIP_OPTIONAL_TOOLS" = "1" ]; then
   warn 'Skipping optional tool installation because DOTFILES_SKIP_OPTIONAL_TOOLS=1'
 else
-  ensure_optional_command zsh zsh zsh || true
+  if [ "$INSTALL_ZSH" = "1" ]; then
+    ensure_optional_command zsh zsh zsh || true
+  fi
   ensure_optional_command tmux tmux tmux || true
   ensure_optional_command nvim neovim neovim || true
   ensure_optional_command rg ripgrep ripgrep || true
@@ -216,6 +220,15 @@ fi
 
 if [ -x "$SCRIPT_DIR/__scripts__/restore_credentials.sh" ]; then
   "$SCRIPT_DIR/__scripts__/restore_credentials.sh" --quiet || true
+fi
+
+if [ "$OS" = "linux" ] && [ "$INSTALL_DEBIAN_BREW_EQUIV" = "1" ] && [ -x "$SCRIPT_DIR/__scripts__/install_debian_brew_equivalents.sh" ]; then
+  log 'Installing Debian equivalents for Homebrew leaves...'
+  debian_bridge_args=(--from-file "$SCRIPT_DIR/__scripts__/brew-leaves.txt")
+  if [ "$APT_UPDATED" -eq 1 ]; then
+    debian_bridge_args+=(--skip-update)
+  fi
+  "$SCRIPT_DIR/__scripts__/install_debian_brew_equivalents.sh" "${debian_bridge_args[@]}" || warn 'Debian package bridge encountered issues.'
 fi
 
 if [ "$SKIP_MISE_INSTALL" = "1" ]; then
