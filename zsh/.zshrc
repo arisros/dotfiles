@@ -8,26 +8,34 @@ export CPPFLAGS="-I/opt/homebrew/opt/libxslt/include"
 export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
 export PATH="/opt/homebrew/bin:$PATH"
 export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
-export CGO_CPPFLAGS="$(pkg-config --cflags lept tesseract)"
-export CGO_LDFLAGS="$(pkg-config --libs lept tesseract)"
+if command -v pkg-config >/dev/null 2>&1; then
+  cgo_cppflags="$(pkg-config --cflags lept tesseract 2>/dev/null || true)"
+  cgo_ldflags="$(pkg-config --libs lept tesseract 2>/dev/null || true)"
+  [ -n "$cgo_cppflags" ] && export CGO_CPPFLAGS="$cgo_cppflags"
+  [ -n "$cgo_ldflags" ] && export CGO_LDFLAGS="$cgo_ldflags"
+fi
 export GOTOOLCHAIN=local
 # .NET tools
 export PATH="$HOME/.dotnet/tools:$PATH"
 
 # source ~/.zshrc
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
-eval "$(~/.local/bin/mise activate zsh)"
+if command -v brew >/dev/null 2>&1; then
+  eval "$(brew shellenv)"
+fi
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
 # eval "$(mise activate zsh)"
 export PATH="$(go env GOPATH)/bin:$PATH"
 export NODE_OPTIONS="--max-old-space-size=8096"
 
 # git-prompt
-source ~/git-prompt.zsh
+[ -f "$HOME/git-prompt.zsh" ] && source "$HOME/git-prompt.zsh"
 # autosuggestions
-source "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && source "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 # syntax-highlighting
-source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+[ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 set -o vi
 
@@ -43,6 +51,7 @@ setopt HIST_IGNORE_ALL_DUPS      # Remove older duplicates, keep latest
 setopt HIST_REDUCE_BLANKS        # Trim unnecessary spaces before saving
 setopt HIST_EXPIRE_DUPS_FIRST    # Remove oldest duplicate first when trimming
 setopt HIST_SAVE_NO_DUPS         # Don't save duplicate commands in history
+setopt NO_NOMATCH                # Keep unmatched globs literal (enables ?? command)
 
 # History Performance Tweaks
 setopt APPEND_HISTORY            # Append commands to history file, not overwrite
@@ -51,7 +60,7 @@ setopt HIST_FCNTL_LOCK            # Prevent corruption when multiple shells writ
 setopt HIST_VERIFY                # Show command before running on history expansion
 
 # history-substring-search
-source "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+[ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh" ] && source "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
@@ -81,7 +90,7 @@ export PATH="/usr/local/bin:$PATH"
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
 export CGO_CFLAGS_ALLOW="-I"
 
-export FVM_HOME=/Users/mac-098183/fvm
+export FVM_HOME="$HOME/fvm"
 export PATH="$FVM_HOME/default/bin:$PATH"
  
 # [flutter]
@@ -96,8 +105,13 @@ export PATH="/opt/homebrew/sbin:$PATH"
 export PATH="$HOME/.pub-cache/bin:$PATH"
 
 # [java]
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
-export PATH=$JAVA_HOME/bin:$PATH
+if [ -x /usr/libexec/java_home ]; then
+  java_home_21="$(/usr/libexec/java_home -v 21 2>/dev/null || true)"
+  if [ -n "$java_home_21" ]; then
+    export JAVA_HOME="$java_home_21"
+    export PATH="$JAVA_HOME/bin:$PATH"
+  fi
+fi
 
 # [mise]
 export PATH="$HOME/.local/bin:$PATH"
@@ -106,33 +120,30 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.composer/vendor/bin:$PATH"
 #
 
-eval "$(~/.local/bin/mise activate zsh)"
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
 ## [dart][Completion]
 ## Completion scripts setup. Remove the following line to uninstall
-[[ -f /Users/arisjirat/.dart-cli-completion/zsh-config.zsh ]] && . /Users/arisjirat/.dart-cli-completion/zsh-config.zsh || true
+[[ -f "$HOME/.dart-cli-completion/zsh-config.zsh" ]] && . "$HOME/.dart-cli-completion/zsh-config.zsh" || true
 ## [/Completion]
 
 
 # [ZSH] config_restart_aliases
-source ~/.config_restart_aliases
+[ -f "$HOME/.config_restart_aliases" ] && source "$HOME/.config_restart_aliases"
 # [ZSH] fs_aliases
-source ~/.fs_aliases
+[ -f "$HOME/.fs_aliases" ] && source "$HOME/.fs_aliases"
 # [ZSH] functions
-source ~/.functions
+[ -f "$HOME/.functions" ] && source "$HOME/.functions"
 # [ZSH] git_aliases
-source ~/.git_aliases
+[ -f "$HOME/.git_aliases" ] && source "$HOME/.git_aliases"
 # [ZSH] docker_aliases
-source ~/.docker_aliases
+[ -f "$HOME/.docker_aliases" ] && source "$HOME/.docker_aliases"
 # [ZSH] blue_dev
-source ~/.blue_dev
+[ -f "$HOME/.blue_dev" ] && source "$HOME/.blue_dev"
 
 # [ZSH] arduino
-source ~/.arduino-cli-completion
-
-## [Completion]
-## Completion scripts setup. Remove the following line to uninstall
-[[ -f /Users/justtest/.dart-cli-completion/zsh-config.zsh ]] && . /Users/justtest/.dart-cli-completion/zsh-config.zsh || true
-## [/Completion]
+[ -f "$HOME/.arduino-cli-completion" ] && source "$HOME/.arduino-cli-completion"
 
 if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
   . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
@@ -154,12 +165,17 @@ export SDKMAN_DIR="$HOME/.sdkman"
 export JAVA_HOME="$HOME/.sdkman/candidates/java/current"
 export PATH="$JAVA_HOME/bin:$PATH"
 
-export PHPVM_DIR="/Users/justtest/.phpvm"
+export PHPVM_DIR="$HOME/.phpvm"
 export PATH="$PHPVM_DIR/bin:$PATH"
-[ -s "$PHPVM_DIR/phpvm.sh" ] && . "$PHPVM_DIR/phpvm.sh"
 
 
 
 
 # opencode
-export PATH=/Users/mac-098183/.opencode/bin:$PATH
+export PATH="$HOME/.opencode/bin:$PATH"
+
+# LORA workspace alias
+alias lora-workspace='code "$HOME/work/lora/lora-workspace/lora.code-workspace"'
+
+# Added by Antigravity
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"

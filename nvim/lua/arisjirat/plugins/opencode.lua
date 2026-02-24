@@ -98,12 +98,7 @@ return {
 			":OpenCodeDoc<CR>",
 			vim.tbl_extend("force", opts, { desc = "Generate documentation" })
 		)
-		keymap.set(
-			"n",
-			"<leader>ot",
-			":OpenCodeTest<CR>",
-			vim.tbl_extend("force", opts, { desc = "Generate tests" })
-		)
+		keymap.set("n", "<leader>ot", ":OpenCodeTest<CR>", vim.tbl_extend("force", opts, { desc = "Generate tests" }))
 		keymap.set(
 			"n",
 			"<leader>op",

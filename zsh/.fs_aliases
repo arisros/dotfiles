@@ -13,6 +13,9 @@ alias la='ls -lha'
 alias gblpres="cd ~/ubl/gostudentubl"
 alias blpres="gblpres && export \$(grep -v '^#' .env | xargs -0) && go run -trimpath cmd/gostudentubl/main.go"
 
+# OpenCode template scaffold
+alias oc-init='~/dotfiles/__scripts__/opencode_scaffold_template.sh'
+
 
 
 # blpres() {
@@ -20,4 +23,3 @@ alias blpres="gblpres && export \$(grep -v '^#' .env | xargs -0) && go run -trim
 #   export $(grep -v '^#' .env | xargs)
 #   go run -trimpath cmd/gostudentubl/main.go
 # }
-

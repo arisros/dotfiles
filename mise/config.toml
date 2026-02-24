@@ -19,6 +19,8 @@ rust = "latest"
 # lf = "latest"
 ruby = "latest"
 dotnet = "8"
+"npm:@biomejs/biome" = "latest"
+"npm:@mermaid-js/mermaid-cli" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["*"]
