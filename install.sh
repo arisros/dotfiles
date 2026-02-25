@@ -135,6 +135,27 @@ ensure_mise() {
   return 0
 }
 
+ensure_tmux_bootstrap() {
+  xdg_tmux_conf="$HOME/.config/tmux/tmux.conf"
+  legacy_tmux_conf="$HOME/.tmux.conf"
+  tpm_dir="$HOME/.config/tmux/plugins/tpm"
+  tpm_exec="$tpm_dir/tpm"
+  install_plugins_exec="$tpm_dir/bin/install_plugins"
+
+  if [ -f "$xdg_tmux_conf" ] && [ ! -e "$legacy_tmux_conf" ]; then
+    ln -s "$xdg_tmux_conf" "$legacy_tmux_conf"
+  fi
+
+  if [ ! -x "$tpm_exec" ] && command -v git >/dev/null 2>&1; then
+    mkdir -p "$HOME/.config/tmux/plugins"
+    git clone https://github.com/tmux-plugins/tpm "$tpm_dir" >/dev/null 2>&1 || true
+  fi
+
+  if [ -x "$install_plugins_exec" ] && command -v tmux >/dev/null 2>&1; then
+    "$install_plugins_exec" >/dev/null 2>&1 || true
+  fi
+}
+
 log "Detected OS: $OS"
 
 ensure_command git git git || warn 'Please install git manually if this fails.'
@@ -206,6 +227,8 @@ for pair in "${stow_pairs[@]}"; do
   log "Stowing $pkg -> $target"
   stow -R -t "$target" "$pkg"
 done
+
+ensure_tmux_bootstrap
 
 if [ -x "$SCRIPT_DIR/__scripts__/install_git_hooks.sh" ]; then
   log 'Installing versioned git hooks...'

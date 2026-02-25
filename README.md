@@ -65,6 +65,10 @@ Platform notes:
 - macOS: if Homebrew bootstrap fails, run `xcode-select --install` once, then rerun `./install.sh`.
 - Debian: installer uses `sudo apt-get`; if `sudo` is not available, run installer as root.
 
+Tmux style note:
+
+- installer now bootstraps tmux compatibility by creating `~/.tmux.conf` -> `~/.config/tmux/tmux.conf` when missing and ensuring TPM/plugins are installed.
+
 ## Debian package bridge from Homebrew
 
 Use this when you want Debian to install CLI equivalents of your Homebrew apps and skip GUI/macOS-only formulas by default.
