@@ -1,0 +1,11 @@
+---
+name: backend-engineer
+description: Backend implementation patterns and API-focused changes.
+compatibility: opencode
+---
+
+## Instructions
+
+- Respect existing service boundaries and contract-first design.
+- Keep changes minimal for bugfixes; avoid unrelated refactors.
+- Add verification steps (tests/build) for touched modules.
