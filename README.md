@@ -31,10 +31,25 @@ Optional for faster first run:
 DOTFILES_SKIP_MISE_INSTALL=1 ./install.sh
 DOTFILES_SKIP_OPTIONAL_TOOLS=1 DOTFILES_SKIP_MISE_INSTALL=1 ./install.sh
 DOTFILES_INSTALL_ZSH=1 DOTFILES_INSTALL_DEBIAN_BREW_EQUIV=1 ./install.sh
+DOTFILES_INSTALL_OPENCODE=1 ./install.sh
+DOTFILES_INSTALL_OPENCODE=1 DOTFILES_INSTALL_OH_MY_OPENCODE=1 ./install.sh
 DOTFILES_STOW_ADOPT=1 ./install.sh
 ```
 
 `DOTFILES_STOW_ADOPT=1` enables `stow --adopt` during linking, which can resolve conflict aborts by moving existing target files into the matching stow package.
+
+OpenCode / oh-my-opencode bootstrap:
+
+- OpenCode install is opt-in via `DOTFILES_INSTALL_OPENCODE=1` (official installer: `https://opencode.ai/install`)
+- oh-my-opencode installer is opt-in via `DOTFILES_INSTALL_OH_MY_OPENCODE=1`
+- by default, oh-my-opencode runs non-interactive with conservative "all subscriptions = no" flags; override with:
+
+```bash
+DOTFILES_OH_MY_OPENCODE_FLAGS='--claude=yes --openai=yes --gemini=no --copilot=no --opencode-zen=no --zai-coding-plan=no' \
+DOTFILES_INSTALL_OPENCODE=1 DOTFILES_INSTALL_OH_MY_OPENCODE=1 ./install.sh
+```
+
+Use the official oh-my-opencode repository for docs/releases: `https://github.com/code-yeongyu/oh-my-opencode`
 
 Shell strategy:
 
