@@ -31,7 +31,10 @@ Optional for faster first run:
 DOTFILES_SKIP_MISE_INSTALL=1 ./install.sh
 DOTFILES_SKIP_OPTIONAL_TOOLS=1 DOTFILES_SKIP_MISE_INSTALL=1 ./install.sh
 DOTFILES_INSTALL_ZSH=1 DOTFILES_INSTALL_DEBIAN_BREW_EQUIV=1 ./install.sh
+DOTFILES_STOW_ADOPT=1 ./install.sh
 ```
+
+`DOTFILES_STOW_ADOPT=1` enables `stow --adopt` during linking, which can resolve conflict aborts by moving existing target files into the matching stow package.
 
 Shell strategy:
 
