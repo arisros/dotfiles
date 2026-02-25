@@ -11,6 +11,7 @@ SKIP_MISE_INSTALL="${DOTFILES_SKIP_MISE_INSTALL:-0}"
 SKIP_OPTIONAL_TOOLS="${DOTFILES_SKIP_OPTIONAL_TOOLS:-0}"
 INSTALL_ZSH="${DOTFILES_INSTALL_ZSH:-0}"
 INSTALL_DEBIAN_BREW_EQUIV="${DOTFILES_INSTALL_DEBIAN_BREW_EQUIV:-0}"
+STOW_ADOPT="${DOTFILES_STOW_ADOPT:-0}"
 
 log() {
   printf '[install] %s\n' "$*"
@@ -217,6 +218,8 @@ stow_pairs=(
   "$HOME:lynx"
 )
 
+stow_failures=()
+
 for pair in "${stow_pairs[@]}"; do
   target="${pair%%:*}"
   pkg="${pair#*:}"
@@ -225,8 +228,34 @@ for pair in "${stow_pairs[@]}"; do
     continue
   fi
   log "Stowing $pkg -> $target"
-  stow -R -t "$target" "$pkg"
+  stow_args=(-R -t "$target")
+  if [ "$STOW_ADOPT" = "1" ]; then
+    stow_args=(--adopt "${stow_args[@]}")
+  fi
+
+  stow_output=''
+  if ! stow_output="$(stow "${stow_args[@]}" "$pkg" 2>&1)"; then
+    warn "Stow failed for $pkg -> $target"
+    printf '%s\n' "$stow_output" >&2
+    stow_failures+=("$pkg -> $target")
+    continue
+  fi
+
+  if [ -n "$stow_output" ]; then
+    printf '%s\n' "$stow_output"
+  fi
 done
+
+if [ "${#stow_failures[@]}" -gt 0 ]; then
+  warn 'One or more stow operations failed due to existing files/conflicts:'
+  for failure in "${stow_failures[@]}"; do
+    warn "  - $failure"
+  done
+  if [ "$STOW_ADOPT" != "1" ]; then
+    warn 'Re-run with DOTFILES_STOW_ADOPT=1 to adopt existing files into their matching stow package.'
+  fi
+  warn 'Or move/remove conflicting files manually and re-run ./install.sh'
+fi
 
 ensure_tmux_bootstrap
 
@@ -261,6 +290,11 @@ elif ensure_mise; then
     log 'Installing tools from mise config (this can take a while)...'
     mise install || warn 'mise install failed. You can rerun: mise install'
   fi
+fi
+
+if [ "${#stow_failures[@]}" -gt 0 ]; then
+  warn 'Dotfiles setup finished with stow conflicts unresolved. See logs above and rerun after resolving.'
+  exit 1
 fi
 
 log 'Dotfiles setup complete.'
