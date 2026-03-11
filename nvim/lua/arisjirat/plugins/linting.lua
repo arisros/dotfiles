@@ -5,6 +5,8 @@ return {
 		local lint = require("lint")
 
 		lint.linters_by_ft = {
+			c = { "cppcheck" },
+			cpp = { "cppcheck" },
 			javascript = { "eslint" },
 			typescript = { "eslint" },
 			javascriptreact = { "eslint" },

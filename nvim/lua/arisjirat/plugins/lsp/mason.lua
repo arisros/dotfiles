@@ -27,6 +27,7 @@ return {
 				"ts_ls",
 				"buf_ls",
 				"bashls",
+				"clangd",
 				"gopls",
 				"templ",
 				"jdtls",
@@ -49,8 +50,9 @@ return {
 				"prettierd",
 				"arduino_language_server",
 				"jdtls",
-				-- We need to install clangd for arduino_language_server to work
 				"clangd",
+				"clang-format",
+				"codelldb",
 				"intelephense",
 				"pyright",
 			},

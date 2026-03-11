@@ -49,6 +49,8 @@ return {
 				},
 			},
 			formatters_by_ft = {
+				c = { "clang_format" },
+				cpp = { "clang_format" },
 				cs = { "csharpier" },
 				php = { "pint", "php_cs_fixer" },
 				blade = { "blade-formatter" },

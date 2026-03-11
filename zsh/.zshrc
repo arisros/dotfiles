@@ -179,3 +179,6 @@ alias lora-workspace='code "$HOME/work/lora/lora-workspace/lora.code-workspace"'
 
 # Added by Antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+
+# LORA session manager
+alias lora-session='/Users/mac-098183/work/lora/lora-workspace/scripts/session.sh'

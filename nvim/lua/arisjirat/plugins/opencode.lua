@@ -2,14 +2,7 @@ return {
 	"sudo-tee/opencode.nvim",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
-		{
-			"MeanderingProgrammer/render-markdown.nvim",
-			opts = {
-				anti_conceal = { enabled = true },
-				file_types = { "markdown", "opencode_output" },
-			},
-			ft = { "markdown", "Avante", "copilot-chat", "opencode_output" },
-		},
+		"MeanderingProgrammer/render-markdown.nvim",
 		"hrsh7th/nvim-cmp",
 		"nvim-telescope/telescope.nvim",
 	},
