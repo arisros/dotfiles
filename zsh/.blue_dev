@@ -25,6 +25,12 @@ alias gltn="cd $lora_dir/lora-tools-nix"
 
 
 unalias glss 2>/dev/null || true
+unalias glgs 2>/dev/null || true
+unalias glts 2>/dev/null || true
+unalias glbofe 2>/dev/null || true
+unalias glndfw 2>/dev/null || true
+unalias glndftw 2>/dev/null || true
+unalias glt 2>/dev/null || true
 
 glss()    { cd "$(_lora_svc_dir lora-schema-service)"; }
 glgs()    { cd "$(_lora_svc_dir lora-gateway-service)"; }
