@@ -58,37 +58,37 @@ gl() {
 }
 
 # ── Run services ──────────────────────────────────────────────────────────────
-rlss()    { glss    && export $(grep -v '^#' .env | xargs -0) && HTTP_SERVER_PORT=8080 go run -trimpath cmd/http/main.go; }
-rlgs()    { glgs    && export $(grep -v '^#' .env | xargs -0) && HTTP_SERVER_PORT=8081 go run -trimpath cmd/http/main.go; }
-rlts()    { glts    && export $(grep -v '^#' .env | xargs -0) && go run -trimpath cmd/http/main.go; }
-rlbofe()  { glbofe  && pnpm run dev; }
-rlndfw()  { glndfw  && export $(grep -v '^#' .env | xargs -0) && go run -trimpath cmd/main.go; }
-rlndftw() { glndftw && export $(grep -v '^#' .env | xargs -0) && go run -trimpath cmd/main.go; }
-
-# run all services one command
-alias rlora="gl && ./real_atletico/run_services.sh"
-
-# ── ArangoDB shell ────────────────────────────────────────────────────────────
-alias arango="tmux split-window -h -p 30 'nvim $lora_toolkit_dir/arango_cht.sh' && docker exec -it arangodb arangosh"
-
-# ── Schema codegen (targets worktree path when active) ───────────────────────
-pwdoc() {
-  lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_8_0.schema.json?bundled=1' \
-    -t "$(_lora_svc_dir lora-partnership-ndf)/internal/process/document"
-}
-
-
-twdoc() {
-  lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_8_0.schema.json?bundled=1' \
-    -t "$(_lora_svc_dir lora-partnership-task-ndf)/internal/process/common"
-}
-pwdoc6() {
-  lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_7_0.schema.json?bundled=1' \
-    -t "$(_lora_svc_dir lora-partnership-ndf)/internal/process/document"
-}
-twdoc6() {
-  lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_7_0.schema.json?bundled=1' \
-    -t "$(_lora_svc_dir lora-partnership-task-ndf)/internal/process/common"
-}
-alias tmuxr='tmux source-file ~/.tmux.conf'
-alias szz='source ~/.zshrc'
+# rlss()    { glss    && export $(grep -v '^#' .env | xargs -0) && HTTP_SERVER_PORT=8080 go run -trimpath cmd/http/main.go; }
+# rlgs()    { glgs    && export $(grep -v '^#' .env | xargs -0) && HTTP_SERVER_PORT=8081 go run -trimpath cmd/http/main.go; }
+# rlts()    { glts    && export $(grep -v '^#' .env | xargs -0) && go run -trimpath cmd/http/main.go; }
+# rlbofe()  { glbofe  && pnpm run dev; }
+# rlndfw()  { glndfw  && export $(grep -v '^#' .env | xargs -0) && go run -trimpath cmd/main.go; }
+# rlndftw() { glndftw && export $(grep -v '^#' .env | xargs -0) && go run -trimpath cmd/main.go; }
+#
+# # run all services one command
+# alias rlora="gl && ./real_atletico/run_services.sh"
+#
+# # ── ArangoDB shell ────────────────────────────────────────────────────────────
+# alias arango="tmux split-window -h -p 30 'nvim $lora_toolkit_dir/arango_cht.sh' && docker exec -it arangodb arangosh"
+#
+# # ── Schema codegen (targets worktree path when active) ───────────────────────
+# pwdoc() {
+#   lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_8_0.schema.json?bundled=1' \
+#     -t "$(_lora_svc_dir lora-partnership-ndf)/internal/process/document"
+# }
+#
+#
+# twdoc() {
+#   lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_8_0.schema.json?bundled=1' \
+#     -t "$(_lora_svc_dir lora-partnership-task-ndf)/internal/process/common"
+# }
+# pwdoc6() {
+#   lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_7_0.schema.json?bundled=1' \
+#     -t "$(_lora_svc_dir lora-partnership-ndf)/internal/process/document"
+# }
+# twdoc6() {
+#   lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_7_0.schema.json?bundled=1' \
+#     -t "$(_lora_svc_dir lora-partnership-task-ndf)/internal/process/common"
+# }
+# alias tmuxr='tmux source-file ~/.tmux.conf'
+# alias szz='source ~/.zshrc'
