@@ -23,6 +23,9 @@ uwdoc10() {
 alias glc="cd $lora_dir/lora-collection"
 alias gltn="cd $lora_dir/lora-tools-nix"
 
+
+unalias glss 2>/dev/null || true
+
 glss()    { cd "$(_lora_svc_dir lora-schema-service)"; }
 glgs()    { cd "$(_lora_svc_dir lora-gateway-service)"; }
 glts()    { cd "$(_lora_svc_dir lora-task-service)"; }
