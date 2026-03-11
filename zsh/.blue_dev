@@ -32,6 +32,14 @@ unalias glndfw 2>/dev/null || true
 unalias glndftw 2>/dev/null || true
 unalias glt 2>/dev/null || true
 
+unalias lss 2>/dev/null || true
+unalias lgs 2>/dev/null || true
+unalias lts 2>/dev/null || true
+unalias lbofe 2>/dev/null || true
+unalias lndfw 2>/dev/null || true
+unalias lndftw 2>/dev/null || true
+
+
 glss()    { cd "$(_lora_svc_dir lora-schema-service)"; }
 glgs()    { cd "$(_lora_svc_dir lora-gateway-service)"; }
 glts()    { cd "$(_lora_svc_dir lora-task-service)"; }
