@@ -51,8 +51,8 @@ return {
 						opts.desc = "Show LSP references"
 						keymap.set("n", "gR", lsp_references_dynamic_width, opts) -- show definition, references
 
-						opts.desc = "Go to declaration"
-						keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
+						opts.desc = "Go to definition"
+						keymap.set("n", "gD", vim.lsp.buf.definition, opts)
 
 						opts.desc = "Show LSP definitions"
 						keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
@@ -125,6 +125,10 @@ return {
 					return
 				end
 
+				if server == "jdtls" then
+					return
+				end
+
 				if server == "arduino_language_server" then
 					lspconfig.arduino_language_server.setup({
 						cmd = {
@@ -142,15 +146,6 @@ return {
 						filetypes = { "arduino", "cpp", "c" }, -- Arduino code is usually .ino, but .cpp is used internally
 						root_dir = lspconfig.util.root_pattern("*.ino", ".git", "arduino.json"),
 					})
-				else
-					lspconfig[server].setup({
-						capabilities,
-					})
-				end
-
-				--  if java then stop
-				if server == "jdtls" then
-					-- You should not use `mason-lspconfig` for jdtls attach directly here
 					return
 				end
 
@@ -162,6 +157,10 @@ return {
 					})
 					return
 				end
+
+				lspconfig[server].setup({
+					capabilities,
+				})
 
 				-- if vim.lsp.protocol.make_client_capabilities then
 				-- 	capabilities = vim.lsp.protocol.make_client_capabilities()

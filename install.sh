@@ -139,6 +139,60 @@ ensure_mise() {
   return 0
 }
 
+is_neovim_011() {
+  if ! command -v nvim >/dev/null 2>&1; then
+    return 1
+  fi
+
+  nvim_line="$(nvim --version 2>/dev/null | sed -n '1p')"
+  case "$nvim_line" in
+    "NVIM v0.11"*|"NVIM v0.12"*|"NVIM v0.13"*|"NVIM v1."*)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+ensure_neovim_target() {
+  if is_neovim_011; then
+    return 0
+  fi
+
+  warn 'Neovim v0.11+ is required. Attempting installation via mise first...'
+  if ensure_mise; then
+    if mise use -g neovim@0.11 >/dev/null 2>&1 || mise use -g neovim@v0.11 >/dev/null 2>&1; then
+      export PATH="$HOME/.local/bin:$PATH"
+      if is_neovim_011; then
+        return 0
+      fi
+    fi
+  fi
+
+  warn 'Falling back to system package manager for Neovim...'
+  case "$OS" in
+    darwin)
+      ensure_homebrew || return 1
+      brew install neovim || brew upgrade neovim || true
+      ;;
+    linux)
+      apt_install neovim || true
+      ;;
+    *)
+      warn "Unsupported OS for automatic Neovim install: $OS"
+      return 1
+      ;;
+  esac
+
+  if ! is_neovim_011; then
+    warn 'Could not guarantee Neovim v0.11+ automatically. Install manually and rerun.'
+    return 1
+  fi
+
+  return 0
+}
+
 ensure_tmux_bootstrap() {
   xdg_tmux_conf="$HOME/.config/tmux/tmux.conf"
   legacy_tmux_conf="$HOME/.tmux.conf"
@@ -224,11 +278,19 @@ else
     ensure_optional_command zsh zsh zsh || true
   fi
   ensure_optional_command tmux tmux tmux || true
-  ensure_optional_command nvim neovim neovim || true
+  ensure_neovim_target || true
+  ensure_optional_command lazygit lazygit lazygit || true
   ensure_optional_command rg ripgrep ripgrep || true
   ensure_optional_command jq jq jq || true
   ensure_optional_command gpg gnupg gnupg || true
   ensure_optional_command pass pass pass || true
+  ensure_optional_command clang clang clang || true
+  ensure_optional_command clang-format clang-format clang-format || true
+  ensure_optional_command cmake cmake cmake || true
+  ensure_optional_command ninja ninja-build ninja-build || true
+  ensure_optional_command ccache ccache ccache || true
+  ensure_optional_command cppcheck cppcheck cppcheck || true
+  ensure_optional_command bear bear bear || true
 fi
 
 config_dirs=(

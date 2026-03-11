@@ -5,6 +5,10 @@ go = "1.24.9"
 # golangci-lint = "latest"
 bun = "1.2.7"
 
+cmake = "latest"
+ninja = "latest"
+ccache = "latest"
+
 # java = "zulu-21"
 maven = "latest"
 
@@ -13,11 +17,12 @@ maven = "latest"
 python = "3.13.0"
 
 arduino = "1.2.0"
-golangci-lint = "1.64.8"
+# golangci-lint = "1.64.8"
+golangci-lint = "latest"
+
 rust = "latest"
 # lf = "latest"
 ruby = "latest"
 dotnet = "8"
 "npm:@biomejs/biome" = "latest"
 "npm:@mermaid-js/mermaid-cli" = "latest"
-

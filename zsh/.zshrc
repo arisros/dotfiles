@@ -179,3 +179,6 @@ alias redacted-workspace='code "$HOME/work/redacted/redacted-workspace/redacted.
 
 # Added by Antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+
+# redacted session manager
+alias redacted-session='/Users/mac-098183/work/redacted/redacted-workspace/scripts/session.sh'

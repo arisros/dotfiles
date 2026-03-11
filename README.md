@@ -14,7 +14,7 @@ Or after cloning the repo:
 
 - detect platform (`darwin` or `linux`)
 - auto-install missing core dependencies (`git`, `stow`, `curl`) using Homebrew (macOS) or `apt-get` (Debian)
-- best-effort install common tools (`tmux`, `neovim`, `ripgrep`, `jq`, `gnupg`, `pass`)
+- best-effort install common tools (`tmux`, `neovim` with v0.11+ target, `lazygit`, `ripgrep`, `jq`, `gnupg`, `pass`)
 - attempt to install `mise` and run `mise install` from `mise/config.toml`
 - install versioned git hooks and initialize `~/.secrets` template safely
 
@@ -25,39 +25,39 @@ Quick bootstrap:
 - macOS: `./install.sh`
 - Debian: `./install.sh` (uses `sudo apt-get` when needed)
 
-Optional for faster first run:
+Optional toggles (to disable parts of the default profile):
 
 ```bash
 DOTFILES_SKIP_MISE_INSTALL=1 ./install.sh
 DOTFILES_SKIP_OPTIONAL_TOOLS=1 DOTFILES_SKIP_MISE_INSTALL=1 ./install.sh
-DOTFILES_INSTALL_ZSH=1 DOTFILES_INSTALL_DEBIAN_BREW_EQUIV=1 ./install.sh
-DOTFILES_INSTALL_OPENCODE=1 ./install.sh
-DOTFILES_INSTALL_OPENCODE=1 DOTFILES_INSTALL_OH_MY_OPENCODE=1 ./install.sh
-DOTFILES_STOW_ADOPT=1 ./install.sh
+DOTFILES_INSTALL_ZSH=0 ./install.sh
+DOTFILES_INSTALL_DEBIAN_BREW_EQUIV=0 ./install.sh
+DOTFILES_INSTALL_OPENCODE=0 DOTFILES_INSTALL_OH_MY_OPENCODE=0 ./install.sh
+DOTFILES_STOW_ADOPT=0 ./install.sh
 ```
 
-`DOTFILES_STOW_ADOPT=1` enables `stow --adopt` during linking, which can resolve conflict aborts by moving existing target files into the matching stow package.
+`DOTFILES_STOW_ADOPT` is enabled by default. Set `DOTFILES_STOW_ADOPT=0` to use regular stow behavior.
 
 OpenCode / oh-my-opencode bootstrap:
 
-- OpenCode install is opt-in via `DOTFILES_INSTALL_OPENCODE=1` (official installer: `https://opencode.ai/install`)
-- oh-my-opencode installer is opt-in via `DOTFILES_INSTALL_OH_MY_OPENCODE=1`
+- OpenCode install is enabled by default (official installer: `https://opencode.ai/install`)
+- oh-my-opencode installer is enabled by default
 - by default, oh-my-opencode runs non-interactive with conservative "all subscriptions = no" flags; override with:
 
 ```bash
 DOTFILES_OH_MY_OPENCODE_FLAGS='--claude=yes --openai=yes --gemini=no --copilot=no --opencode-zen=no --zai-coding-plan=no' \
-DOTFILES_INSTALL_OPENCODE=1 DOTFILES_INSTALL_OH_MY_OPENCODE=1 ./install.sh
+./install.sh
 ```
 
 Use the official oh-my-opencode repository for docs/releases: `https://github.com/code-yeongyu/oh-my-opencode`
 
 Shell strategy:
 
-- default behavior: keep existing shell on machine (recommended for Debian portability)
-- install zsh only when you explicitly want it:
+- default behavior: attempt zsh package install, but keep shell unchanged (no automatic `chsh`)
+- keep existing shell package setup by disabling zsh install:
 
 ```bash
-DOTFILES_INSTALL_ZSH=1 ./install.sh
+DOTFILES_INSTALL_ZSH=0 ./install.sh
 ```
 
 ## New machine checklist (macOS + Debian)
@@ -76,6 +76,43 @@ Quick verification:
 ```bash
 zsh -i -c 'echo shell-ok'
 tmux new -d -s tmux-check && tmux kill-session -t tmux-check
+```
+
+## C development setup
+
+This dotfiles setup now includes C/C++ developer tooling with `mise` and Neovim integration.
+
+Install tools:
+
+```bash
+mise install
+```
+
+Toolchain and build tools:
+
+- `clang` (system package via Homebrew/apt)
+- `cmake`
+- `ninja`
+- `ccache`
+
+Neovim support:
+
+- LSP: `clangd`
+- Formatter: `clang-format` via Conform
+- Linter: `cppcheck` via nvim-lint
+- Debugger: `codelldb` via nvim-dap
+
+Quick local check:
+
+```bash
+cat > /tmp/hello.c <<'EOF'
+#include <stdio.h>
+int main(void) { puts("hello"); return 0; }
+EOF
+
+clang -Wall -Wextra -std=c17 /tmp/hello.c -o /tmp/hello && /tmp/hello
+clang-format -i /tmp/hello.c
+cppcheck --enable=warning,style --std=c11 /tmp/hello.c
 ```
 
 Platform notes:

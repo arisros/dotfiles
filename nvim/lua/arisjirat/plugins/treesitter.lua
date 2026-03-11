@@ -48,6 +48,7 @@ return {
 				"gitignore",
 				"vimdoc",
 				"c",
+				"cpp",
 				"dart",
 				"python",
 				"java",
