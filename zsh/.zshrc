@@ -1,13 +1,25 @@
-export CONFIG_DIR="$HOME/.config/sketchybar"
-export ITEM_DIR="$CONFIG_DIR/items"
-export CGO_CFLAGS="-I/opt/homebrew/include"
-export CGO_LDFLAGS="-L/opt/homebrew/lib"
-export PATH="/opt/homebrew/opt/libxslt/bin:$PATH"
-export LDFLAGS="-L/opt/homebrew/opt/libxslt/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/libxslt/include"
-export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
-export PATH="/opt/homebrew/bin:$PATH"
-export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
+# --- OS detection ---
+_IS_MACOS=false
+_IS_LINUX=false
+if [[ "$OSTYPE" == darwin* ]]; then
+  _IS_MACOS=true
+elif [[ "$OSTYPE" == linux* ]]; then
+  _IS_LINUX=true
+fi
+
+# --- macOS-only: sketchybar, CGO/Homebrew flags ---
+if $_IS_MACOS; then
+  export CONFIG_DIR="$HOME/.config/sketchybar"
+  export ITEM_DIR="$CONFIG_DIR/items"
+  export CGO_CFLAGS="-I/opt/homebrew/include"
+  export CGO_LDFLAGS="-L/opt/homebrew/lib"
+  export PATH="/opt/homebrew/opt/libxslt/bin:$PATH"
+  export LDFLAGS="-L/opt/homebrew/opt/libxslt/lib"
+  export CPPFLAGS="-I/opt/homebrew/opt/libxslt/include"
+  export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
+  export PATH="/opt/homebrew/bin:$PATH"
+  export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
+fi
 if command -v pkg-config >/dev/null 2>&1; then
   cgo_cppflags="$(pkg-config --cflags lept tesseract 2>/dev/null || true)"
   cgo_ldflags="$(pkg-config --libs lept tesseract 2>/dev/null || true)"
@@ -33,9 +45,17 @@ export NODE_OPTIONS="--max-old-space-size=8096"
 # git-prompt
 [ -f "$HOME/git-prompt.zsh" ] && source "$HOME/git-prompt.zsh"
 # autosuggestions
-[ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && source "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
 # syntax-highlighting
-[ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 set -o vi
 
@@ -60,7 +80,11 @@ setopt HIST_FCNTL_LOCK            # Prevent corruption when multiple shells writ
 setopt HIST_VERIFY                # Show command before running on history expansion
 
 # history-substring-search
-[ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh" ] && source "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh" ]; then
+  source "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+elif [ -f /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]; then
+  source /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+fi
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
@@ -95,22 +119,37 @@ export PATH="$FVM_HOME/default/bin:$PATH"
  
 # [flutter]
 export PATH="$HOME/fvm/default/bin:$PATH"
-export ANDROID_HOME="$HOME/Library/Android/sdk"
-export ANDROID_SDK_ROOT="$ANDROID_HOME"
-export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
-export PATH="$ANDROID_HOME/platform-tools:$PATH"
-export PATH="$ANDROID_HOME/emulator:$PATH"
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="/opt/homebrew/sbin:$PATH"
+if [ -d "$HOME/Library/Android/sdk" ]; then
+  export ANDROID_HOME="$HOME/Library/Android/sdk"
+elif [ -d "$HOME/Android/Sdk" ]; then
+  export ANDROID_HOME="$HOME/Android/Sdk"
+fi
+if [ -n "${ANDROID_HOME:-}" ]; then
+  export ANDROID_SDK_ROOT="$ANDROID_HOME"
+  export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+  export PATH="$ANDROID_HOME/platform-tools:$PATH"
+  export PATH="$ANDROID_HOME/emulator:$PATH"
+fi
+if $_IS_MACOS; then
+  export PATH="/opt/homebrew/bin:$PATH"
+  export PATH="/opt/homebrew/sbin:$PATH"
+fi
 export PATH="$HOME/.pub-cache/bin:$PATH"
 
 # [java]
 if [ -x /usr/libexec/java_home ]; then
+  # macOS java_home utility
   java_home_21="$(/usr/libexec/java_home -v 21 2>/dev/null || true)"
   if [ -n "$java_home_21" ]; then
     export JAVA_HOME="$java_home_21"
     export PATH="$JAVA_HOME/bin:$PATH"
   fi
+elif [ -d /usr/lib/jvm/java-21-openjdk-amd64 ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
+  export PATH="$JAVA_HOME/bin:$PATH"
+elif [ -d /usr/lib/jvm/java-21-openjdk ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-21-openjdk"
+  export PATH="$JAVA_HOME/bin:$PATH"
 fi
 
 # [mise]
@@ -156,7 +195,9 @@ fi
 export GOPRIVATE=github.com/bfi-finance
 
 
-export CATALINA_HOME="/opt/homebrew/opt/tomcat/libexec"
+if $_IS_MACOS; then
+  export CATALINA_HOME="/opt/homebrew/opt/tomcat/libexec"
+fi
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
@@ -181,4 +222,4 @@ alias lora-workspace='code "$HOME/work/lora/lora-workspace/lora.code-workspace"'
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
 # LORA session manager
-alias lora-session='/Users/mac-098183/work/lora/lora-workspace/scripts/session.sh'
+alias lora-session='$HOME/work/lora/lora-workspace/scripts/session.sh'

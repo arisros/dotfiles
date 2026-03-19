@@ -32,6 +32,22 @@ return {
 		end
 
 		local function find_java_21_home()
+			-- Linux: check common distro paths
+			local linux_java_paths = {
+				"/usr/lib/jvm/java-21-openjdk-amd64",
+				"/usr/lib/jvm/java-21-openjdk",
+				"/usr/lib/jvm/java-21",
+			}
+			for _, path in ipairs(linux_java_paths) do
+				if vim.fn.isdirectory(path) == 1 then
+					local major = java_major(path)
+					if major ~= nil and major >= 21 then
+						return path
+					end
+				end
+			end
+
+			-- macOS: Homebrew
 			local brew_java_21 = "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
 			if vim.fn.isdirectory(brew_java_21) == 1 then
 				local major = java_major(brew_java_21)
@@ -40,6 +56,7 @@ return {
 				end
 			end
 
+			-- macOS: java_home utility
 			if vim.fn.executable("/usr/libexec/java_home") == 1 then
 				local out = trim(vim.fn.system("/usr/libexec/java_home -v 21 2>/dev/null"))
 				if out ~= "" and vim.fn.isdirectory(out) == 1 then
@@ -47,6 +64,7 @@ return {
 				end
 			end
 
+			-- SDKMAN (cross-platform)
 			local sdkman_current = vim.fn.expand("~/.sdkman/candidates/java/current")
 			if vim.fn.isdirectory(sdkman_current) == 1 then
 				local major = java_major(sdkman_current)
@@ -55,6 +73,16 @@ return {
 				end
 			end
 
+			-- mise-managed Java
+			local mise_java = vim.fn.expand("~/.local/share/mise/installs/java/21/")
+			if vim.fn.isdirectory(mise_java) == 1 then
+				local major = java_major(mise_java)
+				if major ~= nil and major >= 21 then
+					return mise_java
+				end
+			end
+
+			-- Fallback: JAVA_HOME env
 			local env_java_home = vim.env.JAVA_HOME
 			if env_java_home ~= nil and env_java_home ~= "" and vim.fn.isdirectory(env_java_home) == 1 then
 				local major = java_major(env_java_home)
