@@ -22,7 +22,6 @@ golangci-lint = "latest"
 
 rust = "latest"
 # lf = "latest"
-ruby = "latest"
 dotnet = "8"
 "npm:@biomejs/biome" = "latest"
 "npm:@mermaid-js/mermaid-cli" = "latest"
