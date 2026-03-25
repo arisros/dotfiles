@@ -1,0 +1,20 @@
+# LORA workspace aliases & functions
+# Managed by: lora-workspace/scripts/init.sh
+# Do NOT edit the lw/lwcd lines manually — re-run `make init` to update.
+
+_LORA_WS="$HOME/work/lora/lora-workspace"
+
+# Open workspace in VS Code
+alias lora-workspace='code "$_LORA_WS/lora.code-workspace"'
+
+# Session manager
+alias lora-session="$_LORA_WS/scripts/session.sh"
+
+# Worktree orchestrator
+alias lw="$_LORA_WS/scripts/worktree.sh"
+
+# lwcd — cd into a service directory (alias-safe: uses full path)
+lwcd() {
+  local d
+  d=$("$_LORA_WS/scripts/worktree.sh" cd "$@") && cd "$d"
+}

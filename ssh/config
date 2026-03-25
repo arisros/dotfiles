@@ -43,6 +43,8 @@ Host arkdefender
     HostName 159.65.15.126
     User root
     IdentityFile ~/.ssh/id_rsa_bpro
+    SetEnv TERM=xterm-256color
+
 
 
 

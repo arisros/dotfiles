@@ -215,11 +215,10 @@ export PATH="$PHPVM_DIR/bin:$PATH"
 # opencode
 export PATH="$HOME/.opencode/bin:$PATH"
 
-# LORA workspace alias
-alias lora-workspace='code "$HOME/work/lora/lora-workspace/lora.code-workspace"'
-
 # Added by Antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
-# LORA session manager
-alias lora-session='$HOME/work/lora/lora-workspace/scripts/session.sh'
+# [ZSH] lora
+[ -f "$HOME/.lora" ] && source "$HOME/.lora"
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi

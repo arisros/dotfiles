@@ -17,71 +17,51 @@ return {
 			},
 		})
 
-		local parsers = {
-			"astro",
-			"json",
-			"javascript",
-			"typescript",
-			"tsx",
-			"yaml",
-			"html",
-			"css",
-			"markdown",
-			"markdown_inline",
-			"bash",
-			"lua",
-			"vim",
-			"gitignore",
-			"vimdoc",
-			"c",
-			"cpp",
-			"dart",
-			"python",
-			"java",
-			"xml",
-			"go",
-			"templ",
-			"http",
-		}
-
-		-- Install parsers (new API: no more configs.setup)
-		require("nvim-treesitter").install(parsers)
-
-		-- Enable treesitter highlighting & indentation for all filetypes with parsers
-		vim.api.nvim_create_autocmd("FileType", {
-			callback = function()
-				local ok = pcall(vim.treesitter.start)
-				if ok then
-					vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-				end
-			end,
-		})
-
-		-- Autotag (new standalone setup)
-		require("nvim-ts-autotag").setup({
-			opts = {
-				enable_close = true,
-				enable_rename = true,
-				enable_close_on_slash = false,
+		require("nvim-treesitter.configs").setup({
+			ensure_installed = {
+				"astro",
+				"json",
+				"javascript",
+				"typescript",
+				"tsx",
+				"yaml",
+				"html",
+				"css",
+				"markdown",
+				"markdown_inline",
+				"bash",
+				"lua",
+				"vim",
+				"gitignore",
+				"vimdoc",
+				"c",
+				"cpp",
+				"dart",
+				"python",
+				"java",
+				"xml",
+				"go",
+				"templ",
+				"http",
+			},
+			auto_install = true,
+			highlight = { enable = true },
+			indent = { enable = true },
+			autotag = { enable = true },
+			textobjects = {
+				move = {
+					enable = true,
+					set_jumps = true,
+					goto_next_start = {
+						["]f"] = { query = "@function.outer", desc = "Next function start" },
+					},
+					goto_previous_start = {
+						["[f"] = { query = "@function.outer", desc = "Previous function start" },
+					},
+				},
 			},
 		})
 
-		-- Textobjects: function navigation
-		require("nvim-treesitter-textobjects").setup({
-			move = {
-				set_jumps = true,
-			},
-		})
-
-		vim.keymap.set({ "n", "x", "o" }, "]f", function()
-			require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
-		end, { desc = "Next function start" })
-
-		vim.keymap.set({ "n", "x", "o" }, "[f", function()
-			require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
-		end, { desc = "Previous function start" })
-
-		-- Sticky function header (treesitter-context)
 		require("treesitter-context").setup({
 			enable = true,
 			max_lines = 3,
