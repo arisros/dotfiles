@@ -46,9 +46,9 @@ return {
 			vim.api.nvim_set_hl(0, "RenderMarkdownH5", { fg = "#606470", bg = "NONE" })
 			vim.api.nvim_set_hl(0, "RenderMarkdownH6", { fg = "#505458", bg = "NONE" })
 
-			-- Heading backgrounds: fully cleared
+			-- Heading backgrounds: no background tint, keep foreground from heading group
 			for i = 1, 6 do
-				vim.api.nvim_set_hl(0, "RenderMarkdownH" .. i .. "Bg", { bg = "NONE", fg = "NONE" })
+				vim.api.nvim_set_hl(0, "RenderMarkdownH" .. i .. "Bg", { bg = "NONE" })
 			end
 
 			-- Code blocks: very subtle dark tint, no vivid border
