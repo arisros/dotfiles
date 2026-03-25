@@ -215,11 +215,10 @@ export PATH="$PHPVM_DIR/bin:$PATH"
 # opencode
 export PATH="$HOME/.opencode/bin:$PATH"
 
-# redacted workspace alias
-alias redacted-workspace='code "$HOME/work/redacted/redacted-workspace/redacted.code-workspace"'
-
 # Added by Antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
-# redacted session manager
-alias redacted-session='$HOME/work/redacted/redacted-workspace/scripts/session.sh'
+# [ZSH] redacted
+[ -f "$HOME/.redacted" ] && source "$HOME/.redacted"
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
