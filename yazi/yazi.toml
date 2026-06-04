@@ -1,3 +1,30 @@
+# ---------------------------------------------------------------------------
+# Manager / preview defaults. Previews automatically use the system tools when
+# present:
+#   - images  → chafa fallback (Kitty/iTerm2/Sixel native if the terminal
+#               supports them, e.g. Ghostty)
+#   - videos  → ffmpegthumbnailer
+#   - PDFs    → pdftoppm (poppler-utils)
+# Install via packages/debian.txt (chafa, ffmpegthumbnailer, poppler-utils)
+# or packages/Brewfile (chafa, ffmpegthumbnailer, poppler).
+# ---------------------------------------------------------------------------
+
+[mgr]
+ratio          = [1, 4, 3]   # parent / current / preview pane widths
+sort_by        = "natural"
+sort_sensitive = false
+sort_reverse   = false
+sort_dir_first = true
+show_hidden    = false
+show_symlink   = true
+
+[preview]
+image_filter   = "triangle"  # triangle is fast; alternatives: nearest, catmull-rom, lanczos3
+image_quality  = 80
+sixel_fraction = 15
+max_width      = 800
+max_height     = 1000
+cache_dir      = ""          # default: $XDG_CACHE_HOME/yazi
 
 [opener]
 edit = [
@@ -7,7 +34,9 @@ play = [
   { run = 'mpv "$@"', orphan = true },
 ]
 open = [
-  { run = 'open "$@"' },
+  # macOS uses `open`; Linux uses `xdg-open`. Yazi picks the first runnable one.
+  { run = 'xdg-open "$@"', desc = "Open (Linux)", for = "linux" },
+  { run = 'open "$@"',     desc = "Open (macOS)", for = "macos" },
 ]
 
 [open]
@@ -15,6 +44,6 @@ rules = [
   { mime = "text/*", use = "edit" },
   { mime = "video/*", use = "play" },
   { mime = "image/*", use = "open" },
-  { name = "*", use = "open" },
+  { url = "*",  use = "open" },
 ]
 

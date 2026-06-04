@@ -11,7 +11,9 @@
     name = "Redacted"
     email = "redacted@example.com"
 [core]
-    sshCommand = "ssh -i ~/.ssh/id_github_work -F /dev/null"
+	; honor ~/.ssh/config so Host aliases (github.com, github-redacted) work — they
+	; already map to the right IdentityFile (id_ed25519 / id_redacted respectively)
+	sshCommand = ssh -o StrictHostKeyChecking=accept-new
 ;     
 ; [user]
 ;   name = "Aris Jirat"
@@ -22,5 +24,21 @@
 
 ; ssh instead of https
 [url "git@github.com:"]
-    insteadOf = https://github.com/
+	insteadOf = https://github.com/
+
+; route redacted-org org through the github-redacted SSH alias (uses ~/.ssh/id_redacted)
+[url "git@github-redacted:redacted-org/"]
+	insteadOf = https://github.com/redacted-org/
+
+[credential]
+	; resolve via $PATH so this works on both /usr/local/bin (mac) and
+	; /usr/bin or ~/.local/bin (Debian). Install the binary from
+	; https://github.com/hickford/git-credential-oauth or similar.
+	helper = git-credential-pat
+[init]
+	defaultBranch = main
+
+[includeIf "gitdir:~/redacted/"]
+    path = ~/redacted/.gitconfig
+
 
