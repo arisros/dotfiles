@@ -1,0 +1,3 @@
+# ShellCheck config for the dotfiles repo.
+# Follow `source`d files (resolved via inline `# shellcheck source=` directives).
+external-sources=true

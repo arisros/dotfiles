@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Shared helpers for install.sh and bootstrap scripts.
 # Sourced — does not run anything on its own.
 
@@ -15,7 +16,8 @@ has_cmd() { command -v "$1" >/dev/null 2>&1; }
 # Uses --restow so re-running install.sh doesn't error on existing links.
 stow_module() {
     local module="$1"
-    local default_target="$HOME/.config/$(basename "$module")"
+    local default_target
+    default_target="$HOME/.config/$(basename "$module")"
     local target="${2:-$default_target}"
 
     if [ ! -d "$DOTFILES_DIR/$module" ]; then
