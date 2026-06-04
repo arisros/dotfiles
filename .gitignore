@@ -33,6 +33,17 @@
 # Ignore logs
 *.log
 
+# Build artifacts (cargo target dirs from install_rust_tools.sh, etc.)
+target-install/
+target/
+
+# tmux plugins are managed by TPM (bootstrap_tpm in scripts/lib.sh) — never track them
+tmux/plugins/
+
+# macOS preference snapshots (not config; restore from git history if ever needed)
+.preferences_backup/
+.macos-defaults-backup.plist
+
 .gitsecret/keys/random_seed
 !*.secret
 zsh/.secrets
