@@ -1,0 +1,39 @@
+# ============================================================================
+# Linux (Debian/Ubuntu) zsh additions. Sourced by ~/.zshrc when $OSTYPE
+# matches linux. Assumes apt-installed zsh plugins (see packages/debian.txt).
+# ============================================================================
+
+# ---- Zsh plugins (apt-installed) -----------------------------------------
+# Load order matters: autosuggestions and history-substring-search first,
+# zsh-syntax-highlighting MUST be sourced LAST (it wraps every other widget).
+_source_if_exists /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# zsh-history-substring-search isn't in standard Debian repos; fall back to a
+# vendored clone under ~/.zsh-plugins/ if scripts/install_zsh_plugins.sh placed
+# one there.
+_source_if_exists ~/.zsh-plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+_source_if_exists /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+# ---- fzf key-bindings + completion (Ctrl-R history, Ctrl-T files) --------
+# Debian's fzf (0.38) predates `fzf --zsh`; source the shipped example snippets.
+_source_if_exists /usr/share/doc/fzf/examples/key-bindings.zsh
+_source_if_exists /usr/share/doc/fzf/examples/completion.zsh
+
+# ---- Linux Android SDK (if installed) ------------------------------------
+if [ -d "$HOME/Android/Sdk" ]; then
+    export ANDROID_HOME="$HOME/Android/Sdk"
+    export ANDROID_SDK_ROOT="$ANDROID_HOME"
+    [ -d "$ANDROID_HOME/cmdline-tools/latest/bin" ] && export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+    [ -d "$ANDROID_HOME/platform-tools" ]            && export PATH="$ANDROID_HOME/platform-tools:$PATH"
+    [ -d "$ANDROID_HOME/emulator" ]                  && export PATH="$ANDROID_HOME/emulator:$PATH"
+fi
+
+# ---- /usr/local/bin headers (pkg-config) ---------------------------------
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig"
+export CGO_CFLAGS_ALLOW="-I"
+
+# JAVA_HOME on Linux is typically set by SDKMAN (sourced at the end of ~/.zshrc).
+# If SDKMAN isn't installed, uncomment and adjust:
+# export JAVA_HOME="/usr/lib/jvm/default-java"
+# export PATH="$JAVA_HOME/bin:$PATH"
