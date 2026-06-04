@@ -44,6 +44,8 @@ tmux/plugins/
 .preferences_backup/
 .macos-defaults-backup.plist
 
-.gitsecret/keys/random_seed
-!*.secret
+# --- secrets: never committed; loaded locally at runtime ---
+# These source tokens from Vault / ~/.vault-secrets (outside the repo), so no
+# secret ever needs to live in git. git-secret was dropped in favour of Vault.
 zsh/.secrets
+zsh/.cloudflare_env
