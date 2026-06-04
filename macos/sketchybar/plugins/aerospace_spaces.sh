@@ -14,6 +14,10 @@ elif [ "$SENDER" = "yabai_window_focused" ]; then
   aerospace_highlight_focused_window
 elif [ "$SENDER" = "aerospace_workspace_change" ]; then
   aerospace_workspace_change "$FOCUSED_WORKSPACE" "$PREV_WORKSPACE"
+elif [ "$SENDER" = "aerospace_monitor_change" ]; then
+  # Focus moved to another monitor — just re-highlight that monitor's focused
+  # workspace (no add/remove churn, so it's safe even with no PREV_WORKSPACE).
+  aerospace_highlight_focused_window
 elif [ "$SENDER" = "yabai_window_created" ] || [ "$SENDER" = "yabai_window_deminimized" ]; then
   aerospace_new_window_id "$ID"
 elif [ "$SENDER" = "yabai_window_destroyed" ] || [ "$SENDER" = "yabai_window_minimized" ]; then

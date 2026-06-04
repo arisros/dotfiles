@@ -15,11 +15,12 @@ after-startup-command = [
     'exec-and-forget borders',
 ]
 
-# Notify Sketchybar about workspace change
+# Notify Sketchybar about workspace change (also pass the focused monitor so
+# the bar can tell which display the change happened on).
 exec-on-workspace-change = [
   '/bin/bash',
   '-c',
-  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE FOCUSED_MONITOR=$AEROSPACE_FOCUSED_MONITOR',
 ]
 
 # Start AeroSpace at login
@@ -47,7 +48,15 @@ default-root-container-orientation = 'auto'
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 # Fallback value (if you omit the key): on-focused-monitor-changed = []
 # TODO: relook because like glitch focus
-on-focused-monitor-changed = ['move-mouse window-lazy-center --fail-if-noop', 'move-mouse monitor-lazy-center']
+# Also repaint sketchybar: switching monitors changes the focused workspace,
+# but without this the bar never gets told, so the active-workspace highlight
+# went stale ("not proper when switching monitor"). The lightweight
+# aerospace_monitor_change event just re-highlights the focused workspace.
+on-focused-monitor-changed = [
+  'move-mouse window-lazy-center --fail-if-noop',
+  'move-mouse monitor-lazy-center',
+  'exec-and-forget sketchybar --trigger aerospace_monitor_change',
+]
 
 # You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
 # Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
