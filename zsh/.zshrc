@@ -1,147 +1,100 @@
-export CONFIG_DIR="$HOME/.config/sketchybar"
-export ITEM_DIR="$CONFIG_DIR/items"
-eval "$(/opt/homebrew/bin/brew shellenv)"
-eval "$(~/.local/bin/mise activate zsh)"
+# ============================================================================
+# Portable zsh init. OS-specific bits live in .zshrc.macos / .zshrc.linux,
+# which this file sources at the very end.
+# ============================================================================
 
-# git-prompt
-source ~/git-prompt.zsh
-# autosuggestions
-source "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-# syntax-highlighting
-source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+# Helper: source a file only if it exists, so missing optional bits don't error.
+_source_if_exists() { [[ -r "$1" ]] && source "$1"; }
 
+# ---- vi mode + history ----------------------------------------------------
 set -o vi
 
-# Don't store redundant commands (like `ls` or `cd`)
-# History Size (Balanced for Performance)
-HISTSIZE=50000            # Commands stored in memory
-SAVEHIST=50000            # Commands saved to file
-HISTFILE=~/.zsh_history   # Location of the history file
+HISTSIZE=50000
+SAVEHIST=50000
+HISTFILE=~/.zsh_history
 
-# History Behavior Optimizations
-setopt HIST_IGNORE_DUPS         # Ignore duplicate commands
-setopt HIST_IGNORE_ALL_DUPS      # Remove older duplicates, keep latest
-setopt HIST_REDUCE_BLANKS        # Trim unnecessary spaces before saving
-setopt HIST_EXPIRE_DUPS_FIRST    # Remove oldest duplicate first when trimming
-setopt HIST_SAVE_NO_DUPS         # Don't save duplicate commands in history
-
-# History Performance Tweaks
-setopt APPEND_HISTORY            # Append commands to history file, not overwrite
-setopt INC_APPEND_HISTORY         # Write new commands immediately (no full reload)
-setopt HIST_FCNTL_LOCK            # Prevent corruption when multiple shells write
-setopt HIST_VERIFY                # Show command before running on history expansion
-
-# history-substring-search
-source "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
-
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_SAVE_NO_DUPS
+setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_FCNTL_LOCK
+setopt HIST_VERIFY
 
 autoload -Uz compinit && compinit
 
-export PATH="$HOME/.bun/bin:$PATH"
-# Add phpenv to PATH for PHP version management
-# export PATH="$HOME/.phpenv/bin:$PATH"
+# ---- sourced prompt + aliases --------------------------------------------
+_source_if_exists ~/git-prompt.zsh
+_source_if_exists ~/.config_restart_aliases
+_source_if_exists ~/.fs_aliases
+_source_if_exists ~/.functions
+_source_if_exists ~/.git_aliases
+_source_if_exists ~/.docker_aliases
+_source_if_exists ~/.cloudflare_env
+_source_if_exists ~/.blue_dev
+_source_if_exists ~/.arduino-cli-completion
+_source_if_exists ~/.secrets
 
-# export PHPVM_DIR="$HOME/.phpvm"
- 
-# [nvm] will replace with mise
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-if [ -z "$SSH_AUTH_SOCK" ]; then
-    eval "$(ssh-agent -s)"
-    ssh-add ~/.ssh/id_ed25519_github
-    ssh-add ~/.ssh/id_rsa_git_arisjirat
-    ssh-add ~/.ssh/id_github_bfi
+# ---- ssh-agent ------------------------------------------------------------
+# Start an agent if one isn't already inherited (works on both macOS and Linux;
+# on macOS the launchd plist may have already exported SSH_AUTH_SOCK).
+if [ -z "${SSH_AUTH_SOCK:-}" ]; then
+    eval "$(ssh-agent -s)" >/dev/null
+    for key in ~/.ssh/id_ed25519_github ~/.ssh/id_rsa_git_arisjirat ~/.ssh/id_github_bfi; do
+        [ -f "$key" ] && ssh-add "$key" 2>/dev/null
+    done
 fi
 
-# [usr/local/bin]
-export PATH="/usr/local/bin:$PATH"
-export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
-export CGO_CFLAGS_ALLOW="-I"
- 
-# [flutter]
-export PATH="$HOME/fvm/default/bin:$PATH"
-export ANDROID_HOME="$HOME/Library/Android/sdk"
-export ANDROID_SDK_ROOT="$ANDROID_HOME"
-export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
-export PATH="$ANDROID_HOME/platform-tools:$PATH"
-export PATH="$ANDROID_HOME/emulator:$PATH"
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="/opt/homebrew/sbin:$PATH"
-export PATH="$HOME/.pub-cache/bin:$PATH"
+# ---- generic PATH (portable) ---------------------------------------------
+# Earlier entries win. mise's shims live in ~/.local/bin.
+export PATH="$HOME/.local/bin:$HOME/.bun/bin:$HOME/.composer/vendor/bin:$PATH"
 
-# [java]
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
-export PATH=$JAVA_HOME/bin:$PATH
+# Sketchybar config dirs — harmless on Linux, used by macOS sketchybar.
+export CONFIG_DIR="$HOME/.config/sketchybar"
+export ITEM_DIR="$CONFIG_DIR/items"
 
-# [mise]
-export PATH="$HOME/.local/bin:$PATH"
-
-# [composer]
-export PATH="$HOME/.composer/vendor/bin:$PATH"
-#
-
-eval "$(~/.local/bin/mise activate zsh)"
-## [dart][Completion]
-## Completion scripts setup. Remove the following line to uninstall
-[[ -f /Users/arisjirat/.dart-cli-completion/zsh-config.zsh ]] && . /Users/arisjirat/.dart-cli-completion/zsh-config.zsh || true
-## [/Completion]
-
-
-# [ZSH] config_restart_aliases
-source ~/.config_restart_aliases
-# [ZSH] fs_aliases
-source ~/.fs_aliases
-# [ZSH] functions
-source ~/.functions
-# [ZSH] git_aliases
-source ~/.git_aliases
-# [ZSH] docker_aliases
-source ~/.docker_aliases
-# [ZSH] blue_dev
-source ~/.blue_dev
-
-# [ZSH] arduino
-source ~/.arduino-cli-completion
-
-## [Completion]
-## Completion scripts setup. Remove the following line to uninstall
-[[ -f /Users/justtest/.dart-cli-completion/zsh-config.zsh ]] && . /Users/justtest/.dart-cli-completion/zsh-config.zsh || true
-## [/Completion]
-
-if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
-  . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+# ---- runtime managers (single source of truth: mise) ---------------------
+# nvm and fnm intentionally dropped; mise manages node/python/ruby/etc.
+if [ -x "$HOME/.local/bin/mise" ]; then
+    eval "$(~/.local/bin/mise activate zsh)"
 fi
 
-## [secrets]
-[ -f ~/.secrets ] && source ~/.secrets
+# SDKMAN — pinned at end of OS-specific files per its own instructions, see below.
 
+# ---- dart completion (portable) ------------------------------------------
+_source_if_exists "$HOME/.dart-cli-completion/zsh-config.zsh"
 
+# ---- nix daemon (portable) -----------------------------------------------
+_source_if_exists "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+
+# ---- bun completion (portable) -------------------------------------------
+_source_if_exists "$HOME/.bun/_bun"
+
+# ---- opencode -------------------------------------------------------------
+[ -d "$HOME/.opencode/bin" ] && export PATH="$HOME/.opencode/bin:$PATH"
+
+# ---- private repos --------------------------------------------------------
 export GOPRIVATE=github.com/bfi-finance
 
+# ---- plugin styling (read by autosuggestions when it loads below) --------
+# Suggest from history first, then completion. Dim grey so suggestions read as
+# "ghost text". Ctrl-Space accepts the current suggestion.
+export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+bindkey '^ ' autosuggest-accept
 
-export CATALINA_HOME="/opt/homebrew/opt/tomcat/libexec"
+# ---- OS-specific overrides (must be near the end) ------------------------
+case "$OSTYPE" in
+    darwin*)  _source_if_exists ~/.zshrc.macos ;;
+    linux*)   _source_if_exists ~/.zshrc.linux ;;
+esac
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+# ---- SDKMAN (must be last per SDKMAN's own instructions) -----------------
 export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-export JAVA_HOME="$HOME/.sdkman/candidates/java/current"
-export PATH="$JAVA_HOME/bin:$PATH"
-
-export PHPVM_DIR="/Users/justtest/.phpvm"
-export PATH="$PHPVM_DIR/bin:$PATH"
-[ -s "$PHPVM_DIR/phpvm.sh" ] && . "$PHPVM_DIR/phpvm.sh"
-
-
-#c[mysql]
-export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"
-
-export PHPVM_DIR="~/.phpvm"
-export PATH="$PHPVM_DIR/bin:$PATH"
-[ -s "$PHPVM_DIR/phpvm.sh" ] && . "$PHPVM_DIR/phpvm.sh"
-
-
+_source_if_exists "$SDKMAN_DIR/bin/sdkman-init.sh"
+if [ -d "$SDKMAN_DIR/candidates/java/current" ]; then
+    export JAVA_HOME="$SDKMAN_DIR/candidates/java/current"
+    export PATH="$JAVA_HOME/bin:$PATH"
+fi

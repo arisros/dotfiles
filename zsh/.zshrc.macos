@@ -1,0 +1,58 @@
+# ============================================================================
+# macOS-specific zsh additions. Sourced by ~/.zshrc when $OSTYPE matches darwin.
+# Apple Silicon assumption: Homebrew at /opt/homebrew. For Intel mac change to
+# /usr/local.
+# ============================================================================
+
+# ---- Homebrew -------------------------------------------------------------
+if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+# ---- Zsh plugins (Homebrew-installed) ------------------------------------
+# Load order matters: autosuggestions and history-substring-search first,
+# zsh-syntax-highlighting MUST be sourced LAST (it wraps every other widget).
+_source_if_exists "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+_source_if_exists "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+_source_if_exists "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+# ---- fzf key-bindings + completion (Ctrl-R history, Ctrl-T files) --------
+# Homebrew's fzf is new enough for `fzf --zsh`; fall back to the keg shell dir.
+if command -v fzf >/dev/null 2>&1; then
+    source <(fzf --zsh) 2>/dev/null || {
+        _source_if_exists "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
+        _source_if_exists "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"
+    }
+fi
+
+# ---- macOS-only paths -----------------------------------------------------
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+[ -d "$ANDROID_HOME/cmdline-tools/latest/bin" ] && export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+[ -d "$ANDROID_HOME/platform-tools" ]            && export PATH="$ANDROID_HOME/platform-tools:$PATH"
+[ -d "$ANDROID_HOME/emulator" ]                  && export PATH="$ANDROID_HOME/emulator:$PATH"
+
+# Flutter / fvm
+[ -d "$HOME/fvm/default/bin" ] && export PATH="$HOME/fvm/default/bin:$PATH"
+[ -d "$HOME/.pub-cache/bin" ]  && export PATH="$HOME/.pub-cache/bin:$PATH"
+
+# Tomcat (Homebrew)
+[ -d "$HOMEBREW_PREFIX/opt/tomcat/libexec" ] && export CATALINA_HOME="$HOMEBREW_PREFIX/opt/tomcat/libexec"
+
+# mysql@8.0 (Homebrew keg-only)
+[ -d "$HOMEBREW_PREFIX/opt/mysql@8.0/bin" ] && export PATH="$HOMEBREW_PREFIX/opt/mysql@8.0/bin:$PATH"
+
+# Java via macOS java_home (overridable by SDKMAN later in ~/.zshrc)
+if [ -x /usr/libexec/java_home ]; then
+    _java_home="$(/usr/libexec/java_home -v 21 2>/dev/null)" || true
+    [ -n "${_java_home:-}" ] && export JAVA_HOME="$_java_home" && export PATH="$JAVA_HOME/bin:$PATH"
+    unset _java_home
+fi
+
+# ---- C/Go build flags (Homebrew headers) ---------------------------------
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}:$HOMEBREW_PREFIX/lib/pkgconfig:$HOMEBREW_PREFIX/share/pkgconfig"
+export CGO_CFLAGS_ALLOW="-I"
