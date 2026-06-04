@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Lint shell scripts
+        # -x follows `source`d files; fragments carry `# shellcheck shell=bash`.
+        # Gate on warning+ (style/info are advisory). zsh files (.zshrc*) are
+        # excluded — shellcheck doesn't support the zsh dialect.
+        run: |
+          shellcheck --version
+          shellcheck -x --severity=warning \
+            install.sh \
+            scripts/install_nvim.sh \
+            scripts/install_rust_tools.sh \
+            scripts/install_zsh_plugins.sh \
+            scripts/lib.sh \
+            scripts/bootstrap-debian.sh \
+            scripts/bootstrap-mac.sh
+
+  smoke-debian:
+    name: install.sh smoke (Debian 12)
+    runs-on: ubuntu-latest
+    container: debian:12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run installer (minimal — apt bootstrap + stow, no toolchain)
+        env:
+          DEBIAN_FRONTEND: noninteractive
+          DOTFILES_MINIMAL: "1"
+        run: bash install.sh
+      - name: Verify symlinks + config load
+        run: |
+          set -eux
+          # zsh config is symlinked into $HOME
+          test -L "$HOME/.zshrc"
+          # a representative stowed module landed under ~/.config
+          test -e "$HOME/.config/nvim"
+          # the apt zsh plugins are present (regression test for the plugin gap)
+          test -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+          test -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+          # interactive zsh loads cleanly AND the plugins actually activate
+          zsh -i -c 'echo zsh-loaded'
+          test -n "$(zsh -i -c 'echo $ZSH_HIGHLIGHT_VERSION' 2>/dev/null)"
