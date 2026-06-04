@@ -10,6 +10,9 @@ mkdir -p "$CACHE_DIR"
 : > "$CACHE_DIR/$LOG_FILE"
 
 sketchybar --add event aerospace_workspace_change
+# Fired by aerospace's on-focused-monitor-changed hook so the bar re-highlights
+# the focused workspace when focus moves to another monitor.
+sketchybar --add event aerospace_monitor_change
 # sketchybar --add event yabai_window_created
 # sketchybar --add event yabai_window_destroyed
 # sketchybar --add event yabai_window_focused
@@ -25,7 +28,8 @@ sketchy_add_item space_listener left \
   --set space_listener "${props[@]}" \
   script="$PLUGIN_DIR/aerospace_spaces.sh" \
   --subscribe space_listener \
-  aerospace_workspace_change 
+  aerospace_workspace_change \
+  aerospace_monitor_change
   # yabai_window_created \
   # yabai_window_destroyed \
   # yabai_window_focused \
