@@ -11,7 +11,9 @@
     name = "Aris Kurniawan_098183"
     email = "aris.kurniawan@bfi.co.id"
 [core]
-    sshCommand = "ssh -i ~/.ssh/id_github_bfi -F /dev/null"
+	; honor ~/.ssh/config so Host aliases (github.com, github-bfi) work — they
+	; already map to the right IdentityFile (id_ed25519 / id_bfi respectively)
+	sshCommand = ssh -o StrictHostKeyChecking=accept-new
 ;     
 ; [user]
 ;   name = "Aris Jirat"
@@ -22,5 +24,21 @@
 
 ; ssh instead of https
 [url "git@github.com:"]
-    insteadOf = https://github.com/
+	insteadOf = https://github.com/
+
+; route bfi-finance org through the github-bfi SSH alias (uses ~/.ssh/id_bfi)
+[url "git@github-bfi:bfi-finance/"]
+	insteadOf = https://github.com/bfi-finance/
+
+[credential]
+	; resolve via $PATH so this works on both /usr/local/bin (mac) and
+	; /usr/bin or ~/.local/bin (Debian). Install the binary from
+	; https://github.com/hickford/git-credential-oauth or similar.
+	helper = git-credential-pat
+[init]
+	defaultBranch = main
+
+[includeIf "gitdir:~/bfi/"]
+    path = ~/bfi/.gitconfig
+
 

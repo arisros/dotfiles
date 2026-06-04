@@ -1,5 +1,9 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
+	-- Pin to the legacy `master` branch. The new `main` branch (v1.0+) drops
+	-- the `nvim-treesitter.configs` module that this setup() call uses.
+	-- Migration to the new API is a separate task.
+	branch = "master",
 
 	event = { "BufReadPre", "BufNewFile" },
 	build = ":TSUpdate",

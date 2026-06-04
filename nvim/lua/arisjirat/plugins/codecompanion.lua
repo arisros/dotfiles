@@ -9,7 +9,7 @@ return {
 			"echasnovski/mini.diff", -- inline diff
 			"HakonHarnes/img-clip.nvim", -- paste image to chat
 			"hrsh7th/nvim-cmp", -- completion
-			"ravitemer/mcphub.nvim", -- extension example
+			-- "ravitemer/mcphub.nvim", -- enable after: npm install -g mcp-hub@latest
 		},
 		config = function()
 			------------------------------------------------------------
@@ -36,16 +36,12 @@ return {
 					grep_search = true,
 				},
 
-				extensions = {
-					mcphub = {
-						callback = "mcphub.extensions.codecompanion",
-						opts = {
-							make_vars = true,
-							make_slash_commands = true,
-							show_result_in_chat = true,
-						},
-					},
-				},
+				-- extensions = {
+				-- 	mcphub = {
+				-- 		callback = "mcphub.extensions.codecompanion",
+				-- 		opts = { make_vars = true, make_slash_commands = true, show_result_in_chat = true },
+				-- 	},
+				-- },
 			})
 
 			------------------------------------------------------------
@@ -55,15 +51,16 @@ return {
 			diff.setup({
 				source = diff.gen_source.none(), -- disabled auto
 			})
+
 		end,
 	},
 
 	------------------------------------------------------------
-	-- 📜 RENDER MARKDOWN
+	-- 📜 RENDER MARKDOWN (disabled — markview is used instead)
 	------------------------------------------------------------
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
-		ft = { "markdown", "codecompanion" },
+		enabled = false,
 	},
 
 	------------------------------------------------------------
