@@ -32,10 +32,19 @@ brew "pkgconf"
 brew "htop"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
+# yazi preview dependencies
+brew "chafa"
+brew "ffmpegthumbnailer"
+brew "poppler"
+brew "unar"
 # Java language specific implementation of the Language Server Protocol
 brew "jdtls"
 # Simple terminal UI for git commands
 brew "lazygit"
+# Blazing fast terminal file manager written in Rust
+brew "yazi"
+# Ranger-like terminal file manager written in Rust
+brew "joshuto"
 # Graphical front-end for GCC's coverage testing tool (gcov)
 brew "lcov"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -50,6 +59,11 @@ brew "pass"
 brew "pass-otp"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# CLI tools used by nvim (telescope/fzf-lua) and sketchybar's helpers.
+# Keep these in sync with packages/debian.txt (jq=jq, bat=bat, fd=fd-find).
+brew "jq"
+brew "bat"
+brew "fd"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
 # Terminal multiplexer
