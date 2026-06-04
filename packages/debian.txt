@@ -1,0 +1,58 @@
+# Debian/Ubuntu packages for the cross-platform dotfiles.
+# Used by scripts/bootstrap-debian.sh — comments and blank lines are stripped.
+
+# --- core ---
+zsh
+stow
+git
+curl
+ca-certificates
+build-essential
+pkg-config
+
+# --- general CLI (parity with packages/Brewfile) ---
+htop
+urlview              # tmux-urlview plugin: open URLs from the current pane
+# NOTE: lazygit (used by lazygit.nvim) is NOT in Debian stable apt — install
+# from GitHub releases if you want it on Linux.
+
+# --- editors / multiplexers ---
+# NOTE: neovim is NOT installed from apt — Debian bookworm ships 0.7 which is
+# too old for lazy.nvim (needs ≥0.8). install.sh runs scripts/install_nvim.sh
+# which grabs the latest stable from the Neovim GitHub releases and shadows
+# any apt copy via ~/.local/bin.
+tmux
+vim
+
+# --- CLI tools used by nvim plugins (Telescope, fzf-lua, Mason) ---
+ripgrep
+fd-find
+fzf
+bat
+jq
+chafa                # terminal image renderer fallback (yazi + fzf-lua)
+ffmpegthumbnailer    # yazi video previews (extracts frames)
+poppler-utils        # yazi pdf previews (provides pdftoppm)
+imagemagick          # yazi image conversion fallback (provides convert/magick)
+unar                 # yazi archive previews
+luarocks             # lazy.nvim needs this for plugins that depend on rocks (e.g. mcphub)
+mercurial            # silences diffview health warning; drop the line if you don't use hg
+
+# --- zsh plugins (apt-shipped; history-substring-search is vendored separately) ---
+zsh-autosuggestions
+zsh-syntax-highlighting
+
+# --- clipboard for tmux + neovim ---
+xclip
+wl-clipboard
+
+# --- fonts ---
+fontconfig
+
+# --- node for nvim Mason LSPs and tools like opencode ---
+nodejs
+npm
+
+# --- file managers (configs exist in repo) ---
+# joshuto and yazi are not packaged in stable Debian; install via cargo or release binary.
+# If you want them via apt-equivalents, install separately. Leaving out of this list.
