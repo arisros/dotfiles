@@ -14,37 +14,77 @@ Host github.com-bfi-finance
     HostName github.com
     User git
     IdentityFile ~/.ssh/id_github_bfi
-Host bi
-    Hostname 188.166.188.121
-    StrictHostKeyChecking yes
-    User root
-    IdentityFile ~/.ssh/id_bi
-
-Host westjava
-    HostName 103.175.219.11
-    StrictHostKeyChecking yes
-    User arisjirat
-    IdentityFile ~/.ssh/id_rsa_bpro
-
-# Host arkdefender
-#     HostName 103.76.120.113
-#     StrictHostKeyChecking yes
-#     User arkdefender
-#     IdentityFile ~/.ssh/id_ed25519_fti_ci
-
-Host marcom
-    HostName 188.166.188.121
-    # StrictHostKeyChecking yes
-    User root
-    IdentityFile ~/.ssh/id_rsa_git_arisjirat
-
 
 Host arkdefender
     HostName 159.65.15.126
     User root
-    IdentityFile ~/.ssh/id_rsa_bpro
+    IdentityFile ~/.ssh/id_ed25519_github
     SetEnv TERM=xterm-256color
 
 
+Host vps
+    HostName 159.65.15.126
+    User root
+    IdentityFile ~/.ssh/id_ed25519_github
+
+Host hostme
+    HostName 10.10.0.1
+    User root
+    IdentityFile ~/.ssh/id_sys
+    IdentitiesOnly yes
+    ProxyJump vps
+    SetEnv TERM=xterm-256color
+    SetEnv TERM=xterm-kitty
+    SetEnv COLORTERM=truecolor
+    SetEnv KITTY_WINDOW_ID=1
 
 
+Host sys_hostme
+    HostName 10.10.0.1
+    User sys_hostme
+    IdentityFile ~/.ssh/id_sys
+    IdentitiesOnly yes
+    ProxyJump vps
+
+
+    
+
+Host bri
+    HostName 188.166.188.121
+    User root
+    IdentityFile ~/.ssh/id_sys
+    IdentitiesOnly yes
+    SetEnv TERM=xterm-256color
+    SetEnv TERM=xterm-kitty
+    SetEnv COLORTERM=truecolor
+    SetEnv KITTY_WINDOW_ID=1
+
+
+# Cache key passphrases in ssh-agent + macOS Keychain (survives reboot).
+# Keep this Host * block LAST — ssh uses first-match-wins per option.
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes
+
+Host macoffice
+      HostName 127.0.0.1
+      Port 2222
+      User mac-098183      
+      IdentityFile ~/.ssh/id_ed25519_github
+      IdentitiesOnly yes
+      ProxyJump vps
+      SetEnv TERM=xterm-256color
+      SetEnv TERM=xterm-kitty
+      SetEnv COLORTERM=truecolor
+      SetEnv KITTY_WINDOW_ID=1
+
+
+
+Host runpod
+    HostName 154.54.102.29
+    Port 13336
+    User root
+    IdentityFile ~/.ssh/id_runpod
+    IdentitiesOnly yes
+    StrictHostKeyChecking accept-new
+    ServerAliveInterval 30
