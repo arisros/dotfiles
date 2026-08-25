@@ -236,3 +236,52 @@ lwcd() { local d; d=$('/Users/mac-098183/work/lora/lora-workspace/scripts/worktr
 # LORA MQ sender
 alias mq-send='/Users/mac-098183/work/lora/lora-workspace/scripts/mq-send.sh'
 
+# [ZSH] sleep control (lid-close override for background agents)
+lock() {
+  local batt_pct reply
+  batt_pct=$(pmset -g batt | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
+
+  if [[ -n "$batt_pct" && "$batt_pct" -lt 20 ]]; then
+    echo "⚠️  Baterai di bawah 20% (${batt_pct}%). disablesleep bisa nahan mekanisme emergency-sleep macOS juga — resiko hard shutdown kalau baterai habis di tengah jalan."
+    read "reply?Tetap lanjut dalam force mode? (yes/N): "
+    if [[ "${reply:l}" != "yes" ]]; then
+      echo "❌ Dibatalkan."
+      return 1
+    fi
+    echo "⚡ Force mode diaktifkan pada baterai ${batt_pct}%."
+  fi
+
+  echo "🔒 Preventing sleep (lid-close sleep disabled) — safe to close the lid while an agent runs."
+  sudo pmset -a disablesleep 1
+  osascript -e 'tell application "System Events" to keystroke "q" using {control down, command down}'
+}
+
+hard() {
+  local batt_pct reply
+  batt_pct=$(pmset -g batt | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
+
+  if [[ -n "$batt_pct" && "$batt_pct" -lt 20 ]]; then
+    echo "⚠️  Baterai di bawah 20% (${batt_pct}%). HARD mode juga mematikan displaysleep/disksleep/standby — resiko hard shutdown kalau baterai habis di tengah jalan, tanpa charger."
+    read "reply?Tetap lanjut dalam hard mode? (yes/N): "
+    if [[ "${reply:l}" != "yes" ]]; then
+      echo "❌ Dibatalkan."
+      return 1
+    fi
+    echo "⚡ Hard mode dipaksa aktif pada baterai ${batt_pct}%."
+  fi
+
+  echo "🔥 HARD mode: semua bentuk sleep/standby (display, disk, sistem) dimatikan di semua sumber daya — termasuk tanpa charger. Layar TIDAK dikunci."
+  sudo pmset -a disablesleep 1 sleep 0 displaysleep 0 disksleep 0 standby 0
+  echo "✅ Hard mode aktif — mesin tidak akan mati sama sekali sampai kamu jalankan 'normal'."
+}
+
+normal() {
+  echo "💤 Restoring normal sleep behavior..."
+  sudo pmset -a disablesleep 0 sleep 1 displaysleep 2 disksleep 10 standby 1
+  pkill -x caffeinate 2>/dev/null
+  if ioreg -r -k AppleClamshellState -d 4 | grep -q '"AppleClamshellState" = Yes'; then
+    echo "Lid is closed but system is still awake — forcing sleep now."
+    pmset sleepnow
+  fi
+  echo "✅ Normal sleep behavior restored."
+}
