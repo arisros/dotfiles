@@ -10,6 +10,21 @@ return {
 		local telescope = require("telescope")
 		local actions = require("telescope.actions")
 
+		-- Show the last `n` path segments (dir/.../dir/file) instead of telescope's
+		-- dynamic "smart" shortening, so sibling dirs (e.g. set_requested vs set_expiry
+		-- under spouse_ekyc) stay distinguishable one level further back.
+		local function path_last_n(n)
+			local os_sep = require("telescope.utils").get_separator()
+			return function(_, path)
+				local parts = vim.split(path, os_sep, { plain = true })
+				if #parts <= n then
+					return path
+				end
+				local start = #parts - n + 1
+				return ".." .. os_sep .. table.concat(vim.list_slice(parts, start, #parts), os_sep)
+			end
+		end
+
 		telescope.setup({
 			defaults = {
 				layout_config = {
@@ -36,8 +51,7 @@ return {
 			},
 			pickers = {
 				lsp_references = {
-					path_display = { "absolute" },
-					-- path_display = { shorten = { len = 3, exclude = { 1, -1 } } },
+					path_display = path_last_n(3),
 					layout_strategy = "vertical",
 					layout_config = {
 						width = 0.9,
