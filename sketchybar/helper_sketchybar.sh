@@ -6,23 +6,42 @@ get_count_monitors() {
     echo $count_monitors
 }
 
-is_need_swap_monitor() {
-    ((count_monitors > 1)) && need_swap_monitor=true
-    count_monitors=$(get_count_monitors)
-    need_swap_monitor=false
-    (( count_monitors > 1 )) && need_swap_monitor=true
+# Maps an AeroSpace monitor ID to the correct sketchybar display number
+# by looking up monitor names: Mi 27 NFGL → display 2, Built-in → display 1, DELL → display 3
+get_display_for_monitor() {
+    local aerospace_id="$1"
+    local monitors_json
+    monitors_json=$(aerospace list-monitors --json 2>/dev/null)
 
-    echo $need_swap_monitor
+    # Single-screen mode: sketchybar only has display 1, so the name-based
+    # mapping below (which puts Built-in on display 2) would hide every item
+    # on a non-existent display. Always use display 1 when there's one monitor.
+    local monitor_count
+    monitor_count=$(jq 'length' <<< "$monitors_json" 2>/dev/null)
+    if [[ "$monitor_count" == "1" ]]; then
+        echo "1"
+        return
+    fi
+
+    local monitor_name
+    monitor_name=$(echo "$monitors_json" | jq -r --argjson id "$aerospace_id" \
+        '.[] | select(."monitor-id" == $id) | ."monitor-name"')
+
+    if echo "$monitor_name" | grep -qi "Mi"; then
+        echo "1"
+    elif echo "$monitor_name" | grep -qi "Built-in\|Built in\|Retina"; then
+        echo "2"
+    else
+        # Third monitor (e.g. DELL) — use display 3
+        echo "3"
+    fi
 }
 
 focus_workspace() {
     local except="$1"
     local monitor_="$2"
-    local monitor="$monitor_"
-
-    local need_swap_monitor=$(is_need_swap_monitor)
-    [[ "$need_swap_monitor" == true ]] && [[ "$monitor_" == 1 ]] && monitor="2"
-    [[ "$need_swap_monitor" == true ]] && [[ "$monitor_" == 2 ]] && monitor="1"
+    local monitor
+    monitor=$(get_display_for_monitor "$monitor_")
 
     local workspaces=$(aerospace list-workspaces --monitor "$monitor")
 
@@ -132,7 +151,7 @@ find_windows_in_workspace() {
 
     windows=$(aerospace list-windows --workspace "$sid" --json --format '%{monitor-id}%{workspace}%{app-bundle-id}%{window-id}%{app-name}')
     count=$(jq length <<< "$windows" 2>/dev/null || echo 0)
-    [[ ! "$count" =~ ^[0-9]+$ ]] && continue
+    [[ ! "$count" =~ ^[0-9]+$ ]] && return
 
 
     for ((i = 0; i < count; i++)); do
@@ -190,12 +209,12 @@ add_windows_to_workspace() {
 
     if ! jq -e '.' <<< "$json_items" >/dev/null 2>&1; then
         echo "Invalid JSON from Aerospace" >&2
-        continue
+        return
     fi
 
 
     count=$(jq length <<< "$json_items" 2>/dev/null || echo 0)
-    [[ ! "$count" =~ ^[0-9]+$ ]] && continue
+    [[ ! "$count" =~ ^[0-9]+$ ]] && return
 
     for ((i = 0; i < count; i++)); do
         workspace=$(jq -r --argjson i "$i" '.[$i]["workspace"] // empty' <<< "$json_items")
