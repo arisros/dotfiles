@@ -3,6 +3,7 @@ return {
 	version = "*",
 	dependencies = {
 		"rafamadriz/friendly-snippets",
+		"L3MON4D3/LuaSnip",
 		{
 			"fang2hou/blink-copilot",
 			dependencies = { "zbirenbaum/copilot.lua" },
