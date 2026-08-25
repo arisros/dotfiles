@@ -30,6 +30,8 @@ export GOTOOLCHAIN=local
 # .NET tools
 export PATH="$HOME/.dotnet/tools:$PATH"
 
+export QMK_HOME='~/qmk_firmware' # Optional, set the location for `qmk_firmware`
+
 # source ~/.zshrc
 
 if command -v brew >/dev/null 2>&1; then
@@ -222,3 +224,7 @@ export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 [ -f "$HOME/.lora" ] && source "$HOME/.lora"
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+
+# ArkButton flasher
+flash() { ~/keyboard-project/firmware/flash "$@"; }
+kbstatus() { ~/keyboard-project/firmware/kbstatus; }
