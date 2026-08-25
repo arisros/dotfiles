@@ -1,0 +1,48 @@
+onboarding = false
+# herdr — https://herdr.dev
+# Semua opsi: `herdr --default-config`  ·  validasi: `herdr config check`
+#
+# Tujuan file ini: menyamakan keymap herdr dengan ~/dotfiles/tmux/tmux.conf
+# supaya muscle memory tmux tetap terpakai. Hanya override yang ditulis;
+# sisanya memakai default herdr.
+#
+# Catatan: keys.prefix tidak menerima array (tidak ada padanan `prefix2`),
+# dan "home" ditolak sebagai nama key. Jadi prefix memakai ctrl+b — yang di
+# tmux.conf:5 memang prefix sekunder Anda.
+
+[keys]
+prefix = "ctrl+b"
+
+# --- Split -------------------------------------------------------------
+# tmux.conf:16-17 — `-` membelah kiri/kanan, `v` membelah atas/bawah.
+# Default herdr justru kebalikannya, jadi ditukar di sini.
+split_vertical   = "prefix+minus"   # side by side (tmux: bind - split-window -h)
+split_horizontal = "prefix+v"       # stacked      (tmux: bind v split-window -v)
+
+# --- Pindah pane -------------------------------------------------------
+# tmux.conf:20-23 (prefix + panah), plus chord tanpa prefix.
+# ctrl+alt dipilih karena bebas di default Ghostty/Alacritty dan tidak kena
+# composing tombol option di macOS.
+focus_pane_left  = ["prefix+left",  "ctrl+alt+h"]
+focus_pane_down  = ["prefix+down",  "ctrl+alt+j"]
+focus_pane_up    = ["prefix+up",    "ctrl+alt+k"]
+focus_pane_right = ["prefix+right", "ctrl+alt+l"]
+
+# --- Resize pane -------------------------------------------------------
+# tmux.conf:38-41 — hjkl langsung resize, tanpa masuk resize mode.
+# prefix+r (resize mode bawaan herdr) tetap tersedia.
+resize_pane_left  = "prefix+h"
+resize_pane_down  = "prefix+j"
+resize_pane_up    = "prefix+k"
+resize_pane_right = "prefix+l"
+
+# --- Tab (padanan "window" di tmux) ------------------------------------
+# tmux.conf:53,66 — bind Space next-window
+next_tab = ["prefix+n", "prefix+space"]
+
+[ui]
+status_indicators = "symbols"   # bentuk berbeda per state, bukan sekadar warna
+
+show_agent_labels_on_pane_borders = true
+[ui.toast]
+delivery = "terminal"           # notifikasi desktop saat agent selesai / minta input
