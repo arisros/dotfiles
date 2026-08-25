@@ -225,3 +225,14 @@ export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 [ -f "$HOME/.supertest" ] && source "$HOME/.supertest"
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+
+# LORA workspace alias
+alias lora-workspace='nvim "/Users/mac-098183/work/lora/lora-workspace/lora.code-workspace"'
+
+# LORA worktree orchestrator
+alias lw='/Users/mac-098183/work/lora/lora-workspace/scripts/worktree.sh'
+lwcd() { local d; d=$('/Users/mac-098183/work/lora/lora-workspace/scripts/worktree.sh' cd "$@") && cd "$d"; }
+
+# LORA MQ sender
+alias mq-send='/Users/mac-098183/work/lora/lora-workspace/scripts/mq-send.sh'
+

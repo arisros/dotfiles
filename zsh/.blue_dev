@@ -1,5 +1,6 @@
 # vars
 workdir=~/work
+lora_workspace=$workdir/lora/lora-workspace
 lora_dir=$workdir/lora/lora-workspace/services
 lora_toolkit_dir=$lora_dir/real-atletico
 
@@ -67,21 +68,24 @@ rlndftw() { glndftw && export $(grep -v '^#' .env | xargs -0) && go run -trimpat
 
 # run all services one command
 alias rlora="gl && ./real_atletico/run_services.sh"
+# go to lora workspace 
+alias wk="cd $lora_workspace"
 #
 # # ── ArangoDB shell ────────────────────────────────────────────────────────────
 # alias arango="tmux split-window -h -p 30 'nvim $lora_toolkit_dir/arango_cht.sh' && docker exec -it arangodb arangosh"
 #
 # # ── Schema codegen (targets worktree path when active) ───────────────────────
-# pwdoc() {
-#   lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_8_0.schema.json?bundled=1' \
-#     -t "$(_lora_svc_dir lora-partnership-ndf)/internal/process/document"
-# }
+pwdoc() {
+  lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_19_0.schema.json?bundled=1' \
+    -t "$(_lora_svc_dir lora-partnership-ndf)/internal/process/document"
+}
 #
 #
-# twdoc() {
-#   lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_8_0.schema.json?bundled=1' \
-#     -t "$(_lora_svc_dir lora-partnership-task-ndf)/internal/process/common"
-# }
+twdoc() {
+ echo $_lora_svc_dir
+  lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_19_0.schema.json?bundled=1' \
+    -t "$(_lora_svc_dir lora-partnership-task-ndf)/internal/process/common"
+}
 # pwdoc6() {
 #   lora-schemagen -d -s 'http://localhost:8080/json-schema/business/document/dp-ndf-v0_7_0.schema.json?bundled=1' \
 #     -t "$(_lora_svc_dir lora-partnership-ndf)/internal/process/document"
