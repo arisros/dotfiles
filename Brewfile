@@ -1,5 +1,6 @@
 tap "felixkratz/formulae"
 tap "homebrew/services"
+tap "infisical/get-cli"
 tap "kardolus/chatgpt-cli"
 tap "leoafarias/fvm"
 tap "nats-io/nats-tools"
@@ -36,6 +37,18 @@ brew "imagemagick"
 brew "jdtls"
 # Simple terminal UI for git commands
 brew "lazygit"
+# --- LORA supertest E2E toolchain ---------------------------------------
+# Run GitHub Actions locally (docs/local-github-actions-simulation.md)
+brew "act"
+# Secrets for the E2E stack — scripts/run.sh expects `infisical run --`
+brew "infisical/get-cli/infisical"
+# Temporal CLI — workflow describe/list against the stack's published 7233
+brew "temporal"
+# TUI for the 12-container compose stack
+brew "lazydocker"
+# TUI JSON viewer for playwright reports and LGS activity captures
+brew "jless"
+# ------------------------------------------------------------------------
 # Graphical front-end for GCC's coverage testing tool (gcov)
 brew "lcov"
 # Ambitious Vim-fork focused on extensibility and agility

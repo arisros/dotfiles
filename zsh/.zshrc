@@ -221,4 +221,7 @@ export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 # [ZSH] lora
 [ -f "$HOME/.lora" ] && source "$HOME/.lora"
 
+# [ZSH] supertest — LORA E2E engine (sut, sutcd, sut-tmux)
+[ -f "$HOME/.supertest" ] && source "$HOME/.supertest"
+
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi

@@ -78,6 +78,15 @@ zsh -i -c 'echo shell-ok'
 tmux new -d -s tmux-check && tmux kill-session -t tmux-check
 ```
 
+## LORA supertest toolkit
+
+Terminal workflow for the LORA E2E engine — verbs, the debug ladder, environment, ports,
+and the nvim/tmux bindings: [`docs/supertest-toolkit.html`](docs/supertest-toolkit.html)
+(self-contained, servable as a static page).
+
+Shell entry points live in `zsh/.supertest` (`sut`, `suti`, `sut-tmux`); the editor side is
+`nvim/lua/arisjirat/plugins/neotest.lua`; request collection is `lora/http/supertest.http`.
+
 ## C development setup
 
 This dotfiles setup now includes C/C++ developer tooling with `mise` and Neovim integration.

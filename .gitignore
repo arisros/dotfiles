@@ -62,3 +62,13 @@ ssh/*.key
 *.kdbx
 
 zsh/.secrets
+
+# Tooling kerja — dipindah ke repo privat arisros/dotfiles-private,
+# di-symlink balik ke sini. Jangan pernah masuk repo publik.
+lora
+zsh/.supertest
+docs/supertest-toolkit.html
+
+# File backup bertimestamp & state migrasi (bukan cuma *.bak)
+*.bak.*
+*.migrations.json
