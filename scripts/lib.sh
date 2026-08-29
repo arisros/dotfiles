@@ -27,7 +27,13 @@ stow_module() {
 
     mkdir -p "$target"
     log "stow $module → $target"
-    (cd "$DOTFILES_DIR" && stow --restow --target="$target" "$module")
+    # GNU Stow refuses slashes in package names ("Slashes are not permitted in
+    # package names"), so nested modules like macos/aerospace have to be passed
+    # as --dir=<parent> <basename> rather than as one path.
+    local pkg_dir pkg_name
+    pkg_dir="$DOTFILES_DIR/$(dirname "$module")"
+    pkg_name="$(basename "$module")"
+    (cd "$DOTFILES_DIR" && stow --restow --dir="$pkg_dir" --target="$target" "$pkg_name")
 }
 
 # ---- bootstrap_tpm: install Tmux Plugin Manager + plugins ---------------

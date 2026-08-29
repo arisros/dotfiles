@@ -55,6 +55,10 @@ if [ "$OS" = "Darwin" ]; then
     stow_module macos/borders          "$HOME/.config/borders"
     stow_module macos/sketchybar       "$HOME/.config/sketchybar"
     stow_module macos/ssh-launchagent  "$HOME"
+    # Karabiner rewrites karabiner.json on every change, so that file can never
+    # be a symlink. assets/complex_modifications/ is read-only to Karabiner —
+    # safe to stow. Rules still have to be enabled once in the GUI.
+    stow_module macos/karabiner        "$HOME/.config/karabiner/assets/complex_modifications"
 fi
 
 # ---- 5. Bootstrap plugins + tools ----------------------------------------

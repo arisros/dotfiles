@@ -4,6 +4,7 @@ font-blex-mono-nerd-font
 font-hack-nerd-font
 font-sketchybar-app-font
 insomnia
+karabiner-elements
 ngrok
 obsidian
 orbstack
