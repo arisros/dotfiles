@@ -105,6 +105,8 @@ cask "font-hack-nerd-font"
 cask "font-sketchybar-app-font"
 # HTTP and GraphQL Client
 cask "insomnia"
+# Keyboard customizer — hosts macos/karabiner complex modifications
+cask "karabiner-elements"
 # Reverse proxy, secure introspectable tunnels to localhost
 cask "ngrok"
 # Knowledge base that works on top of a local folder of plain text Markdown files
