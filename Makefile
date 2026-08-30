@@ -5,6 +5,7 @@ SHELL_SCRIPTS := install.sh \
                  scripts/install_rust_tools.sh \
                  scripts/install_zsh_plugins.sh \
                  scripts/install_karabiner_rules.sh \
+                 scripts/karabiner-prefix-indicator.sh \
                  scripts/lib.sh \
                  scripts/bootstrap-debian.sh \
                  scripts/bootstrap-mac.sh
