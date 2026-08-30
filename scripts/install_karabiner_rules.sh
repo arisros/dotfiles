@@ -47,9 +47,6 @@ if [ -x "$CLI" ]; then
     fi
 fi
 
-backup="$CONFIG.bak.$(date +%Y%m%d%H%M%S)"
-cp "$CONFIG" "$backup"
-
 tmp="$(mktemp)"
 trap 'rm -f "$tmp"' EXIT
 
@@ -68,6 +65,18 @@ jq -e '.profiles | length > 0' "$tmp" >/dev/null || {
     err "merge produced an invalid config — left $CONFIG untouched (backup: $backup)"
     exit 1
 }
+
+# Nothing to do if the merge is a no-op. Bailing out here keeps repeat runs of
+# install.sh from piling up backups and from nudging Karabiner to reload.
+if cmp -s "$tmp" "$CONFIG"; then
+    log "Karabiner rules already up to date"
+    exit 0
+fi
+
+# Only now is a backup worth writing — and only reachable once the merge has
+# been built and validated, so a failure never leaves a stray one behind.
+backup="$CONFIG.bak.$(date +%Y%m%d%H%M%S)"
+cp "$CONFIG" "$backup"
 
 # Overwrite in place rather than mv: keeping the inode is what lets Karabiner's
 # file watcher notice the change and reload without a restart.
