@@ -59,6 +59,9 @@ if [ "$OS" = "Darwin" ]; then
     # be a symlink. assets/complex_modifications/ is read-only to Karabiner —
     # safe to stow. Rules still have to be enabled once in the GUI.
     stow_module macos/karabiner        "$HOME/.config/karabiner/assets/complex_modifications"
+    # Stowing only puts the rules on disk; Karabiner still has to copy them into
+    # the selected profile. There is no CLI for that, so we merge them in directly.
+    bash "$DOTFILES_DIR/scripts/install_karabiner_rules.sh" || warn "Karabiner rules step had warnings"
 fi
 
 # ---- 5. Bootstrap plugins + tools ----------------------------------------
