@@ -11,6 +11,7 @@ source $ITEM_DIR/cpu.sh
 source $ITEM_DIR/disk.sh
 source $ITEM_DIR/battery.sh
 source $ITEM_DIR/clock.sh
+source $ITEM_DIR/tmux_prefix.sh
 
 ##### Finalizing Setup #####
 sketchybar --update

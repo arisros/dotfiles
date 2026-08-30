@@ -73,6 +73,7 @@ Left column is what `tmux list-keys -T prefix` reports for this repo's tmux.conf
 | `r` refresh-client | reload | `Cmd`+`R` |
 | `z` resize-pane -Z | fullscreen | `Ctrl`+`Cmd`+`F` |
 | `[` copy-mode | Vimium visual mode | `v` |
+| `[` copy-mode (alt) | caret-browsing copy mode — see below | `F7` on `Home v` |
 | `o` urlview (plugin) | Vimium link hints | `f` |
 | `?` list-keys | Vimium help | `?` |
 | `l` last-window¹ | previous tab visited | `^` |
@@ -108,3 +109,62 @@ this to Karabiner, and therefore to macOS.
 macOS only. On Linux the equivalent is `keyd` or `xremap` with a different config
 format — not covered here. Vimium works on both regardless; only the number layer
 and the tmux letter grammar are lost.
+
+## Two ways into copy mode
+
+`Home [` and `Home v` both give you tmux's copy-mode; they differ in where the
+cursor comes from.
+
+`Home [` hands off to **Vimium's visual mode**. Motions are Vimium's own and
+snap to DOM structure, which is the better tool when you are selecting a
+paragraph or a code block. Its caret is small, does not blink much, and starts
+wherever Vimium guesses — easy to lose.
+
+`Home v` turns on **Chrome's native caret browsing** (`F7`) and layers tmux's
+copy-mode keys over it. The cursor is the browser's own blinking text caret, so
+you always know where you are, and because it is a browser feature rather than
+an extension it also works on `chrome://` pages and in the PDF viewer.
+
+| copy-mode-vi | sent |
+|---|---|
+| `h` `j` `k` `l` | `←` `↓` `↑` `→` |
+| `w` / `b` | `Opt`+`→` / `Opt`+`←` |
+| `0` / `$` | `Cmd`+`←` / `Cmd`+`→` |
+| `g` / `G` | `Cmd`+`↑` / `Cmd`+`↓` |
+| `C-u` / `C-d` | `PageUp` / `PageDown` |
+| `v` begin-selection | every motion above gains `Shift` |
+| `y` | `Cmd`+`C`, then exit |
+| `/` | `Cmd`+`F` |
+| `q`, `Esc` | exit |
+
+`v` works by setting a second variable; while it is on, the selecting variants of
+each motion are listed *before* the plain ones so Karabiner matches them first.
+That is exactly tmux's `begin-selection`: anchor where the cursor is, extend as
+you move.
+
+Two things to check on first use. Chrome asks for confirmation the first time
+`F7` arrives — once, with a "don't ask again" box. And `F7` can be swallowed as a
+media key depending on *Use F1–F12 as standard function keys* in System Settings.
+
+Exiting sends `F7` again to toggle caret browsing back off, so if you turn it off
+some other way while the layer is active, the next exit will turn it back on.
+
+## Seeing the state
+
+tmux shows a red `●` in its status bar when the prefix is live
+(`@minimal-tmux-indicator-str`, `tmux.conf:76`). The browser layer had no such
+cue, which made a two-key sequence feel like a guess. Now it drives two:
+
+- **sketchybar** — `macos/sketchybar/items/tmux_prefix.sh` adds a hidden item that
+  appears as a red `●` labelled `PREFIX` or `COPY`. Same glyph, same colour, same
+  top bar as tmux, so the two layers read identically.
+- **JankyBorders** — the focused window's border turns the same red and returns to
+  `0xffCC6766` on release. A dot in the corner is easy to miss; a frame around the
+  whole window is not.
+
+Both are driven by `scripts/karabiner-prefix-indicator.sh`, called from
+`shell_command` on every arm and disarm. It sits in the path of a keystroke, so
+it re-adds Homebrew to `PATH` (Karabiner's `shell_command` runs with a minimal
+one), swallows every error, and always exits 0 — a missing sketchybar or borders
+must never cost you a keypress. It resolves as `$HOME/dotfiles/...`, the same
+assumption `tmux.conf:100` already makes for `osc52-copy.sh`.

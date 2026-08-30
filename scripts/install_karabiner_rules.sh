@@ -28,6 +28,15 @@ fi
 
 [ -f "$SRC" ] || { err "rule file not found: $SRC"; exit 1; }
 
+# Every rule this repo manages carries this prefix; anything else in the profile
+# belongs to the user and is left alone.
+TAG="[dotfiles] "
+if [ "$(jq --arg t "$TAG" '[.rules[] | select((.description // "") | startswith($t))] | length' "$SRC")" \
+   != "$(jq '.rules | length' "$SRC")" ]; then
+    err "every rule in $SRC must have a description starting with '$TAG'"
+    exit 1
+fi
+
 if [ ! -f "$CONFIG" ]; then
     warn "$CONFIG does not exist yet."
     warn "Launch Karabiner-Elements once so it writes a default profile, then re-run:"
@@ -50,13 +59,16 @@ fi
 tmp="$(mktemp)"
 trap 'rm -f "$tmp"' EXIT
 
-jq --slurpfile new "$SRC" '
+# Managed rules are identified by the TAG in their description, not by the whole
+# string. Matching on the full description meant that renaming a rule left the
+# old copy behind — and since a stale copy sits earlier in the list, it would
+# keep binding Home and silently shadow the new one.
+jq --slurpfile new "$SRC" --arg tag "$TAG" '
   ($new[0].rules) as $newrules
-  | ($newrules | map(.description)) as $newdescs
   | (((.profiles | map(.selected == true) | index(true)) // 0)) as $i
   | .profiles[$i].complex_modifications.rules =
       (((.profiles[$i].complex_modifications.rules // [])
-        | map(select(.description as $d | ($newdescs | index($d)) == null)))
+        | map(select((.description // "") | startswith($tag) | not)))
        + $newrules)
 ' "$CONFIG" > "$tmp"
 
