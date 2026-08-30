@@ -10,15 +10,29 @@ and which therefore cannot be symlinked (see upstream issue #3248).
 
 ## Enabling
 
-    Karabiner-Elements → Complex Modifications → Add rule
+`install.sh` does it — `scripts/install_karabiner_rules.sh` runs after the stow
+and merges both rules into the selected profile. Re-run it on its own after
+editing the rules:
 
-Enable **"tmux prefix in the browser"** first, then **"caps_lock -> home"**.
-That order matters: both rules bind `caps_lock`, and Karabiner applies
-manipulators top-down. Rule 1 claims `caps_lock` only while a browser is
-frontmost; outside the browser its condition fails and rule 2 takes over.
+    bash scripts/install_karabiner_rules.sh
 
-Enabling copies the rule into `karabiner.json`, so **after editing this file you
-must remove and re-add the rule** — there is no live reload.
+It is idempotent (rules are matched by description and replaced), preserves any
+rules you added yourself, backs up `karabiner.json` first, and overwrites in
+place so Karabiner's file watcher reloads without a restart. If Karabiner has
+never been launched there is no `karabiner.json` yet; the script says so and
+exits without doing anything.
+
+This exists because Karabiner has no CLI for enabling a rule — `karabiner_cli`
+can only *lint* one. The GUI's "Add rule" copies the rule out of
+`assets/complex_modifications/` into `karabiner.json`, and the script does the
+same thing directly. The GUI route still works if you prefer it:
+Karabiner-Elements → Complex Modifications → Add rule, enabling
+**"tmux prefix in the browser"** before **"caps_lock -> home"**.
+
+That order matters either way: both rules bind `caps_lock`, and Karabiner
+applies manipulators top-down. Rule 1 claims `caps_lock` only while a browser is
+frontmost; outside the browser its condition fails and rule 2 takes over. The
+script preserves the order the rules appear in `tmux-browser.json`.
 
 ## The prefix
 
