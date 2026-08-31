@@ -32,3 +32,8 @@
 [credential "https://gist.github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
+
+; Local, untracked overrides: identity and anything machine-specific.
+; Missing file is not an error, so this is safe on a fresh machine.
+[include]
+    path = ~/.config/git/config.local

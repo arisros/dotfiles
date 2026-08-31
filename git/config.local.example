@@ -1,0 +1,13 @@
+# Copy to ~/.config/git/config.local. Never committed.
+# git/.gitconfig includes it, so identity stays machine-local and this repo is
+# identical everywhere.
+
+# [user]
+#     name = "<name>"
+#     email = "<email>"
+# [core]
+#     sshCommand = "ssh -i ~/.ssh/<key> -F /dev/null"
+
+# Per-directory identity, if you switch by workspace:
+# [includeIf "gitdir:~/<dir>/"]
+#     path = ~/.config/git/config.<name>
