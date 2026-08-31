@@ -1,20 +1,24 @@
-
 [opener]
 edit = [
-  { run = 'nvim "$@"', block = true },
+  { run = 'nvim "$@"', desc = "nvim", block = true },
 ]
 play = [
-  { run = 'mpv "$@"', orphan = true },
+  { run = 'open "$@"', desc = "Play in default app", orphan = true },
+  { run = 'ffplay -autoexit -hide_banner "$1"', desc = "Play with ffplay", block = true },
+  { run = 'ffprobe -hide_banner "$1"; read -r', desc = "Show media info", block = true },
 ]
 open = [
-  { run = 'open "$@"' },
+  { run = 'open "$@"', desc = "Open in default app", orphan = true },
+  { run = 'open -R "$1"', desc = "Reveal in Finder", orphan = true },
 ]
 
 [open]
-rules = [
-  { mime = "text/*", use = "edit" },
+prepend_rules = [
+  { mime = "text/*",  use = "edit" },
   { mime = "video/*", use = "play" },
+  { mime = "audio/*", use = "play" },
   { mime = "image/*", use = "open" },
-  { name = "*", use = "open" },
 ]
-
+append_rules = [
+  { url = "*", use = "open" },
+]
