@@ -3,51 +3,14 @@
 # This won't be added again if you remove it.
 Include ~/.orbstack/ssh/config
 
-# Real machines live here, untracked. Include must stay above any Host block.
+# Real machines - addresses, logins, ports, key names - live here, untracked.
+# Include must stay above any Host block, or the entries below would win.
 Include ~/.ssh/config.local
 
-# Personal GitHub Account
-Host github.com-arisros
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_rsa_git_arisjirat
-
-# Work GitHub Account (BFI)
-Host github.com-bfi-finance
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_github_bfi
-Host bi
-    Hostname 188.166.188.121
-    StrictHostKeyChecking yes
-    User root
-    IdentityFile ~/.ssh/id_bi
-
-Host westjava
-    HostName 103.175.219.11
-    StrictHostKeyChecking yes
-    User arisjirat
-    IdentityFile ~/.ssh/id_rsa_bpro
-
-# Host arkdefender
-#     HostName 103.76.120.113
-#     StrictHostKeyChecking yes
-#     User arkdefender
-#     IdentityFile ~/.ssh/id_ed25519_fti_ci
-
-Host marcom
-    HostName 188.166.188.121
-    # StrictHostKeyChecking yes
-    User root
-    IdentityFile ~/.ssh/id_rsa_git_arisjirat
-
-
-Host arkdefender
-    HostName 159.65.15.126
-    User root
-    IdentityFile ~/.ssh/id_rsa_bpro
-    SetEnv TERM=xterm-256color
-
-
-
-
+# Defaults that are the same on every machine.
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentitiesOnly yes
+    ServerAliveInterval 60
+    ServerAliveCountMax 3

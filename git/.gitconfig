@@ -1,24 +1,5 @@
-; [includeIf "gitdir:~/personal/"]
-;     path = ~/.gitconfig-personal
-;
-; [includeIf "gitdir:~/work/"]
-;     path = ~/.gitconfig-work
-; [includeIf "gitdir:~/sandbox/"]
-;     path = ~/.gitconfig-personal
-;
-; ; ; # TODO: swictcher
-; [user]
-; 	name = arisbfi
-; 	email = 123381019+arisbfi@users.noreply.github.com
-; [core]
-;     sshCommand = "ssh -i ~/.ssh/id_github_bfi -F /dev/null"
-;     
-[user]
-  name = "Aris Jirat"
-  email = "arisjiratkurniawan@gmail.com"
-[core]
-  sshCommand = "ssh -i ~/.ssh/id_rsa_git_arisjirat -F /dev/null"
-
+; Identity is machine-local: see the [include] at the bottom and
+; git/config.local.example for the shape.
 
 ; ssh instead of https
 [url "git@github.com:"]

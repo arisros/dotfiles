@@ -115,7 +115,6 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
     eval "$(ssh-agent -s)"
     ssh-add ~/.ssh/id_ed25519_github
     ssh-add ~/.ssh/id_rsa_git_arisjirat
-    ssh-add ~/.ssh/id_github_bfi
 fi
 
 # [usr/local/bin]
@@ -203,8 +202,6 @@ if [ -d "$DOTFILES_MODULES" ]; then
   unset _module
 fi
 
-# [ZSH] blue_dev
-[ -f "$HOME/.blue_dev" ] && source "$HOME/.blue_dev"
 
 # [ZSH] arduino
 [ -f "$HOME/.arduino-cli-completion" ] && source "$HOME/.arduino-cli-completion"
@@ -217,7 +214,6 @@ fi
 [ -f ~/.secrets ] && source ~/.secrets
 
 
-export GOPRIVATE=github.com/bfi-finance
 
 
 if $_IS_MACOS; then
@@ -242,9 +238,6 @@ export PATH="$HOME/.opencode/bin:$PATH"
 
 # Added by Antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
-
-# [ZSH] lora
-[ -f "$HOME/.lora" ] && source "$HOME/.lora"
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
 
