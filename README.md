@@ -1,3 +1,246 @@
 ```
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/arisros/dotfiles/main/install.sh)"
 ```
+
+Or after cloning the repo:
+
+```bash
+./install.sh
+```
+
+## Cross-machine compatibility (macOS + Debian)
+
+`install.sh` is now machine-aware and will:
+
+- detect platform (`darwin` or `linux`)
+- auto-install missing core dependencies (`git`, `stow`, `curl`) using Homebrew (macOS) or `apt-get` (Debian)
+- best-effort install common tools (`tmux`, `neovim` with v0.11+ target, `lazygit`, `ripgrep`, `jq`, `gnupg`, `pass`)
+- attempt to install `mise` and run `mise install` from `mise/config.toml`
+- install versioned git hooks and initialize `~/.secrets` template safely
+
+If a package manager is unavailable for the current OS, the script exits with a clear actionable error.
+
+Quick bootstrap:
+
+- macOS: `./install.sh`
+- Debian: `./install.sh` (uses `sudo apt-get` when needed)
+
+Optional toggles (to disable parts of the default profile):
+
+```bash
+DOTFILES_SKIP_MISE_INSTALL=1 ./install.sh
+DOTFILES_SKIP_OPTIONAL_TOOLS=1 DOTFILES_SKIP_MISE_INSTALL=1 ./install.sh
+DOTFILES_INSTALL_ZSH=0 ./install.sh
+DOTFILES_INSTALL_DEBIAN_BREW_EQUIV=0 ./install.sh
+DOTFILES_INSTALL_OPENCODE=0 DOTFILES_INSTALL_OH_MY_OPENCODE=0 ./install.sh
+DOTFILES_STOW_ADOPT=0 ./install.sh
+```
+
+`DOTFILES_STOW_ADOPT` is enabled by default. Set `DOTFILES_STOW_ADOPT=0` to use regular stow behavior.
+
+OpenCode / oh-my-opencode bootstrap:
+
+- OpenCode install is enabled by default (official installer: `https://opencode.ai/install`)
+- oh-my-opencode installer is enabled by default
+- by default, oh-my-opencode runs non-interactive with conservative "all subscriptions = no" flags; override with:
+
+```bash
+DOTFILES_OH_MY_OPENCODE_FLAGS='--claude=yes --openai=yes --gemini=no --copilot=no --opencode-zen=no --zai-coding-plan=no' \
+./install.sh
+```
+
+Use the official oh-my-opencode repository for docs/releases: `https://github.com/code-yeongyu/oh-my-opencode`
+
+Shell strategy:
+
+- default behavior: attempt zsh package install, but keep shell unchanged (no automatic `chsh`)
+- keep existing shell package setup by disabling zsh install:
+
+```bash
+DOTFILES_INSTALL_ZSH=0 ./install.sh
+```
+
+## New machine checklist (macOS + Debian)
+
+Run this on every new machine:
+
+```bash
+git clone <your-dotfiles-repo>
+cd dotfiles
+./install.sh
+./__scripts__/restore_credentials.sh --force
+```
+
+Quick verification:
+
+```bash
+zsh -i -c 'echo shell-ok'
+tmux new -d -s tmux-check && tmux kill-session -t tmux-check
+```
+
+## Local modules
+
+Everything in this repo is meant to be identical on every machine. Anything that
+is not - an identity, a host list, tooling that only makes sense in one context -
+goes into a local module instead of being committed here.
+
+```
+~/.config/dotfiles/modules/*.zsh   sourced by zsh if present
+~/.config/git/config.local         included by git/.gitconfig
+~/.ssh/config.local                included by ssh/config, above every Host block
+~/.config/tmux/local.conf          sourced by tmux (source-file -q)
+~/.config/nvim/lua/local/init.lua  pcall(require, "local")
+Brewfile.local                     installed by install.sh when it exists
+```
+
+Every hook is optional and silent when the file is missing, so a fresh clone
+works with none of them present. `install.sh` creates the modules directory and
+nothing else - what goes in it is yours to manage, kept out of this repo by
+`.gitignore`.
+
+To attach a set of modules, put them in that directory (a clone of a private
+repo, symlinked, works well). To detach, delete the directory: nothing in this
+repo refers to it by name, so nothing breaks.
+
+`ssh/config.local.example` and `git/config.local.example` document the expected
+shape without carrying any real values.
+
+## C development setup
+
+This dotfiles setup now includes C/C++ developer tooling with `mise` and Neovim integration.
+
+Install tools:
+
+```bash
+mise install
+```
+
+Toolchain and build tools:
+
+- `clang` (system package via Homebrew/apt)
+- `cmake`
+- `ninja`
+- `ccache`
+
+Neovim support:
+
+- LSP: `clangd`
+- Formatter: `clang-format` via Conform
+- Linter: `cppcheck` via nvim-lint
+- Debugger: `codelldb` via nvim-dap
+
+Quick local check:
+
+```bash
+cat > /tmp/hello.c <<'EOF'
+#include <stdio.h>
+int main(void) { puts("hello"); return 0; }
+EOF
+
+clang -Wall -Wextra -std=c17 /tmp/hello.c -o /tmp/hello && /tmp/hello
+clang-format -i /tmp/hello.c
+cppcheck --enable=warning,style --std=c11 /tmp/hello.c
+```
+
+Platform notes:
+
+- macOS: if Homebrew bootstrap fails, run `xcode-select --install` once, then rerun `./install.sh`.
+- Debian: installer uses `sudo apt-get`; if `sudo` is not available, run installer as root.
+
+Tmux style note:
+
+- installer now bootstraps tmux compatibility by creating `~/.tmux.conf` -> `~/.config/tmux/tmux.conf` when missing and ensuring TPM/plugins are installed.
+
+## Debian package bridge from Homebrew
+
+Use this when you want Debian to install CLI equivalents of your Homebrew apps and skip GUI/macOS-only formulas by default.
+
+You can run this directly, or set `DOTFILES_INSTALL_DEBIAN_BREW_EQUIV=1` in `./install.sh`.
+
+1) Export your Homebrew leaves on macOS:
+
+```bash
+./__scripts__/export_brew_leaves.sh
+```
+
+2) On Debian, run dry-run first:
+
+```bash
+./__scripts__/install_debian_brew_equivalents.sh --from-file ./__scripts__/brew-leaves.txt --dry-run
+```
+
+3) Install available apt equivalents:
+
+```bash
+./__scripts__/install_debian_brew_equivalents.sh --from-file ./__scripts__/brew-leaves.txt
+```
+
+Notes:
+
+- default behavior skips GUI/macOS-only formulas (`borders`, `sketchybar`, `mpv`)
+- include GUI formulas explicitly with `--include-gui`
+- script prints fallback hints for formulas without apt equivalents
+
+## Mermaid chart rendering
+
+Use the helper script to render Mermaid diagrams into `svg`, `png`, or `pdf`.
+
+```bash
+./__scripts__/render_mermaid.sh ./diagram.mmd svg
+./__scripts__/render_mermaid.sh ./diagram.mmd png ./out/diagram.png
+```
+
+If `mmdc` is missing, install it with:
+
+```bash
+mise use -g npm:@mermaid-js/mermaid-cli@latest
+```
+
+## Secret scan hardening
+
+Run the local high-confidence secret scan before commit/push:
+
+```bash
+./__scripts__/scan_secrets.sh --staged
+./__scripts__/scan_secrets.sh --tracked
+```
+
+Enable the versioned pre-push hook in this repo:
+
+```bash
+./__scripts__/install_git_hooks.sh
+```
+
+The hook uses `gitleaks` when installed, and falls back to the local regex scanner otherwise.
+
+## Credentials restore strategy (easy)
+
+Priority strategy for multi-machine setup:
+
+1. Keep real secrets out of git (`~/.secrets` is local only).
+2. Keep secret source-of-truth in `pass` (password store) entries.
+3. Restore to shell env with:
+
+```bash
+./__scripts__/restore_credentials.sh --force
+```
+
+Alternative restore methods:
+
+```bash
+# restore from environment variables currently in shell
+OPENAI_API_KEY="..." OPENCODE_API_KEY="..." ./__scripts__/restore_credentials.sh --force
+
+# restore from secure transferred file
+./__scripts__/restore_credentials.sh --from-file ~/secure/.secrets --force
+```
+
+This script writes `~/.secrets` from available `pass` entries using these mappings:
+
+- `openai/api-key` -> `OPENAI_API_KEY`
+- `opencode/api-key` -> `OPENCODE_API_KEY`
+- `anthropic/api-key` -> `ANTHROPIC_API_KEY`
+- `google/api-key` -> `GOOGLE_API_KEY`
+- `github/token` -> `GITHUB_TOKEN`
+
+If `pass` is not installed/unlocked, it falls back to environment variables, then to template placeholders in `~/.secrets`.

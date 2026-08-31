@@ -11,3 +11,301 @@ add_to_path() {
   esac
 }
 
+g() {
+  lynx "https://www.google.com/search?q=$(printf '%s' "$*" | sed 's/ /+/g')"
+}
+
+_imgsearch_auto_install_enabled() {
+  [ "${IMGSEARCH_AUTO_INSTALL:-1}" = "1" ]
+}
+
+_imgsearch_python_module_exists() {
+  python3 - "$1" <<'PY' >/dev/null 2>&1
+import importlib.util
+import sys
+
+name = sys.argv[1]
+sys.exit(0 if importlib.util.find_spec(name) else 1)
+PY
+}
+
+_imgsearch_ensure_python_pkg() {
+  if ! command -v python3 >/dev/null 2>&1; then
+    printf 'imgsearch: python3 is required\n' >&2
+    return 1
+  fi
+
+  if _imgsearch_python_module_exists "ddgs"; then
+    return 0
+  fi
+
+  if ! _imgsearch_auto_install_enabled; then
+    printf 'imgsearch: missing python package ddgs\n' >&2
+    printf 'Install manually: python3 -m pip install --user ddgs\n' >&2
+    return 1
+  fi
+
+  printf 'imgsearch: installing ddgs...\n' >&2
+  if ! python3 -m pip --version >/dev/null 2>&1; then
+    python3 -m ensurepip --upgrade >/dev/null 2>&1 || true
+  fi
+
+  if ! python3 -m pip install --user --upgrade ddgs >/dev/null 2>&1; then
+    if ! python3 -m pip install --user --break-system-packages --upgrade ddgs >/dev/null 2>&1; then
+      printf 'imgsearch: auto-install failed\n' >&2
+      printf 'Try: python3 -m pip install --user --break-system-packages ddgs\n' >&2
+      return 1
+    fi
+  fi
+
+  if ! _imgsearch_python_module_exists "ddgs"; then
+    printf 'imgsearch: package installed but import failed\n' >&2
+    return 1
+  fi
+
+  return 0
+}
+
+_imgsearch_ensure_chafa() {
+  if command -v chafa >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if ! _imgsearch_auto_install_enabled; then
+    printf 'imgpreview: chafa is required (brew install chafa)\n' >&2
+    return 1
+  fi
+
+  if ! command -v brew >/dev/null 2>&1; then
+    printf 'imgpreview: brew not found. Install chafa manually.\n' >&2
+    return 1
+  fi
+
+  printf 'imgpreview: installing chafa via Homebrew...\n' >&2
+  if ! brew install chafa >/dev/null 2>&1; then
+    printf 'imgpreview: failed to install chafa\n' >&2
+    return 1
+  fi
+
+  command -v chafa >/dev/null 2>&1
+}
+
+imgsetup() {
+  _imgsearch_ensure_python_pkg || return 1
+  _imgsearch_ensure_chafa || return 1
+  printf 'imgsetup: ready\n'
+}
+
+imgsearch() {
+  if [ "$#" -eq 0 ]; then
+    printf 'Usage: imgsearch <query> [count]\n'
+    return 1
+  fi
+
+  if ! _imgsearch_ensure_python_pkg; then
+    return 1
+  fi
+
+  local cache_file="${TMPDIR:-/tmp}/imgsearch_last_results.txt"
+
+  python3 - "$cache_file" "$@" <<'PY'
+import json
+import sys
+
+cache_file = sys.argv[1]
+parts = sys.argv[2:]
+count = 12
+
+if parts and parts[-1].isdigit():
+    count = int(parts[-1])
+    parts = parts[:-1]
+
+query = " ".join(parts).strip()
+
+if not query:
+    sys.stderr.write("imgsearch: query is required\n")
+    sys.exit(1)
+
+try:
+    from ddgs import DDGS
+except Exception:
+    sys.stderr.write(
+        "imgsearch: python dependency unavailable after setup\n"
+    )
+    sys.exit(1)
+
+rows = []
+try:
+    with DDGS() as ddgs:
+        for idx, item in enumerate(ddgs.images(query, max_results=count), start=1):
+            title = (item.get("title") or "(no title)").strip()
+            image = (item.get("image") or "").strip()
+            source = (item.get("url") or item.get("source") or "").strip()
+            rows.append({"idx": idx, "title": title, "image": image, "source": source})
+except Exception as exc:
+    sys.stderr.write(f"imgsearch: search failed: {exc}\n")
+    sys.exit(1)
+
+if not rows:
+    print("No image results.")
+    sys.exit(0)
+
+with open(cache_file, "w", encoding="utf-8") as f:
+    for row in rows:
+        f.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+for row in rows:
+    print(f"{row['idx']:>2}. {row['title']}")
+    print(f"    {row['image']}")
+    if row["source"]:
+        print(f"    source: {row['source']}")
+PY
+
+  local rc=$?
+  if [ "$rc" -ne 0 ]; then
+    return "$rc"
+  fi
+
+  printf '\nSaved results: %s\n' "$cache_file"
+  printf 'Use: imgopen <number> to open in browser\n'
+  printf 'Use: imgpreview <number> to preview in terminal\n'
+}
+
+imgopen() {
+  if [ "$#" -ne 1 ]; then
+    printf 'Usage: imgopen <number>\n'
+    return 1
+  fi
+
+  case "$1" in
+    ''|*[!0-9]*)
+      printf 'imgopen: number must be an integer\n' >&2
+      return 1
+      ;;
+  esac
+
+  local cache_file="${TMPDIR:-/tmp}/imgsearch_last_results.txt"
+  if [ ! -f "$cache_file" ]; then
+    printf 'imgopen: no cached results. Run imgsearch first.\n' >&2
+    return 1
+  fi
+
+  local url
+  url=$(python3 - "$cache_file" "$1" <<'PY'
+import json
+import sys
+
+cache_file = sys.argv[1]
+target = int(sys.argv[2])
+
+with open(cache_file, encoding="utf-8") as f:
+    for line in f:
+        row = json.loads(line)
+        if row.get("idx") == target:
+            print(row.get("image", ""))
+            break
+PY
+)
+
+  if [ -z "$url" ]; then
+    printf 'imgopen: result %s not found\n' "$1" >&2
+    return 1
+  fi
+
+  open "$url"
+}
+
+imgpreview() {
+  if [ "$#" -ne 1 ]; then
+    printf 'Usage: imgpreview <number>\n'
+    return 1
+  fi
+
+  case "$1" in
+    ''|*[!0-9]*)
+      printf 'imgpreview: number must be an integer\n' >&2
+      return 1
+      ;;
+  esac
+
+  _imgsearch_ensure_chafa || return 1
+
+  local cache_file="${TMPDIR:-/tmp}/imgsearch_last_results.txt"
+  if [ ! -f "$cache_file" ]; then
+    printf 'imgpreview: no cached results. Run imgsearch first.\n' >&2
+    return 1
+  fi
+
+  local url
+  url=$(python3 - "$cache_file" "$1" <<'PY'
+import json
+import sys
+
+cache_file = sys.argv[1]
+target = int(sys.argv[2])
+
+with open(cache_file, encoding="utf-8") as f:
+    for line in f:
+        row = json.loads(line)
+        if row.get("idx") == target:
+            print(row.get("image", ""))
+            break
+PY
+)
+
+  if [ -z "$url" ]; then
+    printf 'imgpreview: result %s not found\n' "$1" >&2
+    return 1
+  fi
+
+  local tmp_img
+  tmp_img=$(mktemp "${TMPDIR:-/tmp}/imgpreview.XXXXXX")
+  if ! curl -fsSL "$url" -o "$tmp_img"; then
+    rm -f "$tmp_img"
+    printf 'imgpreview: failed to download image\n' >&2
+    return 1
+  fi
+
+  if command -v chafa >/dev/null 2>&1; then
+    chafa "$tmp_img"
+  elif command -v viu >/dev/null 2>&1; then
+    viu "$tmp_img"
+  elif command -v imgcat >/dev/null 2>&1; then
+    imgcat "$tmp_img"
+  else
+    rm -f "$tmp_img"
+    printf 'imgpreview: no preview tool available. Use imgopen %s\n' "$1" >&2
+    return 1
+  fi
+
+  rm -f "$tmp_img"
+}
+
+function "??"() {
+  if [ "$#" -eq 0 ]; then
+    echo 'Usage: ?? <prompt>'
+    return 1
+  fi
+
+  opencode run "$*"
+}
+
+ask() {
+  if [ "$#" -eq 0 ]; then
+    opencode
+    return $?
+  fi
+
+  opencode --prompt "$*"
+}
+
+asknews() {
+  local query
+  if [ "$#" -eq 0 ]; then
+    query="today's important AI, software engineering, cybersecurity, and big-tech updates"
+  else
+    query="$*"
+  fi
+
+  opencode run --agent librarian "WEB-ONLY NEWS MODE. Find newest, verifiable information about: ${query}. IMPORTANT: Do not inspect local files/folders/codebase, and do not use repo search tools. Use internet sources only (google_search, websearch_web_search_exa, web pages, official announcements, and if available social/X and map/location sources). Prioritize updates from last 24-72 hours. For Indonesia/Jakarta queries, prioritize local Indonesian sources first. Output: 1 short overview + 5-10 bullets (what happened, why it matters, source URL, timestamp/date) + 'Signals to watch next' + 'Confidence (High/Medium/Low)' with one-line reason."
+}

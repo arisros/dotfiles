@@ -1,0 +1,59 @@
+return {
+	-- "nvim-tree/nvim-tree.lua",
+	-- dependencies = {
+	-- 	"nvim-tree/nvim-web-devicons", -- icons (optional tapi sangat disarankan)
+	-- },
+	-- cmd = { "NvimTreeToggle", "NvimTreeFocus" }, -- lazy load via command
+	-- keys = {
+	-- 	{ "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Toggle NvimTree" },
+	-- },
+	-- config = function()
+	-- 	require("nvim-tree").setup({
+	-- 		disable_netrw = true,
+	-- 		hijack_netrw = true,
+	--
+	-- 		view = {
+	-- 			width = 35,
+	-- 			side = "left",
+	-- 			preserve_window_proportions = true,
+	-- 		},
+	--
+	-- 		renderer = {
+	-- 			highlight_git = true,
+	-- 			highlight_opened_files = "name",
+	-- 			indent_markers = {
+	-- 				enable = true,
+	-- 			},
+	-- 			icons = {
+	-- 				show = {
+	-- 					file = true,
+	-- 					folder = true,
+	-- 					folder_arrow = true,
+	-- 					git = true,
+	-- 				},
+	-- 			},
+	-- 		},
+	--
+	-- 		filters = {
+	-- 			dotfiles = false,
+	-- 			custom = { ".git", "node_modules", ".cache" },
+	-- 		},
+	--
+	-- 		git = {
+	-- 			enable = true,
+	-- 			ignore = false,
+	-- 		},
+	--
+	-- 		actions = {
+	-- 			open_file = {
+	-- 				quit_on_open = false,
+	-- 			},
+	-- 		},
+	--
+	-- 		update_focused_file = {
+	-- 			enable = true,
+	-- 			update_root = true,
+	-- 		},
+	-- 	})
+	-- end,
+}

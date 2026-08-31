@@ -10,7 +10,6 @@
         <string>/usr/bin/ssh-add</string>
         <string>--apple-use-keychain</string>
         <string>~/.ssh/id_rsa_git_arisjirat</string>
-        <string>~/.ssh/id_github_bfi</string>
     </array>
 
     <key>RunAtLoad</key>

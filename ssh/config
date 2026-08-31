@@ -3,15 +3,14 @@
 # This won't be added again if you remove it.
 Include ~/.orbstack/ssh/config
 
-# Personal GitHub Account
-Host github.com-arisros
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_rsa_git_arisjirat
+# Real machines - addresses, logins, ports, key names - live here, untracked.
+# Include must stay above any Host block, or the entries below would win.
+Include ~/.ssh/config.local
 
-# Work GitHub Account (BFI)
-Host github.com-bfi-finance
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_github_bfi
-
+# Defaults that are the same on every machine.
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentitiesOnly yes
+    ServerAliveInterval 60
+    ServerAliveCountMax 3

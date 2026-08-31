@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Scan what is about to be committed, not just what is about to be pushed - by
+# push time a secret is already in the history and removing it means a rewrite.
+
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+"$repo_root/__scripts__/scan_secrets.sh" --staged

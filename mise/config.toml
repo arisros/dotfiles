@@ -1,19 +1,31 @@
 [tools]
 node = "22"
-# need go
-go = "1.24.0"
+go = "1.26.5"
+# golangci-lint = "latest"
 bun = "1.2.7"
+
+cmake = "latest"
+ninja = "latest"
+ccache = "latest"
 
 # java = "zulu-21"
 maven = "latest"
-tomcat = "11.0.0"
 
 # php = "latest"
 
 python = "3.13.0"
 
 arduino = "1.2.0"
-golangci-lint = "1.64.8"
+# golangci-lint = "1.64.8"
+golangci-lint = "latest"
+yarn = "3.6.4"
+
 rust = "latest"
-lf = "latest"
-ruby = "latest"
+# lf = "latest"
+dotnet = "8"
+"npm:@biomejs/biome" = "latest"
+"npm:@mermaid-js/mermaid-cli" = "latest"
+
+[settings]
+idiomatic_version_file_enable_tools = ["node"]
+fetch_remote_versions_timeout = "30"

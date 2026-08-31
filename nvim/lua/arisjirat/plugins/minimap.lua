@@ -1,28 +1,121 @@
 return {
-	"gorbit99/codewindow.nvim",
-	event = { "BufReadPre", "BufNewFile" },
+	"echasnovski/mini.map",
+	event = "VimEnter",
 	config = function()
-		local codewindow = require("codewindow")
-		codewindow.setup({
-			active_in_terminals = false, -- Should the minimap activate for terminal buffers
-			auto_enable = true, -- Automatically open the minimap when entering a (non-excluded) buffer (accepts a table of filetypes)
-			exclude_filetypes = { "help" }, -- Choose certain filetypes to not show minimap on
-			max_minimap_height = nil, -- The maximum height the minimap can take (including borders)
-			max_lines = nil, -- If auto_enable is true, don't open the minimap for buffers which have more than this many lines.
-			minimap_width = 5, -- The width of the text part of the minimap
-			use_lsp = true, -- Use the builtin LSP to show errors and warnings
-			use_treesitter = true, -- Use nvim-treesitter to highlight the code
-			use_git = true, -- Show small dots to indicate git additions and deletions
-			width_multiplier = 10, -- How many characters one dot represents
-			z_index = 1, -- The z-index the floating window will be on
-			show_cursor = true, -- Show the cursor position in the minimap
-			screen_bounds = "lines", -- How the visible area is displayed, "lines": lines above and below, "background": background color
-			-- screen_bounds = "background", -- How the visible area is displayed, "lines": lines above and below, "background": background color
+		local map = require("mini.map")
+		local map_width = 10
 
-			window_border = "single", -- The border style of the floating window (accepts all usual options)
-			-- relative = 'win' -- What will be the minimap be placed relative to, "win": the current window, "editor": the entire editor
-			-- events = { 'TextChanged', 'InsertLeave', 'DiagnosticChanged', 'FileWritePost' } -- Events that update the code window
+		map.setup({
+			integrations = {
+				map.gen_integration.builtin_search(),
+				map.gen_integration.diagnostic(),
+				map.gen_integration.gitsigns(),
+			},
+			symbols = {
+				encode = map.gen_encode_symbols.dot("4x2"),
+				scroll_line = "▶",
+				scroll_view = "┃",
+			},
+			window = {
+				focusable = false,
+				side = "right",
+				width = map_width,
+				winblend = 15,
+				show_integration_count = false,
+			},
 		})
-		codewindow.apply_default_keybinds()
+
+		-- Right-side padding split so buffer text wraps before the minimap
+		local pad_buf = nil
+		local pad_wins = {}
+
+		local function get_pad_win()
+			local tp = vim.api.nvim_get_current_tabpage()
+			local w = pad_wins[tp]
+			if w and vim.api.nvim_win_is_valid(w) then
+				return w
+			end
+			pad_wins[tp] = nil
+			return nil
+		end
+
+		local function create_padding()
+			if get_pad_win() then
+				return
+			end
+			local cur_win = vim.api.nvim_get_current_win()
+			if not pad_buf or not vim.api.nvim_buf_is_valid(pad_buf) then
+				pad_buf = vim.api.nvim_create_buf(false, true)
+				vim.bo[pad_buf].buftype = "nofile"
+				vim.bo[pad_buf].bufhidden = "hide"
+				vim.bo[pad_buf].swapfile = false
+				vim.bo[pad_buf].buflisted = false
+				vim.api.nvim_buf_set_name(pad_buf, "[minimap-pad]")
+			end
+			vim.cmd("botright vertical " .. map_width .. "split")
+			local pw = vim.api.nvim_get_current_win()
+			vim.api.nvim_win_set_buf(pw, pad_buf)
+			vim.wo[pw].winfixwidth = true
+			vim.wo[pw].number = false
+			vim.wo[pw].relativenumber = false
+			vim.wo[pw].signcolumn = "no"
+			vim.wo[pw].foldcolumn = "0"
+			vim.wo[pw].cursorline = false
+			vim.wo[pw].colorcolumn = ""
+			vim.wo[pw].statusline = " "
+			vim.wo[pw].winhighlight = "Normal:NormalFloat"
+			pad_wins[vim.api.nvim_get_current_tabpage()] = pw
+			vim.api.nvim_set_current_win(cur_win)
+		end
+
+		local function remove_padding()
+			local pw = get_pad_win()
+			if pw then
+				vim.api.nvim_win_close(pw, true)
+				pad_wins[vim.api.nvim_get_current_tabpage()] = nil
+			end
+		end
+
+		-- Prevent focus on the padding window
+		vim.api.nvim_create_autocmd("WinEnter", {
+			callback = function()
+				local cur_win = vim.api.nvim_get_current_win()
+				local pw = get_pad_win()
+				if cur_win == pw then
+					vim.cmd("wincmd h")
+				end
+			end,
+		})
+
+		-- Wrap open/close/toggle to manage the padding split
+		local orig_open = map.open
+		local orig_close = map.close
+
+		map.open = function(...)
+			create_padding()
+			orig_open(...)
+		end
+
+		map.close = function(...)
+			orig_close(...)
+			remove_padding()
+		end
+
+		map.toggle = function(...)
+			if MiniMap.current.win_data[vim.api.nvim_get_current_tabpage()] then
+				map.close()
+			else
+				map.open()
+			end
+		end
+
+		map.open()
+
+		vim.keymap.set("n", "<leader>mo", map.open, { desc = "Minimap open" })
+		vim.keymap.set("n", "<leader>mc", map.close, { desc = "Minimap close" })
+		vim.keymap.set("n", "<leader>mt", map.toggle, { desc = "Minimap toggle" })
+		vim.keymap.set("n", "<leader>mr", map.refresh, { desc = "Minimap refresh" })
+		vim.keymap.set("n", "<leader>mf", map.toggle_focus, { desc = "Minimap toggle focus" })
+		vim.keymap.set("n", "<leader>ms", map.toggle_side, { desc = "Minimap toggle side" })
 	end,
 }

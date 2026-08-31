@@ -1,16 +1,72 @@
-export CONFIG_DIR="$HOME/.config/sketchybar"
-export ITEM_DIR="$CONFIG_DIR/items"
-eval "$(/opt/homebrew/bin/brew shellenv)"
-eval "$(~/.local/bin/mise activate zsh)"
+# --- OS detection ---
+_IS_MACOS=false
+_IS_LINUX=false
+if [[ "$OSTYPE" == darwin* ]]; then
+  _IS_MACOS=true
+elif [[ "$OSTYPE" == linux* ]]; then
+  _IS_LINUX=true
+fi
+
+# --- macOS-only: sketchybar, CGO/Homebrew flags ---
+if $_IS_MACOS; then
+  export CONFIG_DIR="$HOME/.config/sketchybar"
+  export ITEM_DIR="$CONFIG_DIR/items"
+  export CGO_CFLAGS="-I/opt/homebrew/include"
+  export CGO_LDFLAGS="-L/opt/homebrew/lib"
+  export PATH="/opt/homebrew/opt/libxslt/bin:$PATH"
+  export LDFLAGS="-L/opt/homebrew/opt/libxslt/lib"
+  export CPPFLAGS="-I/opt/homebrew/opt/libxslt/include"
+  export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
+  export PATH="/opt/homebrew/bin:$PATH"
+  export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
+fi
+if command -v pkg-config >/dev/null 2>&1; then
+  cgo_cppflags="$(pkg-config --cflags lept tesseract 2>/dev/null || true)"
+  cgo_ldflags="$(pkg-config --libs lept tesseract 2>/dev/null || true)"
+  [ -n "$cgo_cppflags" ] && export CGO_CPPFLAGS="$cgo_cppflags"
+  [ -n "$cgo_ldflags" ] && export CGO_LDFLAGS="$cgo_ldflags"
+fi
+export GOTOOLCHAIN=local
+# .NET tools
+export PATH="$HOME/.dotnet/tools:$PATH"
+
+export QMK_HOME="$HOME/qmk_firmware" # Optional, set the location for `qmk_firmware`
+
+# source ~/.zshrc
+
+if command -v brew >/dev/null 2>&1; then
+  eval "$(brew shellenv)"
+fi
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
+# eval "$(mise activate zsh)"
+export PATH="$(go env GOPATH)/bin:$PATH"
+export NODE_OPTIONS="--max-old-space-size=8096"
 
 # git-prompt
-source ~/git-prompt.zsh
+[ -f "$HOME/git-prompt.zsh" ] && source "$HOME/git-prompt.zsh"
 # autosuggestions
-source "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
 # syntax-highlighting
-source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 set -o vi
+
+# In vi mode Backspace is vi-backward-delete-char, which is documented as
+# deleting "without changing lines": once the cursor reaches column 0 it stops,
+# so a pasted multi-line command can never be joined back into one line. The
+# emacs widgets delete across the line break, which is what we want here.
+bindkey -M viins '^?' backward-delete-char   # Backspace
+bindkey -M viins '^H' backward-delete-char   # Ctrl-H, Backspace on some terminals
 
 # Don't store redundant commands (like `ls` or `cd`)
 # History Size (Balanced for Performance)
@@ -24,6 +80,7 @@ setopt HIST_IGNORE_ALL_DUPS      # Remove older duplicates, keep latest
 setopt HIST_REDUCE_BLANKS        # Trim unnecessary spaces before saving
 setopt HIST_EXPIRE_DUPS_FIRST    # Remove oldest duplicate first when trimming
 setopt HIST_SAVE_NO_DUPS         # Don't save duplicate commands in history
+setopt NO_NOMATCH                # Keep unmatched globs literal (enables ?? command)
 
 # History Performance Tweaks
 setopt APPEND_HISTORY            # Append commands to history file, not overwrite
@@ -32,7 +89,11 @@ setopt HIST_FCNTL_LOCK            # Prevent corruption when multiple shells writ
 setopt HIST_VERIFY                # Show command before running on history expansion
 
 # history-substring-search
-source "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh" ]; then
+  source "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+elif [ -f /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]; then
+  source /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+fi
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
@@ -54,28 +115,50 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
     eval "$(ssh-agent -s)"
     ssh-add ~/.ssh/id_ed25519_github
     ssh-add ~/.ssh/id_rsa_git_arisjirat
-    ssh-add ~/.ssh/id_github_bfi
 fi
 
 # [usr/local/bin]
 export PATH="/usr/local/bin:$PATH"
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
 export CGO_CFLAGS_ALLOW="-I"
+
+export FVM_HOME="$HOME/fvm"
+export PATH="$FVM_HOME/default/bin:$PATH"
  
 # [flutter]
 export PATH="$HOME/fvm/default/bin:$PATH"
-export ANDROID_HOME="$HOME/Library/Android/sdk"
-export ANDROID_SDK_ROOT="$ANDROID_HOME"
-export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
-export PATH="$ANDROID_HOME/platform-tools:$PATH"
-export PATH="$ANDROID_HOME/emulator:$PATH"
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="/opt/homebrew/sbin:$PATH"
+if [ -d "$HOME/Library/Android/sdk" ]; then
+  export ANDROID_HOME="$HOME/Library/Android/sdk"
+elif [ -d "$HOME/Android/Sdk" ]; then
+  export ANDROID_HOME="$HOME/Android/Sdk"
+fi
+if [ -n "${ANDROID_HOME:-}" ]; then
+  export ANDROID_SDK_ROOT="$ANDROID_HOME"
+  export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+  export PATH="$ANDROID_HOME/platform-tools:$PATH"
+  export PATH="$ANDROID_HOME/emulator:$PATH"
+fi
+if $_IS_MACOS; then
+  export PATH="/opt/homebrew/bin:$PATH"
+  export PATH="/opt/homebrew/sbin:$PATH"
+fi
 export PATH="$HOME/.pub-cache/bin:$PATH"
 
 # [java]
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
-export PATH=$JAVA_HOME/bin:$PATH
+if [ -x /usr/libexec/java_home ]; then
+  # macOS java_home utility
+  java_home_21="$(/usr/libexec/java_home -v 21 2>/dev/null || true)"
+  if [ -n "$java_home_21" ]; then
+    export JAVA_HOME="$java_home_21"
+    export PATH="$JAVA_HOME/bin:$PATH"
+  fi
+elif [ -d /usr/lib/jvm/java-21-openjdk-amd64 ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
+  export PATH="$JAVA_HOME/bin:$PATH"
+elif [ -d /usr/lib/jvm/java-21-openjdk ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-21-openjdk"
+  export PATH="$JAVA_HOME/bin:$PATH"
+fi
 
 # [mise]
 export PATH="$HOME/.local/bin:$PATH"
@@ -84,33 +167,44 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.composer/vendor/bin:$PATH"
 #
 
-eval "$(~/.local/bin/mise activate zsh)"
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
 ## [dart][Completion]
 ## Completion scripts setup. Remove the following line to uninstall
-[[ -f /Users/arisjirat/.dart-cli-completion/zsh-config.zsh ]] && . /Users/arisjirat/.dart-cli-completion/zsh-config.zsh || true
+[[ -f "$HOME/.dart-cli-completion/zsh-config.zsh" ]] && . "$HOME/.dart-cli-completion/zsh-config.zsh" || true
 ## [/Completion]
 
 
 # [ZSH] config_restart_aliases
-source ~/.config_restart_aliases
+[ -f "$HOME/.config_restart_aliases" ] && source "$HOME/.config_restart_aliases"
 # [ZSH] fs_aliases
-source ~/.fs_aliases
+[ -f "$HOME/.fs_aliases" ] && source "$HOME/.fs_aliases"
 # [ZSH] functions
-source ~/.functions
+[ -f "$HOME/.functions" ] && source "$HOME/.functions"
 # [ZSH] git_aliases
-source ~/.git_aliases
+[ -f "$HOME/.git_aliases" ] && source "$HOME/.git_aliases"
 # [ZSH] docker_aliases
-source ~/.docker_aliases
-# [ZSH] blue_dev
-source ~/.blue_dev
+[ -f "$HOME/.docker_aliases" ] && source "$HOME/.docker_aliases"
+# [ZSH] runpod_aliases
+[ -f "$HOME/.runpod_aliases" ] && source "$HOME/.runpod_aliases"
+# --- Local modules -----------------------------------------------------------
+# Anything dropped into this directory is sourced if it is there, and nothing
+# in this repo depends on it. Machine-specific setup - identities, host lists,
+# per-employer tooling - lives there instead of being committed here, so this
+# repo stays identical on every machine and the modules can be detached by
+# deleting one directory.
+DOTFILES_MODULES="${DOTFILES_MODULES:-$HOME/.config/dotfiles/modules}"
+if [ -d "$DOTFILES_MODULES" ]; then
+  for _module in "$DOTFILES_MODULES"/*.zsh(N); do
+    source "$_module"
+  done
+  unset _module
+fi
+
 
 # [ZSH] arduino
-source ~/.arduino-cli-completion
-
-## [Completion]
-## Completion scripts setup. Remove the following line to uninstall
-[[ -f /Users/justtest/.dart-cli-completion/zsh-config.zsh ]] && . /Users/justtest/.dart-cli-completion/zsh-config.zsh || true
-## [/Completion]
+[ -f "$HOME/.arduino-cli-completion" ] && source "$HOME/.arduino-cli-completion"
 
 if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
   . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
@@ -120,10 +214,11 @@ fi
 [ -f ~/.secrets ] && source ~/.secrets
 
 
-export GOPRIVATE=github.com/bfi-finance
 
 
-export CATALINA_HOME="/opt/homebrew/opt/tomcat/libexec"
+if $_IS_MACOS; then
+  export CATALINA_HOME="/opt/homebrew/opt/tomcat/libexec"
+fi
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
@@ -132,16 +227,70 @@ export SDKMAN_DIR="$HOME/.sdkman"
 export JAVA_HOME="$HOME/.sdkman/candidates/java/current"
 export PATH="$JAVA_HOME/bin:$PATH"
 
-export PHPVM_DIR="/Users/justtest/.phpvm"
+export PHPVM_DIR="$HOME/.phpvm"
 export PATH="$PHPVM_DIR/bin:$PATH"
-[ -s "$PHPVM_DIR/phpvm.sh" ] && . "$PHPVM_DIR/phpvm.sh"
 
 
-#c[mysql]
-export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"
-
-export PHPVM_DIR="~/.phpvm"
-export PATH="$PHPVM_DIR/bin:$PATH"
-[ -s "$PHPVM_DIR/phpvm.sh" ] && . "$PHPVM_DIR/phpvm.sh"
 
 
+# opencode
+export PATH="$HOME/.opencode/bin:$PATH"
+
+# Added by Antigravity
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+
+# ArkButton flasher
+flash() { ~/keyboard-project/firmware/flash "$@"; }
+kbstatus() { ~/keyboard-project/firmware/kbstatus; }
+
+# --- Sleep control ------------------------------------------------------------
+# Keep the machine awake while something long runs, and put it back afterwards.
+# `disablesleep` also suppresses macOS emergency sleep, so both entry points
+# refuse to run below 20% battery without an explicit confirmation.
+lock() {
+  local batt_pct reply
+  batt_pct=$(pmset -g batt | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
+
+  if [[ -n "$batt_pct" && "$batt_pct" -lt 20 ]]; then
+    echo "⚠️  Battery at ${batt_pct}%. disablesleep also holds off emergency sleep — risk of a hard shutdown if it runs out."
+    read "reply?Continue anyway? (yes/N): "
+    if [[ "${reply:l}" != "yes" ]]; then
+      echo "❌ Cancelled."
+      return 1
+    fi
+  fi
+
+  echo "🔒 Lid-close sleep disabled — safe to close the lid while something runs."
+  sudo pmset -a disablesleep 1
+  osascript -e 'tell application "System Events" to keystroke "q" using {control down, command down}'
+}
+
+hard() {
+  local batt_pct reply
+  batt_pct=$(pmset -g batt | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
+
+  if [[ -n "$batt_pct" && "$batt_pct" -lt 20 ]]; then
+    echo "⚠️  Battery at ${batt_pct}%. Hard mode also disables display/disk sleep and standby — risk of a hard shutdown without a charger."
+    read "reply?Continue anyway? (yes/N): "
+    if [[ "${reply:l}" != "yes" ]]; then
+      echo "❌ Cancelled."
+      return 1
+    fi
+  fi
+
+  echo "🔥 Hard mode: display, disk and system sleep off on every power source. The screen is NOT locked."
+  sudo pmset -a disablesleep 1 sleep 0 displaysleep 0 disksleep 0 standby 0
+}
+
+normal() {
+  echo "💤 Restoring normal sleep behaviour..."
+  sudo pmset -a disablesleep 0 sleep 1 displaysleep 2 disksleep 10 standby 1
+  pkill -x caffeinate 2>/dev/null
+  if ioreg -r -k AppleClamshellState -d 4 | grep -q '"AppleClamshellState" = Yes'; then
+    echo "Lid is closed but the system is still awake — sleeping now."
+    pmset sleepnow
+  fi
+  echo "✅ Normal sleep behaviour restored."
+}

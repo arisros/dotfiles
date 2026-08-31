@@ -1,0 +1,17 @@
+# Default search URL (Google)
+DEFAULT_SEARCH_URL:https://www.google.com/search?q=%s
+
+# Use GET (required by Google)
+USE_GET_FOR_SEARCH:TRUE
+
+# Disable images (speed + clean)
+DISPLAY_IMAGES:FALSE
+
+# Better keyboard nav
+VI_KEYS_ALWAYS_ON:TRUE
+
+# Don't prompt cookies
+ACCEPT_ALL_COOKIES:TRUE
+
+# Don't ask before submitting forms
+CONFIRM_SUBMIT:FALSE

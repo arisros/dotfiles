@@ -1,8 +1,6 @@
+vim.o.showtabline = 1
 require("arisjirat.core")
 require("arisjirat.lazy")
--- vim.api.nvim_create_autocmd("FileType", {
--- 	pattern = "java",
--- 	callback = function()
--- 		require("arisjirat.plugins.lsp.jdtls")
--- 	end,
--- })
+
+-- Optional local module: nvim/lua/local/init.lua, untracked. Absent is fine.
+pcall(require, "local")
