@@ -52,6 +52,8 @@ brew "pass-otp"
 brew "ripgrep"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Agent multiplexer that lives in your terminal
+brew "herdr"
 # Terminal multiplexer
 brew "tmux"
 # Implementation of Java Servlet and JavaServer Pages
