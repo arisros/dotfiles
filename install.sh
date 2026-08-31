@@ -293,6 +293,10 @@ else
   ensure_optional_command bear bear bear || true
 fi
 
+# Local modules: created empty so the loaders have somewhere to look. What goes
+# in it is deliberately outside this repo - see README, "Local modules".
+mkdir -p "$HOME/.config/dotfiles/modules"
+
 config_dirs=(
   "$HOME/.config/aerospace"
   "$HOME/.config/alacritty"

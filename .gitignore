@@ -62,3 +62,16 @@ ssh/*.key
 *.kdbx
 
 zsh/.secrets
+
+# --- Local modules and machine-local overrides -------------------------------
+# The public repo carries the mechanism; the contents stay on the machine.
+*.local
+!*.local.example
+ssh/config.local
+zsh/.zshrcbackup
+
+# Machine state dumps: never useful to anyone else, and they carry account,
+# device and network details.
+.preferences_backup/
+.macos-defaults-backup.plist
+*.settings.plist
