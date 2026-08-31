@@ -3,6 +3,9 @@
 # This won't be added again if you remove it.
 Include ~/.orbstack/ssh/config
 
+# Real machines live here, untracked. Include must stay above any Host block.
+Include ~/.ssh/config.local
+
 # Personal GitHub Account
 Host github.com-arisros
     HostName github.com
