@@ -67,7 +67,23 @@ declare -a checks=(
   "Google API key|AIza[0-9A-Za-z_-]{35}"
   "Slack token|xox[baprs]-[A-Za-z0-9-]{10,}"
   "OpenAI-style secret key|sk-[A-Za-z0-9-]{20,}"
+  # Infrastructure, not a credential, but just as unwelcome in a public repo:
+  # a host block that names a real address instead of deferring to config.local.
+  "SSH HostName with a literal address|HostName[[:space:]]+([0-9]{1,3}\\.){3}[0-9]{1,3}"
 )
+
+# Patterns that must not be named in this repo itself - identifiers tied to a
+# person, employer or project. They live in a local module file, one
+# "label|regex" per line, so the list can be enforced without publishing it.
+patterns_file="${DOTFILES_MODULES:-$HOME/.config/dotfiles/modules}/forbidden-patterns.txt"
+if [ -r "$patterns_file" ]; then
+  while IFS= read -r line; do
+    case "$line" in
+      ''|'#'*) continue ;;
+      *'|'*) checks+=("$line") ;;
+    esac
+  done < "$patterns_file"
+fi
 
 found=0
 
