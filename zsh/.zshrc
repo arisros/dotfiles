@@ -185,6 +185,8 @@ fi
 [ -f "$HOME/.git_aliases" ] && source "$HOME/.git_aliases"
 # [ZSH] docker_aliases
 [ -f "$HOME/.docker_aliases" ] && source "$HOME/.docker_aliases"
+# [ZSH] runpod_aliases
+[ -f "$HOME/.runpod_aliases" ] && source "$HOME/.runpod_aliases"
 # [ZSH] blue_dev
 [ -f "$HOME/.blue_dev" ] && source "$HOME/.blue_dev"
 
