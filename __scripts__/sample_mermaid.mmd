@@ -1,0 +1,6 @@
+flowchart TD
+  A[Start] --> B{Need chart?}
+  B -->|Yes| C[Write Mermaid]
+  B -->|No| D[Skip]
+  C --> E[Render SVG/PNG]
+  E --> F[Done]

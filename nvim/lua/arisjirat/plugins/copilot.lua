@@ -1,10 +1,26 @@
 return {
-	"github/copilot.vim",
-	lazy = false, -- Load Copilot immediately
+	"zbirenbaum/copilot.lua",
+	cmd = "Copilot",
+	event = "InsertEnter",
 	config = function()
-		-- vim.g.copilot_no_tab_map = true -- Disable default Tab mapping
-
-		-- Set the keymap for Copilot
-		vim.api.nvim_set_keymap("i", "<C-Space>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+		require("copilot").setup({
+			-- Disable built-in suggestion/panel — handled by blink-copilot source
+			suggestion = { enabled = false },
+			panel = { enabled = false },
+			filetypes = {
+				["*"] = true,
+				markdown = false,
+				text = false,
+				gitcommit = false,
+			},
+			copilot_node_command = "node",
+			server_opts_overrides = {
+				settings = {
+					advanced = {
+						inlineSuggestCount = 3,
+					},
+				},
+			},
+		})
 	end,
 }

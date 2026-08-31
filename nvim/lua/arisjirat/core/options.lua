@@ -14,7 +14,10 @@ vim.o.timeoutlen = 1000
 vim.opt.clipboard = "unnamed"
 
 -- line wrapping
-opt.wrap = false -- disable line wrapping
+opt.wrap = true
+opt.linebreak = true
+opt.breakindent = true
+opt.showbreak = "↪ "
 
 -- search settings
 opt.ignorecase = true -- ignore case when searching
