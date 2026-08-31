@@ -1,0 +1,165 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "enabled_providers": [
+    "openai",
+    "anthropic",
+    "google"
+  ],
+  "default_agent": "build",
+  "model": "openai/gpt-5.1-codex",
+  "small_model": "google/gemini-2.5-flash",
+  "plugin": [
+    "opencode-antigravity-auth@latest",
+    "oh-my-openagent@latest"
+  ],
+  "mcp": {
+    "jira": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@open-mcp/jira"
+      ],
+      "enabled": true
+    }
+  },
+  "provider": {
+    "openai": {
+      "options": {
+        "apiKey": "{env:OPENAI_API_KEY}"
+      }
+    },
+    "anthropic": {
+      "options": {
+        "apiKey": "{env:ANTHROPIC_API_KEY}"
+      }
+    },
+    "google": {
+      "options": {
+        "apiKey": "{env:GOOGLE_API_KEY}"
+      },
+      "models": {
+        "antigravity-claude-opus-4-5-thinking": {
+          "name": "Claude Opus 4.5 Thinking (Antigravity)",
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "variants": {
+            "low": {
+              "thinkingConfig": {
+                "thinkingBudget": 8192
+              }
+            },
+            "max": {
+              "thinkingConfig": {
+                "thinkingBudget": 32768
+              }
+            }
+          }
+        },
+        "antigravity-claude-sonnet-4-5-thinking": {
+          "name": "Claude Sonnet 4.5 Thinking (Antigravity)",
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "variants": {
+            "low": {
+              "thinkingConfig": {
+                "thinkingBudget": 8192
+              }
+            },
+            "max": {
+              "thinkingConfig": {
+                "thinkingBudget": 32768
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "agent": {
+    "build": {
+      "model": "openai/gpt-5.1-codex",
+      "variant": "high",
+      "permission": {
+        "task": {
+          "*": "deny",
+          "explore": "allow",
+          "fast-fix": "allow",
+          "code-reviewer": "allow"
+        }
+      }
+    },
+    "plan": {
+      "model": "anthropic/claude-opus-4-5",
+      "temperature": 0.1,
+      "permission": {
+        "task": {
+          "*": "deny",
+          "explore": "allow",
+          "code-reviewer": "allow"
+        }
+      }
+    },
+    "general": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "temperature": 0.2,
+      "permission": {
+        "task": "deny"
+      }
+    },
+    "explore": {
+      "model": "google/gemini-2.5-flash",
+      "temperature": 0,
+      "permission": {
+        "task": "deny"
+      }
+    },
+    "code-reviewer": {
+      "description": "Review code quality, risks, and regressions.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-5",
+      "temperature": 0.1,
+      "permission": {
+        "task": "deny"
+      },
+      "tools": {
+        "write": false,
+        "edit": false,
+        "patch": false
+      }
+    },
+    "fast-fix": {
+      "description": "Handle small fixes quickly at low cost.",
+      "mode": "subagent",
+      "model": "google/gemini-2.5-flash",
+      "temperature": 0.1,
+      "permission": {
+        "task": "deny"
+      }
+    }
+  }
+}

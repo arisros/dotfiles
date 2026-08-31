@@ -1,0 +1,5 @@
+# RunPod terminal dashboard
+# API key is read from ~/.runpod/key (not in dotfiles) or $RUNPOD_API_KEY
+
+alias rpdash='~/dotfiles/__scripts__/rpdash.py'
+alias rpstat='~/dotfiles/__scripts__/rpdash.py --once'

@@ -12,6 +12,35 @@ return {
 		require("dapui").setup()
 		require("dap-go").setup({})
 
+		local codelldb_path = vim.fn.expand("~/.local/share/nvim/mason/packages/codelldb/extension/adapter/codelldb")
+		if vim.fn.executable(codelldb_path) == 1 then
+			dap.adapters.codelldb = {
+				type = "server",
+				port = "${port}",
+				executable = {
+					command = codelldb_path,
+					args = { "--port", "${port}" },
+				},
+			}
+
+			local codelldb_config = {
+				{
+					name = "Launch file",
+					type = "codelldb",
+					request = "launch",
+					program = function()
+						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+					end,
+					cwd = "${workspaceFolder}",
+					stopOnEntry = false,
+					args = {},
+				},
+			}
+
+			dap.configurations.c = codelldb_config
+			dap.configurations.cpp = codelldb_config
+		end
+
 		require("telescope").load_extension("dap")
 		-- dap.listeners.before.event_terminated["dapui_keep_open"] = function()
 		-- 	dapui.open()

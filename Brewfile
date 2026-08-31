@@ -1,5 +1,6 @@
 tap "felixkratz/formulae"
 tap "homebrew/services"
+tap "infisical/get-cli"
 tap "kardolus/chatgpt-cli"
 tap "leoafarias/fvm"
 tap "nats-io/nats-tools"
@@ -36,6 +37,18 @@ brew "imagemagick"
 brew "jdtls"
 # Simple terminal UI for git commands
 brew "lazygit"
+# --- E2E / container workflow -------------------------------------------
+# Run GitHub Actions locally
+brew "act"
+# Fetch secrets into a command's environment instead of a dotfile
+brew "infisical/get-cli/infisical"
+# Workflow engine CLI - describe/list against a local stack
+brew "temporal"
+# TUI for a multi-container compose stack
+brew "lazydocker"
+# TUI JSON viewer, for test reports and captured payloads
+brew "jless"
+# ------------------------------------------------------------------------
 # Graphical front-end for GCC's coverage testing tool (gcov)
 brew "lcov"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -52,6 +65,8 @@ brew "pass-otp"
 brew "ripgrep"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Agent multiplexer that lives in your terminal
+brew "herdr"
 # Terminal multiplexer
 brew "tmux"
 # Implementation of Java Servlet and JavaServer Pages

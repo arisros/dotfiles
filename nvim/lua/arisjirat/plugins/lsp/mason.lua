@@ -22,10 +22,12 @@ return {
 
 		mason_lspconfig.setup({
 			ensure_installed = {
+				"astro",
 				"lua_ls",
 				"ts_ls",
 				"buf_ls",
 				"bashls",
+				"clangd",
 				"gopls",
 				"templ",
 				"jdtls",
@@ -38,6 +40,7 @@ return {
 
 		mason_tool_installer.setup({
 			ensure_installed = {
+				"astro-language-server",
 				"omnisharp",
 				"stylua",
 				"eslint",
@@ -47,8 +50,9 @@ return {
 				"prettierd",
 				"arduino_language_server",
 				"jdtls",
-				-- We need to install clangd for arduino_language_server to work
 				"clangd",
+				"clang-format",
+				"codelldb",
 				"intelephense",
 				"pyright",
 			},
