@@ -80,10 +80,16 @@ def load_key():
 
 def fetch(key):
     req = urllib.request.Request(
-        f"{API}?api_key={key}",
+        API,
         data=json.dumps({"query": QUERY}).encode(),
+        # The key goes in a header, never the query string: a URL ends up in
+        # server access logs, in any proxy along the way, and in shell history.
         # the default urllib UA gets 403'd by RunPod's edge
-        headers={"content-type": "application/json", "user-agent": "rpdash/1.0"},
+        headers={
+            "content-type": "application/json",
+            "user-agent": "rpdash/1.0",
+            "authorization": f"Bearer {key}",
+        },
     )
     with urllib.request.urlopen(req, timeout=20) as resp:
         body = json.load(resp)
