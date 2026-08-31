@@ -30,7 +30,7 @@ export GOTOOLCHAIN=local
 # .NET tools
 export PATH="$HOME/.dotnet/tools:$PATH"
 
-export QMK_HOME='~/qmk_firmware' # Optional, set the location for `qmk_firmware`
+export QMK_HOME="$HOME/qmk_firmware" # Optional, set the location for `qmk_firmware`
 
 # source ~/.zshrc
 
