@@ -59,6 +59,13 @@ fi
 
 set -o vi
 
+# In vi mode Backspace is vi-backward-delete-char, which is documented as
+# deleting "without changing lines": once the cursor reaches column 0 it stops,
+# so a pasted multi-line command can never be joined back into one line. The
+# emacs widgets delete across the line break, which is what we want here.
+bindkey -M viins '^?' backward-delete-char   # Backspace
+bindkey -M viins '^H' backward-delete-char   # Ctrl-H, Backspace on some terminals
+
 # Don't store redundant commands (like `ls` or `cd`)
 # History Size (Balanced for Performance)
 HISTSIZE=50000            # Commands stored in memory
