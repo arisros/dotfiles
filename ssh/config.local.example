@@ -1,0 +1,18 @@
+# Copy to ~/.ssh/config.local and fill in. Never committed - this file only
+# documents the shape, so a fresh machine knows what is expected to be there.
+#
+# ssh/config includes it before any Host block, so anything defined here wins
+# and nothing about your actual machines has to live in a tracked file.
+
+# Host <alias>
+#     HostName <address>
+#     User <login>
+#     Port 22
+#     IdentityFile ~/.ssh/<key>
+#     StrictHostKeyChecking yes
+
+# An extra identity for a second account:
+# Host github.com-<alias>
+#     HostName github.com
+#     User git
+#     IdentityFile ~/.ssh/<key>

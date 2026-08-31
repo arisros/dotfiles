@@ -78,6 +78,33 @@ zsh -i -c 'echo shell-ok'
 tmux new -d -s tmux-check && tmux kill-session -t tmux-check
 ```
 
+## Local modules
+
+Everything in this repo is meant to be identical on every machine. Anything that
+is not - an identity, a host list, tooling that only makes sense in one context -
+goes into a local module instead of being committed here.
+
+```
+~/.config/dotfiles/modules/*.zsh   sourced by zsh if present
+~/.config/git/config.local         included by git/.gitconfig
+~/.ssh/config.local                included by ssh/config, above every Host block
+~/.config/tmux/local.conf          sourced by tmux (source-file -q)
+~/.config/nvim/lua/local/init.lua  pcall(require, "local")
+Brewfile.local                     installed by install.sh when it exists
+```
+
+Every hook is optional and silent when the file is missing, so a fresh clone
+works with none of them present. `install.sh` creates the modules directory and
+nothing else - what goes in it is yours to manage, kept out of this repo by
+`.gitignore`.
+
+To attach a set of modules, put them in that directory (a clone of a private
+repo, symlinked, works well). To detach, delete the directory: nothing in this
+repo refers to it by name, so nothing breaks.
+
+`ssh/config.local.example` and `git/config.local.example` document the expected
+shape without carrying any real values.
+
 ## C development setup
 
 This dotfiles setup now includes C/C++ developer tooling with `mise` and Neovim integration.

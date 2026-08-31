@@ -189,6 +189,20 @@ fi
 [ -f "$HOME/.docker_aliases" ] && source "$HOME/.docker_aliases"
 # [ZSH] runpod_aliases
 [ -f "$HOME/.runpod_aliases" ] && source "$HOME/.runpod_aliases"
+# --- Local modules -----------------------------------------------------------
+# Anything dropped into this directory is sourced if it is there, and nothing
+# in this repo depends on it. Machine-specific setup - identities, host lists,
+# per-employer tooling - lives there instead of being committed here, so this
+# repo stays identical on every machine and the modules can be detached by
+# deleting one directory.
+DOTFILES_MODULES="${DOTFILES_MODULES:-$HOME/.config/dotfiles/modules}"
+if [ -d "$DOTFILES_MODULES" ]; then
+  for _module in "$DOTFILES_MODULES"/*.zsh(N); do
+    source "$_module"
+  done
+  unset _module
+fi
+
 # [ZSH] blue_dev
 [ -f "$HOME/.blue_dev" ] && source "$HOME/.blue_dev"
 
