@@ -1,5 +1,8 @@
 {
   "$schema": "https://opencode.ai/tui.json",
   "theme": "arisjirat",
-  "keybinds": {}
+  "keybinds": {},
+  "plugin": [
+    "oh-my-openagent@latest"
+  ]
 }
