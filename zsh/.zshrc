@@ -244,3 +244,53 @@ if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)
 # ArkButton flasher
 flash() { ~/keyboard-project/firmware/flash "$@"; }
 kbstatus() { ~/keyboard-project/firmware/kbstatus; }
+
+# --- Sleep control ------------------------------------------------------------
+# Keep the machine awake while something long runs, and put it back afterwards.
+# `disablesleep` also suppresses macOS emergency sleep, so both entry points
+# refuse to run below 20% battery without an explicit confirmation.
+lock() {
+  local batt_pct reply
+  batt_pct=$(pmset -g batt | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
+
+  if [[ -n "$batt_pct" && "$batt_pct" -lt 20 ]]; then
+    echo "⚠️  Battery at ${batt_pct}%. disablesleep also holds off emergency sleep — risk of a hard shutdown if it runs out."
+    read "reply?Continue anyway? (yes/N): "
+    if [[ "${reply:l}" != "yes" ]]; then
+      echo "❌ Cancelled."
+      return 1
+    fi
+  fi
+
+  echo "🔒 Lid-close sleep disabled — safe to close the lid while something runs."
+  sudo pmset -a disablesleep 1
+  osascript -e 'tell application "System Events" to keystroke "q" using {control down, command down}'
+}
+
+hard() {
+  local batt_pct reply
+  batt_pct=$(pmset -g batt | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
+
+  if [[ -n "$batt_pct" && "$batt_pct" -lt 20 ]]; then
+    echo "⚠️  Battery at ${batt_pct}%. Hard mode also disables display/disk sleep and standby — risk of a hard shutdown without a charger."
+    read "reply?Continue anyway? (yes/N): "
+    if [[ "${reply:l}" != "yes" ]]; then
+      echo "❌ Cancelled."
+      return 1
+    fi
+  fi
+
+  echo "🔥 Hard mode: display, disk and system sleep off on every power source. The screen is NOT locked."
+  sudo pmset -a disablesleep 1 sleep 0 displaysleep 0 disksleep 0 standby 0
+}
+
+normal() {
+  echo "💤 Restoring normal sleep behaviour..."
+  sudo pmset -a disablesleep 0 sleep 1 displaysleep 2 disksleep 10 standby 1
+  pkill -x caffeinate 2>/dev/null
+  if ioreg -r -k AppleClamshellState -d 4 | grep -q '"AppleClamshellState" = Yes'; then
+    echo "Lid is closed but the system is still awake — sleeping now."
+    pmset sleepnow
+  fi
+  echo "✅ Normal sleep behaviour restored."
+}
