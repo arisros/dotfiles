@@ -43,6 +43,8 @@ return {
 				"go",
 				"templ",
 				"http",
+				"rust",
+				"toml",
 			},
 			auto_install = true,
 			highlight = { enable = true },
