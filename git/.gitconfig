@@ -7,12 +7,15 @@
 
 [url "https://:@github.com"]
 	insteadOf = https://github.com
+
+; Resolve gh from PATH: it is /opt/homebrew/bin/gh on macOS but /usr/bin/gh
+; on Debian, and an absolute path makes the helper a no-op on the other OS.
 [credential "https://github.com"]
 	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !gh auth git-credential
 
 ; Local, untracked overrides: identity and anything machine-specific.
 ; Missing file is not an error, so this is safe on a fresh machine.
