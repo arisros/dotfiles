@@ -70,6 +70,7 @@ return {
 				bash = { "beautysh" },
 				sh = { "beautysh" },
 				go = { "gofmt" },
+				rust = { "rustfmt" },
 				http = { "kulala" },
 				templ = { "templ_fmt" },
 			},
