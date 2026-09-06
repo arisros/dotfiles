@@ -89,3 +89,14 @@ queuepeek/config.toml
 
 # Flutter version manager artifacts, including absolute symlinks into $HOME.
 .fvm/
+
+# Claude Code: the config is tracked, the state and the machine-specific
+# instructions are not.
+claude/CLAUDE.md
+claude/projects/
+claude/transcripts/
+claude/sessions/
+claude/history.jsonl
+claude/*.log
+claude/*.bak
+claude/.credentials.json
