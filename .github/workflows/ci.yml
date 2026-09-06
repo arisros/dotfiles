@@ -83,6 +83,9 @@ jobs:
           # apt zsh plugins present (regression test for the plugin gap)
           test -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
           test -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+          # The repo's own mise config won the stow: nothing wrote a plain
+          # file there first (regression test for the neovim bootstrap)
+          test -L "$HOME/.config/mise/config.toml"
           # history-substring-search is vendored (apt does not ship it)
           test -d "$HOME/.zsh-plugins/zsh-history-substring-search"
           # Neovim came from the release tarball, not apt's too-old 0.7
