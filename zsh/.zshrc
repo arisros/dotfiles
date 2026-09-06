@@ -41,7 +41,11 @@ if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"
 fi
 # eval "$(mise activate zsh)"
-export PATH="$(go env GOPATH)/bin:$PATH"
+# Guard on go being present: without it `go env` prints "command not found"
+# on every shell start and the result is an empty, meaningless PATH entry.
+if command -v go >/dev/null 2>&1; then
+  export PATH="$(go env GOPATH)/bin:$PATH"
+fi
 export NODE_OPTIONS="--max-old-space-size=8096"
 
 # git-prompt
