@@ -392,6 +392,10 @@ render_launch_agents() {
 }
 
 render_launch_agents
+# The tracked CLAUDE.md imports this file. Create it empty so the import never
+# dangles on a machine that has no private context to load.
+touch "$HOME/.claude/context.local.md"
+
 
 ensure_tmux_bootstrap
 
