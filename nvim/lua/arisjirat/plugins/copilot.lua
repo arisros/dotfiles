@@ -4,8 +4,20 @@ return {
 	event = "InsertEnter",
 	config = function()
 		require("copilot").setup({
-			-- Disable built-in suggestion/panel — handled by blink-copilot source
-			suggestion = { enabled = false },
+			suggestion = {
+				enabled = true,
+				auto_trigger = true,
+				hide_during_completion = true,
+				debounce = 75,
+				keymap = {
+					accept = "<C-l>",
+					accept_word = "<C-;>",
+					accept_line = false,
+					next = "<M-]>",
+					prev = "<M-[>",
+					dismiss = "<C-]>",
+				},
+			},
 			panel = { enabled = false },
 			filetypes = {
 				["*"] = true,
