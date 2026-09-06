@@ -1,0 +1,4 @@
+# Karabiner hanya membaca file .json dari assets/complex_modifications/,
+# jadi dokumentasi dan file stow tidak perlu ikut ter-symlink ke sana.
+README\.md
+\.stow-local-ignore
