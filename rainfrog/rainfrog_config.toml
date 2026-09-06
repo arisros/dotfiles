@@ -29,30 +29,24 @@ autopairs_enabled = true
 # <alias> = { driver = "postgres", host = "localhost", port = 5432, database = "<db>", username = "<user>" }
 
 # ── Keybindings ──────────────────────────────────────────────────────────────
-# Hasil audit tmux + aerospace + macOS + rainfrog. Yang TIDAK boleh dipakai:
+# Taken, and therefore unusable here:
 #
-#   Alt-*                 aerospace: workspace 1..5, q/w/e/r/t/a/s/d/f/g,
-#                         h/j/k/l, minus/equal, slash/comma
-#   Ctrl-b                prefix kedua tmux (tmux.conf:5; prefix utama = Home)
-#   Ctrl-h/j/k/l, Ctrl-\  tmux root table + vim-tmux-navigator (bind -n)
-#   Ctrl-panah            macOS: Mission Control (^Up), App Windows (^Down),
-#                         pindah Space (^Left/^Right) — keempatnya masih aktif
-#   F1..F12               butuh fn: "F keys as standard" tidak diaktifkan
-#   Ctrl-e / Ctrl-y       rainfrog: scroll editor
-#   Ctrl-f / Ctrl-b       rainfrog: page down/up di panel data
-#   Ctrl-r                rainfrog: redo di editor
-#   Ctrl-p / Ctrl-n       rainfrog: navigasi autocomplete
-#   Ctrl-space            rainfrog: trigger autocomplete
-#   huruf & angka polos   editor rainfrog modal ala vim (w/e/b/0/$/i/v/y/x/p/u)
+#   Alt-*                 aerospace workspaces and window movement
+#   Ctrl-b                tmux secondary prefix (primary is Home)
+#   Ctrl-h/j/k/l, Ctrl-\  tmux root table and vim-tmux-navigator
+#   Ctrl-arrows           macOS Mission Control, App Windows, Space switching
+#   F1..F12               need fn, "F keys as standard" is off
+#   Ctrl-e/y, f/b, r      rainfrog scroll, page, redo
+#   Ctrl-p/n, Ctrl-space  rainfrog autocomplete
+#   bare letters/digits   rainfrog's vim-style modal editor
 #
-# Sisanya yang benar-benar bebas: Shift+panah, plus Ctrl-g (yang memang default
-# rainfrog sendiri), Ctrl-s, dan Ctrl-o.
+# What is left free: Shift+arrows, Ctrl-g, Ctrl-s, Ctrl-o.
 #
-#   Shift-Left  menu        Shift-Up  editor       Shift-Down  hasil query
-#   Shift-Right favorites   Ctrl-g    history      Tab/Shift-Tab muter panel
-#   Ctrl-s      jalankan query         Ctrl-o      buka query di nvim
-#   Shift-PageUp/PageDown              besar/kecilkan panel
-#   q (di panel selain editor)         batalkan query yang jalan
+#   Shift-Left  menu        Shift-Up  editor        Shift-Down  query result
+#   Shift-Right favorites   Ctrl-g    history       Tab         cycle panels
+#   Ctrl-s      run query   Ctrl-o    open in nvim
+#   Shift-PageUp/PageDown   resize panel
+#   q outside the editor    cancel a running query
 
 [keybindings.Menu]
 "<Shift-left>" = "FocusMenu"
