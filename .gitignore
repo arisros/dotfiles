@@ -92,7 +92,7 @@ queuepeek/config.toml
 
 # Claude Code: the config is tracked, the state and the machine-specific
 # instructions are not.
-claude/CLAUDE.md
+claude/*.local.md
 claude/projects/
 claude/transcripts/
 claude/sessions/
