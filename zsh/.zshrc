@@ -302,3 +302,10 @@ normal() {
   fi
   echo "✅ Normal sleep behaviour restored."
 }
+
+# The Claude Code PreToolUse hook routes bash commands through rtk unless this
+# file exists, so the toggle is the file, not a setting.
+rtk-status() { [ -f ~/.rtk_disabled ] && echo "rtk: off" || echo "rtk: on"; }
+rtk-on()     { rm -f ~/.rtk_disabled; rtk-status }
+rtk-off()    { : > ~/.rtk_disabled; rtk-status }
+rtk-toggle() { [ -f ~/.rtk_disabled ] && rtk-on || rtk-off; }
