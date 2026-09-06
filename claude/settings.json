@@ -1,0 +1,205 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh issue list:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr status:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(git blame:*)",
+      "Bash(git branch:*)",
+      "Bash(git diff:*)",
+      "Bash(git fetch:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git stash list:*)",
+      "Bash(git status:*)",
+      "Bash(rtk gh pr diff:*)",
+      "Bash(rtk gh pr list:*)",
+      "Bash(rtk gh pr view:*)",
+      "Bash(rtk git blame:*)",
+      "Bash(rtk git branch:*)",
+      "Bash(rtk git diff:*)",
+      "Bash(rtk git fetch:*)",
+      "Bash(rtk git log:*)",
+      "Bash(rtk git show:*)",
+      "Bash(rtk git status:*)",
+      "mcp__atlassian__atlassianUserInfo",
+      "mcp__atlassian__fetch",
+      "mcp__atlassian__getAccessibleAtlassianResources",
+      "mcp__atlassian__getConfluenceCommentChildren",
+      "mcp__atlassian__getConfluencePage",
+      "mcp__atlassian__getConfluencePageDescendants",
+      "mcp__atlassian__getConfluencePageFooterComments",
+      "mcp__atlassian__getConfluencePageInlineComments",
+      "mcp__atlassian__getConfluenceSpaces",
+      "mcp__atlassian__getIssueLinkTypes",
+      "mcp__atlassian__getJiraIssue",
+      "mcp__atlassian__getJiraIssueRemoteIssueLinks",
+      "mcp__atlassian__getJiraIssueTypeMetaWithFields",
+      "mcp__atlassian__getJiraProjectIssueTypesMetadata",
+      "mcp__atlassian__getPagesInConfluenceSpace",
+      "mcp__atlassian__getTransitionsForJiraIssue",
+      "mcp__atlassian__getVisibleJiraProjects",
+      "mcp__atlassian__lookupJiraAccountId",
+      "mcp__atlassian__search",
+      "mcp__atlassian__searchConfluenceUsingCql",
+      "mcp__atlassian__searchJiraIssuesUsingJql"
+    ],
+    "deny": [
+      "Bash(gh repo archive:*)",
+      "Bash(gh repo delete:*)",
+      "Bash(gh repo rename:*)",
+      "Bash(git push --delete:*)",
+      "Bash(git push --force-with-lease:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push --mirror:*)",
+      "Bash(git push -f:*)",
+      "Bash(git remote add:*)",
+      "Bash(git remote remove:*)",
+      "Bash(git remote rename:*)",
+      "Bash(git remote rm:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(rtk git push --force:*)",
+      "Bash(rtk git push -f:*)",
+      "Bash(rtk git remote set-url:*)"
+    ],
+    "ask": [
+      "Bash(gh issue close:*)",
+      "Bash(gh issue comment:*)",
+      "Bash(gh issue create:*)",
+      "Bash(gh issue edit:*)",
+      "Bash(gh pr close:*)",
+      "Bash(gh pr comment:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr edit:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh pr ready:*)",
+      "Bash(gh pr reopen:*)",
+      "Bash(gh pr review:*)",
+      "Bash(gh release:*)",
+      "Bash(gh run cancel:*)",
+      "Bash(gh run rerun:*)",
+      "Bash(gh secret:*)",
+      "Bash(gh variable:*)",
+      "Bash(gh workflow run:*)",
+      "Bash(git push:*)",
+      "Bash(git remote:*)",
+      "Bash(rtk git push:*)",
+      "mcp__atlassian__addCommentToJiraIssue",
+      "mcp__atlassian__addWorklogToJiraIssue",
+      "mcp__atlassian__createConfluenceFooterComment",
+      "mcp__atlassian__createConfluenceInlineComment",
+      "mcp__atlassian__createConfluencePage",
+      "mcp__atlassian__createIssueLink",
+      "mcp__atlassian__createJiraIssue",
+      "mcp__atlassian__editJiraIssue",
+      "mcp__atlassian__transitionJiraIssue",
+      "mcp__atlassian__updateConfluencePage",
+      "mcp__claude_ai_Gmail__forward",
+      "mcp__claude_ai_Gmail__reply",
+      "mcp__claude_ai_Gmail__send_message",
+      "mcp__claude_ai_Google_Drive__share_file",
+      "mcp__claude_ai_Google_Drive__trash_file"
+    ]
+  },
+  "model": "opus[1m]",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f ~/.rtk_disabled && cat || rtk hook claude"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $HOME/.claude/hooks/guard-remote.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude finished responding\" with title \"Claude Code\" sound name \"Funk\"'; afplay /System/Library/Sounds/Funk.aiff; [ -n \"$TMUX\" ] && { tmux set-window-option -t \"$TMUX_PANE\" window-status-style 'bg=green,fg=black'; tmux refresh-client -S; } 2>/dev/null",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude needs your input\" with title \"Claude Code\" sound name \"Ping\"'; afplay /System/Library/Sounds/Ping.aiff",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$TMUX\" ] && { tmux set-window-option -t \"$TMUX_PANE\" window-status-style 'bg=yellow,fg=black'; tmux refresh-client -S; } 2>/dev/null; true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$TMUX\" ] && tmux set-window-option -t \"$TMUX_PANE\" -u window-status-style 2>/dev/null; true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '$HOME/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true
+  },
+  "effortLevel": "high",
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  }
+}

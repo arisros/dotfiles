@@ -1,0 +1,2170 @@
+{
+  "title": "tmux-style navigation (arisjirat dotfiles)",
+  "rules": [
+    {
+      "description": "[dotfiles] tmux prefix in the browser: Home (ArkButton thumb) / fn+Left / caps_lock, then 1-9 n p c x w s f : [ v o l r z u ? & \u2014 plus a copy-mode layer over caret browsing. Chrome & Brave only.",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "home",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 1
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" prefix"
+            }
+          ],
+          "to_delayed_action": {
+            "to_if_invoked": [
+              {
+                "set_variable": {
+                  "name": "tmux_browser_prefix",
+                  "value": 0
+                }
+              },
+              {
+                "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+              }
+            ]
+          },
+          "parameters": {
+            "basic.to_delayed_action_delay_milliseconds": 2000
+          },
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "left_arrow",
+            "modifiers": {
+              "mandatory": [
+                "fn"
+              ]
+            }
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 1
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" prefix"
+            }
+          ],
+          "to_delayed_action": {
+            "to_if_invoked": [
+              {
+                "set_variable": {
+                  "name": "tmux_browser_prefix",
+                  "value": 0
+                }
+              },
+              {
+                "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+              }
+            ]
+          },
+          "parameters": {
+            "basic.to_delayed_action_delay_milliseconds": 2000
+          },
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "caps_lock",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 1
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" prefix"
+            }
+          ],
+          "to_delayed_action": {
+            "to_if_invoked": [
+              {
+                "set_variable": {
+                  "name": "tmux_browser_prefix",
+                  "value": 0
+                }
+              },
+              {
+                "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+              }
+            ]
+          },
+          "parameters": {
+            "basic.to_delayed_action_delay_milliseconds": 2000
+          },
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "1"
+          },
+          "to": [
+            {
+              "key_code": "1",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "2"
+          },
+          "to": [
+            {
+              "key_code": "2",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "3"
+          },
+          "to": [
+            {
+              "key_code": "3",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "4"
+          },
+          "to": [
+            {
+              "key_code": "4",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "5"
+          },
+          "to": [
+            {
+              "key_code": "5",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "6"
+          },
+          "to": [
+            {
+              "key_code": "6",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "7"
+          },
+          "to": [
+            {
+              "key_code": "7",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "8"
+          },
+          "to": [
+            {
+              "key_code": "8",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "9"
+          },
+          "to": [
+            {
+              "key_code": "9",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "n"
+          },
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_command",
+                "left_option"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "spacebar"
+          },
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_command",
+                "left_option"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "p"
+          },
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": [
+                "left_command",
+                "left_option"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "c"
+          },
+          "to": [
+            {
+              "key_code": "t",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "x"
+          },
+          "to": [
+            {
+              "key_code": "w",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "7",
+            "modifiers": {
+              "mandatory": [
+                "shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "w",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "w"
+          },
+          "to": [
+            {
+              "key_code": "a",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "s"
+          },
+          "to": [
+            {
+              "key_code": "a",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "f"
+          },
+          "to": [
+            {
+              "key_code": "a",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "semicolon",
+            "modifiers": {
+              "mandatory": [
+                "shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "l",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "r"
+          },
+          "to": [
+            {
+              "key_code": "r",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "z"
+          },
+          "to": [
+            {
+              "key_code": "f",
+              "modifiers": [
+                "left_control",
+                "left_command"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "open_bracket"
+          },
+          "to": [
+            {
+              "key_code": "v"
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "o"
+          },
+          "to": [
+            {
+              "key_code": "f"
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "slash",
+            "modifiers": {
+              "mandatory": [
+                "shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "slash",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "l"
+          },
+          "to": [
+            {
+              "key_code": "6",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "u"
+          },
+          "to": [
+            {
+              "key_code": "t",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "v"
+          },
+          "to": [
+            {
+              "key_code": "f7"
+            },
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "set_variable": {
+                "name": "tmux_copy_mode",
+                "value": 1
+              }
+            },
+            {
+              "set_variable": {
+                "name": "tmux_copy_visual",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" copy"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "escape"
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "h"
+          },
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "j"
+          },
+          "to": [
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "k"
+          },
+          "to": [
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "l"
+          },
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "w"
+          },
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_option",
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "b"
+          },
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": [
+                "left_option",
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "0"
+          },
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "4",
+            "modifiers": {
+              "mandatory": [
+                "shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "g"
+          },
+          "to": [
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "g",
+            "modifiers": {
+              "mandatory": [
+                "shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": [
+                "control"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "page_up",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "d",
+            "modifiers": {
+              "mandatory": [
+                "control"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "page_down",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_visual",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "h"
+          },
+          "to": [
+            {
+              "key_code": "left_arrow"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "j"
+          },
+          "to": [
+            {
+              "key_code": "down_arrow"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "k"
+          },
+          "to": [
+            {
+              "key_code": "up_arrow"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "l"
+          },
+          "to": [
+            {
+              "key_code": "right_arrow"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "w"
+          },
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_option"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "b"
+          },
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": [
+                "left_option"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "0"
+          },
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "4",
+            "modifiers": {
+              "mandatory": [
+                "shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "g"
+          },
+          "to": [
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "g",
+            "modifiers": {
+              "mandatory": [
+                "shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": [
+                "control"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "page_up"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "d",
+            "modifiers": {
+              "mandatory": [
+                "control"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "page_down"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "v"
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "tmux_copy_visual",
+                "value": 1
+              }
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "y"
+          },
+          "to": [
+            {
+              "key_code": "c",
+              "modifiers": [
+                "left_command"
+              ]
+            },
+            {
+              "key_code": "f7"
+            },
+            {
+              "set_variable": {
+                "name": "tmux_copy_mode",
+                "value": 0
+              }
+            },
+            {
+              "set_variable": {
+                "name": "tmux_copy_visual",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "slash"
+          },
+          "to": [
+            {
+              "key_code": "f",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "q"
+          },
+          "to": [
+            {
+              "key_code": "f7"
+            },
+            {
+              "set_variable": {
+                "name": "tmux_copy_mode",
+                "value": 0
+              }
+            },
+            {
+              "set_variable": {
+                "name": "tmux_copy_visual",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "escape"
+          },
+          "to": [
+            {
+              "key_code": "f7"
+            },
+            {
+              "set_variable": {
+                "name": "tmux_copy_mode",
+                "value": 0
+              }
+            },
+            {
+              "set_variable": {
+                "name": "tmux_copy_visual",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_copy_mode",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "[dotfiles] caps_lock -> home (global) \u2014 gives the MacBook built-in keyboard a real Home key for the tmux prefix. ArkButton has no caps_lock, so this is a no-op there.",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "caps_lock",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
