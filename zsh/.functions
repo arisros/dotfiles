@@ -1,3 +1,16 @@
+# Hand a URL or file to the desktop: `open` is macOS, `xdg-open` is the
+# freedesktop equivalent. Used by imgopen and anything else that needs it.
+_open_url() {
+  if command -v open >/dev/null 2>&1; then
+    open "$1"
+  elif command -v xdg-open >/dev/null 2>&1; then
+    xdg-open "$1" >/dev/null 2>&1
+  else
+    printf 'No opener found (open/xdg-open). URL: %s\n' "$1" >&2
+    return 1
+  fi
+}
+
 # Function to remove duplicate entries from PATH
 dedupe_path() {
   export PATH=$(echo "$PATH" | awk -v RS=':' '!seen[$0]++' | paste -sd ':')
@@ -72,17 +85,22 @@ _imgsearch_ensure_chafa() {
   fi
 
   if ! _imgsearch_auto_install_enabled; then
-    printf 'imgpreview: chafa is required (brew install chafa)\n' >&2
+    printf 'imgpreview: chafa is required (brew install chafa / apt install chafa)\n' >&2
     return 1
   fi
 
-  if ! command -v brew >/dev/null 2>&1; then
-    printf 'imgpreview: brew not found. Install chafa manually.\n' >&2
+  if command -v brew >/dev/null 2>&1; then
+    printf 'imgpreview: installing chafa via Homebrew...\n' >&2
+    brew install chafa >/dev/null 2>&1
+  elif command -v apt-get >/dev/null 2>&1; then
+    printf 'imgpreview: installing chafa via apt...\n' >&2
+    { [ "$(id -u)" -eq 0 ] && apt-get install -y chafa || sudo apt-get install -y chafa; } >/dev/null 2>&1
+  else
+    printf 'imgpreview: no supported package manager. Install chafa manually.\n' >&2
     return 1
   fi
 
-  printf 'imgpreview: installing chafa via Homebrew...\n' >&2
-  if ! brew install chafa >/dev/null 2>&1; then
+  if ! command -v chafa >/dev/null 2>&1; then
     printf 'imgpreview: failed to install chafa\n' >&2
     return 1
   fi
@@ -212,7 +230,7 @@ PY
     return 1
   fi
 
-  open "$url"
+  _open_url "$url"
 }
 
 imgpreview() {

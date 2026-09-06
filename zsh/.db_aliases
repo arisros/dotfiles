@@ -4,8 +4,8 @@
 # and is found through RAINFROG_CONFIG, exported in .zshrc.
 #
 # Passwords are never written to the config: rainfrog asks once per connection
-# and keeps it in the macOS Keychain, so this file and the config stay
-# committable.
+# and hands it to the OS keyring (Keychain on macOS, Secret Service on Linux),
+# so this file and the config stay committable.
 
 alias rf='rainfrog'
 
