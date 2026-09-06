@@ -2,7 +2,7 @@
   "title": "tmux-style navigation (arisjirat dotfiles)",
   "rules": [
     {
-      "description": "[dotfiles] tmux prefix in the browser: Home (ArkButton thumb) / fn+Left / caps_lock, then 1-9 n p c x w s f : [ v o l r z u ? & \u2014 plus a copy-mode layer over caret browsing. Chrome & Brave only.",
+      "description": "[dotfiles] tmux prefix in the browser: Home (ArkButton thumb) / fn+Left / caps_lock, then 1-9 n p c x w s f : [ v o l r z u ? & — plus a copy-mode layer over caret browsing. Chrome & Brave only.",
       "manipulators": [
         {
           "type": "basic",
@@ -1203,6 +1203,38 @@
         },
         {
           "type": "basic",
+          "description": "any other key clears the prefix",
+          "from": {
+            "any": "key_code"
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
           "from": {
             "key_code": "h"
           },
@@ -2146,7 +2178,7 @@
       ]
     },
     {
-      "description": "[dotfiles] caps_lock -> home (global) \u2014 gives the MacBook built-in keyboard a real Home key for the tmux prefix. ArkButton has no caps_lock, so this is a no-op there.",
+      "description": "[dotfiles] caps_lock -> home (global) — gives the MacBook built-in keyboard a real Home key for the tmux prefix. ArkButton has no caps_lock, so this is a no-op there.",
       "manipulators": [
         {
           "type": "basic",
