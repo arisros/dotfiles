@@ -39,6 +39,19 @@ return {
 
 			dap.configurations.c = codelldb_config
 			dap.configurations.cpp = codelldb_config
+			dap.configurations.rust = {
+				{
+					name = "Launch file",
+					type = "codelldb",
+					request = "launch",
+					program = function()
+						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+					end,
+					cwd = "${workspaceFolder}",
+					stopOnEntry = false,
+					args = {},
+				},
+			}
 		end
 
 		require("telescope").load_extension("dap")
