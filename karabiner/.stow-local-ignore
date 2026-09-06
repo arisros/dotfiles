@@ -1,0 +1,3 @@
+# Karabiner only reads .json from assets/complex_modifications/.
+README\.md
+\.stow-local-ignore

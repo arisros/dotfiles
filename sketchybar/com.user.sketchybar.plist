@@ -15,9 +15,9 @@
         <key>PATH</key>
         <string>/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin</string>
         <key>CONFIG_DIR</key>
-        <string>/Users/mac-098183/.config/sketchybar</string>
+        <string>__HOME__/.config/sketchybar</string>
         <key>ITEM_DIR</key>
-        <string>/Users/mac-098183/.config/sketchybar/items</string>
+        <string>__HOME__/.config/sketchybar/items</string>
     </dict>
     <key>RunAtLoad</key>
     <true/>

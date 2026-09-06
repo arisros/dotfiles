@@ -62,6 +62,7 @@ brew "pass"
 # Pass extension for managing one-time-password tokens
 brew "pass-otp"
 # Search tool like grep and The Silver Searcher
+brew "rainfrog"
 brew "ripgrep"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
@@ -102,6 +103,7 @@ cask "aerospace"
 # Electronics prototyping platform
 cask "arduino-ide"
 cask "font-blex-mono-nerd-font"
+cask "karabiner-elements"
 cask "font-hack-nerd-font"
 cask "font-sketchybar-app-font"
 # HTTP and GraphQL Client
