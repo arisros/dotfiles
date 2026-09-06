@@ -26,7 +26,6 @@ return {
 					stdin = true,
 				},
 				csharpier = {
-					-- Pakai global tool yang sudah terbukti ada
 					command = vim.fn.expand("~/.dotnet/tools/csharpier"),
 					args = { "format" },
 					stdin = true,
@@ -70,6 +69,7 @@ return {
 				bash = { "beautysh" },
 				sh = { "beautysh" },
 				go = { "gofmt" },
+				rust = { "rustfmt" },
 				http = { "kulala" },
 				templ = { "templ_fmt" },
 			},

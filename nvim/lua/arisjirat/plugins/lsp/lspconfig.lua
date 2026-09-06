@@ -87,6 +87,25 @@ return {
 		})
 
 		-- Server-specific overrides
+
+		-- rust-analyzer comes from rustup, not mason, so mason-lspconfig's
+		-- automatic_enable never picks it up.
+		if vim.fn.executable("rust-analyzer") == 1 then
+			vim.lsp.config("rust_analyzer", {
+				capabilities = capabilities,
+				settings = {
+					["rust-analyzer"] = {
+						-- allTargets/allFeatures are already appended by rust-analyzer;
+						-- repeating them in extraArgs makes cargo reject the command.
+						check = { command = "clippy" },
+						cargo = { allFeatures = true, buildScripts = { enable = true } },
+						procMacro = { enable = true },
+					},
+				},
+			})
+			vim.lsp.enable("rust_analyzer")
+		end
+
 		vim.lsp.config("omnisharp", {
 			cmd = { vim.fn.expand("~/.local/share/nvim/mason/bin/omnisharp"), "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
 			capabilities = capabilities,

@@ -1,10 +1,10 @@
 return {
 	"MeanderingProgrammer/render-markdown.nvim",
 	dependencies = { "nvim-treesitter/nvim-treesitter" },
-	ft = { "markdown", "Avante", "copilot-chat", "opencode_output" },
+	ft = { "markdown", "Avante", "copilot-chat" },
 	opts = {
 		anti_conceal = { enabled = false },
-		file_types = { "markdown", "Avante", "copilot-chat", "opencode_output" },
+		file_types = { "markdown", "Avante", "copilot-chat" },
 
 		heading = {
 			-- No background tinting on headings

@@ -188,6 +188,14 @@ fi
 [ -f "$HOME/.docker_aliases" ] && source "$HOME/.docker_aliases"
 # [ZSH] runpod_aliases
 [ -f "$HOME/.runpod_aliases" ] && source "$HOME/.runpod_aliases"
+
+# [ZSH] db_aliases - rainfrog helpers (rf, rfdb, rfenv, rfurl) + rabbitmq (rmq, qp)
+[ -f "$HOME/.db_aliases" ] && source "$HOME/.db_aliases"
+
+# rainfrog keeps config and state under XDG paths instead of ~/Library/Application Support
+export RAINFROG_CONFIG="$HOME/.config/rainfrog"
+export RAINFROG_DATA="$HOME/.local/share/rainfrog"
+export RAINFROG_FAVORITES="$HOME/.local/share/rainfrog/favorites"
 # --- Local modules -----------------------------------------------------------
 # Anything dropped into this directory is sourced if it is there, and nothing
 # in this repo depends on it. Machine-specific setup - identities, host lists,
@@ -294,3 +302,10 @@ normal() {
   fi
   echo "✅ Normal sleep behaviour restored."
 }
+
+# The Claude Code PreToolUse hook routes bash commands through rtk unless this
+# file exists, so the toggle is the file, not a setting.
+rtk-status() { [ -f ~/.rtk_disabled ] && echo "rtk: off" || echo "rtk: on"; }
+rtk-on()     { rm -f ~/.rtk_disabled; rtk-status }
+rtk-off()    { : > ~/.rtk_disabled; rtk-status }
+rtk-toggle() { [ -f ~/.rtk_disabled ] && rtk-on || rtk-off; }

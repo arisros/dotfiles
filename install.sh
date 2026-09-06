@@ -304,6 +304,7 @@ config_dirs=(
   "$HOME/.config/borders"
   "$HOME/.config/sketchybar"
   "$HOME/.config/tmux"
+  "$HOME/.claude"
   "$HOME/.config/herdr"
   "$HOME/.config/ghostty"
   "$HOME/.config/opencode"
@@ -324,6 +325,7 @@ stow_pairs=(
   "$HOME/.config/borders:borders"
   "$HOME/.config/sketchybar:sketchybar"
   "$HOME/.config/tmux:tmux"
+  "$HOME/.claude:claude"
   "$HOME/.config/herdr:herdr"
   "$HOME/.config/ghostty:ghostty"
   "$HOME:opencode"
@@ -375,6 +377,25 @@ if [ "${#stow_failures[@]}" -gt 0 ]; then
   fi
   warn 'Or move/remove conflicting files manually and re-run ./install.sh'
 fi
+
+# LaunchAgent plists are templates: launchd does not expand $HOME, and a literal
+# path would carry one machine's username into the repo.
+render_launch_agents() {
+  local dest="$HOME/Library/LaunchAgents"
+  mkdir -p "$dest"
+  local template
+  for template in "$SCRIPT_DIR"/*/com.user.*.plist; do
+    [ -e "$template" ] || continue
+    log "Rendering $(basename "$template") -> $dest"
+    sed "s|__HOME__|$HOME|g" "$template" > "$dest/$(basename "$template")"
+  done
+}
+
+render_launch_agents
+# The tracked CLAUDE.md imports this file. Create it empty so the import never
+# dangles on a machine that has no private context to load.
+touch "$HOME/.claude/context.local.md"
+
 
 ensure_tmux_bootstrap
 
