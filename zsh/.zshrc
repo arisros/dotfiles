@@ -165,6 +165,9 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # [composer]
 export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+# Locally installed helper scripts (osc52-copy.sh and friends).
+export PATH="$HOME/bin:$PATH"
 #
 
 if command -v mise >/dev/null 2>&1; then
