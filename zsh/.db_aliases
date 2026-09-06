@@ -1,0 +1,177 @@
+# Databases — rainfrog (TUI) shell layer.
+#
+# rainfrog config lives in ~/.config/rainfrog (stowed from dotfiles/rainfrog)
+# and is found through RAINFROG_CONFIG, exported in .zshrc.
+#
+# Passwords are never written to the config: rainfrog asks once per connection
+# and keeps it in the macOS Keychain, so this file and the config stay
+# committable.
+
+alias rf='rainfrog'
+
+# ── Helpers ──────────────────────────────────────────────────────────────────
+# _rf_env_get <file> <key…> — first key with a non-empty, uncommented value wins.
+_rf_env_get() {
+  local file="$1"; shift
+  local key val
+  for key in "$@"; do
+    val=$(sed -nE "s/^[[:space:]]*(export[[:space:]]+)?${key}=[\"']?([^\"'#[:space:]]*).*/\2/p" "$file" | tail -1)
+    if [ -n "$val" ]; then printf '%s\n' "$val"; return 0; fi
+  done
+  return 1
+}
+
+# _rf_container_env <container> <key…> — same, but from a running container.
+_rf_container_env() {
+  local name="$1"; shift
+  local env_dump key val
+  env_dump=$(docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$name" 2>/dev/null) || return 1
+  for key in "$@"; do
+    val=$(printf '%s\n' "$env_dump" | sed -nE "s/^${key}=(.*)$/\1/p" | tail -1)
+    if [ -n "$val" ]; then printf '%s\n' "$val"; return 0; fi
+  done
+  return 1
+}
+
+# ── Commands ─────────────────────────────────────────────────────────────────
+# rfdb [name-filter] — pick a running postgres/mysql container and open it.
+# Credentials come from the container's own env and published port, so every
+# compose stack (LCAS, lms-calculation, …) works without hardcoding anything.
+# Set RFDB_ASK_PASSWORD=1 to let rainfrog prompt instead of reusing the
+# container's password (it is a local dev container either way).
+rfdb() {
+  command -v docker >/dev/null 2>&1 || { echo "rfdb: docker not found" >&2; return 1; }
+  command -v rainfrog >/dev/null 2>&1 || { echo "rfdb: rainfrog not installed (brew install rainfrog)" >&2; return 1; }
+
+  local rows name image
+  rows=$(docker ps --format '{{.Names}}\t{{.Image}}' \
+    | awk -F'\t' 'tolower($2) ~ /postgres|mysql|mariadb/' \
+    | { [ -n "$1" ] && grep -i -- "$1" || cat; })
+
+  if [ -z "$rows" ]; then
+    echo "rfdb: no running postgres/mysql container${1:+ matching '$1'}" >&2
+    return 1
+  fi
+
+  if [ "$(printf '%s\n' "$rows" | wc -l)" -gt 1 ] && command -v fzf >/dev/null 2>&1; then
+    rows=$(printf '%s\n' "$rows" | fzf --height 40% --reverse --prompt 'db > ') || return 130
+  fi
+  rows=$(printf '%s\n' "$rows" | head -1)
+  name=${rows%%$'\t'*}
+  image=${rows##*$'\t'}
+
+  local driver internal_port user db pass port
+  case "${image:l}" in
+    *mysql*|*mariadb*)
+      driver=mysql; internal_port=3306
+      user=$(_rf_container_env "$name" MYSQL_USER); user="${user:-root}"
+      db=$(_rf_container_env "$name" MYSQL_DATABASE)
+      pass=$(_rf_container_env "$name" MYSQL_PASSWORD MYSQL_ROOT_PASSWORD)
+      ;;
+    *)
+      driver=postgres; internal_port=5432
+      user=$(_rf_container_env "$name" POSTGRES_USER); user="${user:-postgres}"
+      db=$(_rf_container_env "$name" POSTGRES_DB); db="${db:-$user}"
+      pass=$(_rf_container_env "$name" POSTGRES_PASSWORD)
+      ;;
+  esac
+
+  # Published port on the host; fall back to the container's own port.
+  port=$(docker port "$name" "$internal_port/tcp" 2>/dev/null | head -1)
+  port=${port##*:}
+  port="${port:-$internal_port}"
+
+  local -a extra
+  [ -n "$pass" ] && [ -z "$RFDB_ASK_PASSWORD" ] && extra=(--password "$pass")
+
+  echo "rfdb: $name -> $driver://$user@localhost:$port/$db"
+  rainfrog --driver "$driver" --host localhost --port "$port" \
+    --database "$db" --username "$user" "${extra[@]}"
+}
+
+# rfenv [file] — connect using the .env of the current repo (default ./.env).
+# Understands DATABASE_URL and the POSTGRES_*/DB_*/PG* spellings used across
+# the Go and Node services.
+rfenv() {
+  local file="${1:-.env}"
+  [ -f "$file" ] || { echo "rfenv: $file not found" >&2; return 1; }
+
+  local url host port db user pass
+  url=$(_rf_env_get "$file" DATABASE_URL POSTGRES_URL PG_URL)
+  if [ -n "$url" ]; then rainfrog --url "$url"; return; fi
+
+  host=$(_rf_env_get "$file" POSTGRES_HOST DB_HOST PGHOST); host="${host:-localhost}"
+  port=$(_rf_env_get "$file" POSTGRES_PORT DB_PORT PGPORT); port="${port:-5432}"
+  db=$(_rf_env_get "$file" POSTGRES_DATABASE POSTGRES_DB DB_DB DB_NAME PGDATABASE)
+  user=$(_rf_env_get "$file" POSTGRES_USERNAME POSTGRES_USER DB_USER PGUSER)
+  pass=$(_rf_env_get "$file" POSTGRES_PASSWORD DB_PASS DB_PASSWORD PGPASSWORD)
+
+  if [ -z "$db" ] || [ -z "$user" ]; then
+    echo "rfenv: no database/user in $file (values may still be commented out) — try rfdb" >&2
+    return 1
+  fi
+
+  local -a extra
+  [ -n "$pass" ] && extra=(--password "$pass")
+
+  echo "rfenv: $file -> postgres://$user@$host:$port/$db"
+  rainfrog --driver postgres --host "$host" --port "$port" \
+    --database "$db" --username "$user" "${extra[@]}"
+}
+
+# rfurl <url> — connect from a full connection string.
+rfurl() {
+  if [ -z "$1" ]; then echo "usage: rfurl postgres://user@host:5432/db" >&2; return 1; fi
+  rainfrog --url "$1"
+}
+
+# ── Message queues ───────────────────────────────────────────────────────────
+# rmqtui — RabbitMQ admin TUI (queues/exchanges/bindings, peek, tail, publish).
+# `cargo install rmqtui`; no config file, flags/env only — same idea as rfdb:
+# credentials come from the running container, nothing hardcoded.
+# queuepeek — message-level TUI (pretty JSON, edit & re-publish, `L` DLQ
+# re-route). Profiles live in dotfiles/queuepeek/config.toml.
+alias qp='queuepeek'
+
+# rmq [name-filter] — pick a running rabbitmq container and open rmqtui on it.
+# Reads RABBITMQ_DEFAULT_USER/PASS and the published 5672/15672 ports from the
+# container. Extra args go straight to rmqtui (e.g. `rmq -- --vhost /foo`).
+rmq() {
+  command -v docker >/dev/null 2>&1 || { echo "rmq: docker not found" >&2; return 1; }
+  command -v rmqtui >/dev/null 2>&1 || { echo "rmq: rmqtui not installed (cargo install rmqtui)" >&2; return 1; }
+
+  local filter=""
+  if [ -n "$1" ] && [ "$1" != "--" ]; then filter="$1"; shift; fi
+  [ "$1" = "--" ] && shift
+
+  local rows name
+  rows=$(docker ps --format '{{.Names}}\t{{.Image}}' \
+    | awk -F'\t' 'tolower($2) ~ /rabbitmq/' \
+    | { [ -n "$filter" ] && grep -i -- "$filter" || cat; })
+
+  if [ -z "$rows" ]; then
+    echo "rmq: no running rabbitmq container${filter:+ matching '$filter'}" >&2
+    return 1
+  fi
+
+  if [ "$(printf '%s\n' "$rows" | wc -l)" -gt 1 ] && command -v fzf >/dev/null 2>&1; then
+    rows=$(printf '%s\n' "$rows" | fzf --height 40% --reverse --prompt 'rabbitmq > ') || return 130
+  fi
+  rows=$(printf '%s\n' "$rows" | head -1)
+  name=${rows%%$'\t'*}
+
+  local user pass amqp mgmt
+  user=$(_rf_container_env "$name" RABBITMQ_DEFAULT_USER); user="${user:-guest}"
+  pass=$(_rf_container_env "$name" RABBITMQ_DEFAULT_PASS); pass="${pass:-guest}"
+  amqp=$(docker port "$name" 5672/tcp 2>/dev/null | head -1); amqp=${amqp##*:}; amqp="${amqp:-5672}"
+  mgmt=$(docker port "$name" 15672/tcp 2>/dev/null | head -1); mgmt=${mgmt##*:}; mgmt="${mgmt:-15672}"
+
+  echo "rmq: $name -> amqp://$user@localhost:$amqp  mgmt http://localhost:$mgmt"
+  RMQTUI_USERNAME="$user" RMQTUI_PASSWORD="$pass" \
+  RMQTUI_MGMT_URL="http://localhost:$mgmt" \
+  RMQTUI_AMQP_URL="amqp://$user:$pass@localhost:$amqp/%2f" \
+    rmqtui "$@"
+}
+
+# Work-specific database shortcuts (service names) live in the private repo.
+[ -f "$HOME/.db_aliases_work" ] && source "$HOME/.db_aliases_work"

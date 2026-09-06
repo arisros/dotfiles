@@ -1,0 +1,101 @@
+# rainfrog — database TUI for PostgreSQL/MySQL/SQLite.
+# https://github.com/achristmascarl/rainfrog
+#
+# Stowed to ~/.config/rainfrog; rainfrog finds it through RAINFROG_CONFIG
+# (exported in zsh/.zshrc), otherwise it would use
+# ~/Library/Application Support/dev.rainfrog.rainfrog on macOS.
+#
+# Only overrides live here — every key left out keeps rainfrog's own default,
+# so upgrades can still add new bindings.
+
+[settings]
+# Keep the terminal's native mouse handling (tmux copy-mode, ghostty selection).
+# Set to true if you'd rather click around inside rainfrog.
+mouse_mode = false
+data_compact_columns = true
+data_row_spacer = false
+autocomplete_enabled = true
+autocomplete_debounce_ms = 100
+autocomplete_trigger_len = 1
+autopairs_enabled = true
+
+[db]
+# Frequently used connections, reachable from the menu on startup.
+# NEVER put a password here: rainfrog asks once and stores it in the macOS
+# Keychain (keyring crate), so this file stays safe to commit.
+# Local containers are usually easier through `rfdb` (see zsh/.db_aliases),
+# which reads host/port/user straight from the running container.
+#
+# <alias> = { driver = "postgres", host = "localhost", port = 5432, database = "<db>", username = "<user>" }
+
+# ── Keybindings ──────────────────────────────────────────────────────────────
+# Hasil audit tmux + aerospace + macOS + rainfrog. Yang TIDAK boleh dipakai:
+#
+#   Alt-*                 aerospace: workspace 1..5, q/w/e/r/t/a/s/d/f/g,
+#                         h/j/k/l, minus/equal, slash/comma
+#   Ctrl-b                prefix kedua tmux (tmux.conf:5; prefix utama = Home)
+#   Ctrl-h/j/k/l, Ctrl-\  tmux root table + vim-tmux-navigator (bind -n)
+#   Ctrl-panah            macOS: Mission Control (^Up), App Windows (^Down),
+#                         pindah Space (^Left/^Right) — keempatnya masih aktif
+#   F1..F12               butuh fn: "F keys as standard" tidak diaktifkan
+#   Ctrl-e / Ctrl-y       rainfrog: scroll editor
+#   Ctrl-f / Ctrl-b       rainfrog: page down/up di panel data
+#   Ctrl-r                rainfrog: redo di editor
+#   Ctrl-p / Ctrl-n       rainfrog: navigasi autocomplete
+#   Ctrl-space            rainfrog: trigger autocomplete
+#   huruf & angka polos   editor rainfrog modal ala vim (w/e/b/0/$/i/v/y/x/p/u)
+#
+# Sisanya yang benar-benar bebas: Shift+panah, plus Ctrl-g (yang memang default
+# rainfrog sendiri), Ctrl-s, dan Ctrl-o.
+#
+#   Shift-Left  menu        Shift-Up  editor       Shift-Down  hasil query
+#   Shift-Right favorites   Ctrl-g    history      Tab/Shift-Tab muter panel
+#   Ctrl-s      jalankan query         Ctrl-o      buka query di nvim
+#   Shift-PageUp/PageDown              besar/kecilkan panel
+#   q (di panel selain editor)         batalkan query yang jalan
+
+[keybindings.Menu]
+"<Shift-left>" = "FocusMenu"
+"<Shift-up>" = "FocusEditor"
+"<Shift-down>" = "FocusData"
+"<Shift-right>" = "FocusFavorites"
+"<Ctrl-s>" = "SubmitEditorQuery"
+"<Shift-pageup>" = "IncreaseSectionSize"
+"<Shift-pagedown>" = "DecreaseSectionSize"
+
+[keybindings.Editor]
+"<Shift-left>" = "FocusMenu"
+"<Shift-up>" = "FocusEditor"
+"<Shift-down>" = "FocusData"
+"<Shift-right>" = "FocusFavorites"
+"<Ctrl-s>" = "SubmitEditorQuery"
+"<Ctrl-o>" = "RequestExternalEditor"
+"<Shift-pageup>" = "IncreaseSectionSize"
+"<Shift-pagedown>" = "DecreaseSectionSize"
+
+[keybindings.Data]
+"<Shift-left>" = "FocusMenu"
+"<Shift-up>" = "FocusEditor"
+"<Shift-down>" = "FocusData"
+"<Shift-right>" = "FocusFavorites"
+"<Ctrl-s>" = "SubmitEditorQuery"
+"<Shift-pageup>" = "IncreaseSectionSize"
+"<Shift-pagedown>" = "DecreaseSectionSize"
+
+[keybindings.History]
+"<Shift-left>" = "FocusMenu"
+"<Shift-up>" = "FocusEditor"
+"<Shift-down>" = "FocusData"
+"<Shift-right>" = "FocusFavorites"
+"<Ctrl-s>" = "SubmitEditorQuery"
+"<Shift-pageup>" = "IncreaseSectionSize"
+"<Shift-pagedown>" = "DecreaseSectionSize"
+
+[keybindings.Favorites]
+"<Shift-left>" = "FocusMenu"
+"<Shift-up>" = "FocusEditor"
+"<Shift-down>" = "FocusData"
+"<Shift-right>" = "FocusFavorites"
+"<Ctrl-s>" = "SubmitEditorQuery"
+"<Shift-pageup>" = "IncreaseSectionSize"
+"<Shift-pagedown>" = "DecreaseSectionSize"
