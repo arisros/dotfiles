@@ -376,6 +376,21 @@ if [ "${#stow_failures[@]}" -gt 0 ]; then
   warn 'Or move/remove conflicting files manually and re-run ./install.sh'
 fi
 
+# LaunchAgent plists are templates: launchd does not expand $HOME, and a literal
+# path would carry one machine's username into the repo.
+render_launch_agents() {
+  local dest="$HOME/Library/LaunchAgents"
+  mkdir -p "$dest"
+  local template
+  for template in "$SCRIPT_DIR"/*/com.user.*.plist; do
+    [ -e "$template" ] || continue
+    log "Rendering $(basename "$template") -> $dest"
+    sed "s|__HOME__|$HOME|g" "$template" > "$dest/$(basename "$template")"
+  done
+}
+
+render_launch_agents
+
 ensure_tmux_bootstrap
 
 if [ -x "$SCRIPT_DIR/__scripts__/install_git_hooks.sh" ]; then

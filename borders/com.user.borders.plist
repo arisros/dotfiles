@@ -7,7 +7,7 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/mac-098183/.config/borders/bordersrc</string>
+        <string>__HOME__/.config/borders/bordersrc</string>
     </array>
     <key>EnvironmentVariables</key>
     <dict>
