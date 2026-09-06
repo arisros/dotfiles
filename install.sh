@@ -160,17 +160,11 @@ ensure_neovim_target() {
     return 0
   fi
 
-  warn 'Neovim v0.11+ is required. Attempting installation via mise first...'
-  if ensure_mise; then
-    if mise use -g neovim@0.11 >/dev/null 2>&1 || mise use -g neovim@v0.11 >/dev/null 2>&1; then
-      export PATH="$HOME/.local/bin:$PATH"
-      if is_neovim_011; then
-        return 0
-      fi
-    fi
-  fi
-
-  warn 'Falling back to system package manager for Neovim...'
+  # Deliberately not `mise use -g neovim@...`. That writes a real
+  # ~/.config/mise/config.toml, and this runs before the stow step, so it
+  # leaves a plain file exactly where the repo's own mise package has to
+  # link. Stow then refuses the package and the whole install exits 1.
+  warn 'Neovim v0.11+ is required. Installing...'
   case "$OS" in
     darwin)
       ensure_homebrew || return 1
