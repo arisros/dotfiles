@@ -7,11 +7,11 @@ return {
 			suggestion = {
 				enabled = true,
 				auto_trigger = true,
-				hide_during_completion = true,
+				hide_during_completion = false,
 				debounce = 75,
 				keymap = {
 					accept = "<C-l>",
-					accept_word = "<C-;>",
+					accept_word = "<M-w>",
 					accept_line = false,
 					next = "<M-]>",
 					prev = "<M-[>",
