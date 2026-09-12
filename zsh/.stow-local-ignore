@@ -1,0 +1,8 @@
+# Replaces stow's built-in ignore list, for this package only.
+#
+# .cloudflare_env is a machine-local secrets helper: gitignored, and linked into
+# $HOME by hand as an absolute symlink. Stow refuses to adopt a target it does
+# not own, and one such conflict aborts the *whole* package -- which is how
+# .db_aliases and .runpod_aliases sat in this directory unlinked for months.
+\.cloudflare_env
+\.stow-local-ignore

@@ -56,12 +56,6 @@ if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-autosuggestio
 elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
   source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
-# syntax-highlighting
-if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-  source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
 
 set -o vi
 
@@ -97,10 +91,34 @@ if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-history-subst
   source "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
 elif [ -f /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]; then
   source /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+elif [ -f "$HOME/.local/share/zsh-history-substring-search/zsh-history-substring-search.zsh" ]; then
+  # Debian ships no package for this one, so it is cloned into ~/.local/share.
+  source "$HOME/.local/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
 fi
 
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+# Only bind the arrows to the plugin's widgets if the plugin actually loaded --
+# binding a widget that does not exist leaves the arrow keys dead and makes
+# zsh-syntax-highlighting warn about an 'unhandled ZLE widget' on every prompt.
+if zle -l history-substring-search-up 2>/dev/null; then
+  bindkey '^[[A' history-substring-search-up
+  bindkey '^[[B' history-substring-search-down
+else
+  autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+  zle -N up-line-or-beginning-search
+  zle -N down-line-or-beginning-search
+  bindkey '^[[A' up-line-or-beginning-search
+  bindkey '^[[B' down-line-or-beginning-search
+fi
+
+# zsh-syntax-highlighting wraps every ZLE widget that exists when it is
+# sourced, so it has to come after anything that defines widgets -- loading
+# it earlier makes history-substring-search's up/down widgets 'unhandled'.
+# syntax-highlighting
+if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 autoload -Uz compinit && compinit
 
