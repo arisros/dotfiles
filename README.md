@@ -10,15 +10,40 @@ Or after cloning the repo:
 
 ## Cross-machine compatibility (macOS + Debian)
 
-`install.sh` is now machine-aware and will:
+`install.sh` is machine-aware and will:
 
 - detect platform (`darwin` or `linux`)
 - auto-install missing core dependencies (`git`, `stow`, `curl`) using Homebrew (macOS) or `apt-get` (Debian)
 - best-effort install common tools (`tmux`, `neovim` with v0.11+ target, `lazygit`, `ripgrep`, `jq`, `gnupg`, `pass`)
+- on Debian, additionally install everything in `__scripts__/debian-packages.txt`
+  (yazi's previewers, clipboard tooling, the apt-shipped zsh plugins)
 - attempt to install `mise` and run `mise install` from `mise/config.toml`
 - install versioned git hooks and initialize `~/.secrets` template safely
 
 If a package manager is unavailable for the current OS, the script exits with a clear actionable error.
+
+### What differs per OS
+
+Only macOS gets the window-manager stack. `aerospace`, `borders` and
+`sketchybar` are stowed on darwin alone, and `~/Library/LaunchAgents` is
+rendered there alone — on Linux they would just be config nothing reads.
+
+Two things cannot come from apt on Debian stable and are handled separately:
+
+| Tool | Why | Handled by |
+|---|---|---|
+| Neovim | bookworm ships 0.7; lazy.nvim needs ≥ 0.8 | `__scripts__/install_nvim.sh` pulls a release build into `~/.local/bin` |
+| yazi | not packaged; the gnu builds need a newer glibc | `__scripts__/install_rust_tools.sh` fetches the musl binary |
+
+`zsh-autosuggestions` and `zsh-syntax-highlighting` come from apt;
+`zsh-history-substring-search` is not packaged, so
+`__scripts__/install_zsh_plugins.sh` vendors it into `~/.zsh-plugins`.
+
+joshuto publishes no prebuilt binary. It is skipped by default; build it with
+`JOSHUTO_FORCE_CARGO=1 bash __scripts__/install_rust_tools.sh`.
+
+CI runs shellcheck over every script, simulates the apt list against a real
+Debian 12 image, and smoke-tests `install.sh` end to end on that image.
 
 Quick bootstrap:
 

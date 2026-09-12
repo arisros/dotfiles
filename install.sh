@@ -160,24 +160,25 @@ ensure_neovim_target() {
     return 0
   fi
 
-  warn 'Neovim v0.11+ is required. Attempting installation via mise first...'
-  if ensure_mise; then
-    if mise use -g neovim@0.11 >/dev/null 2>&1 || mise use -g neovim@v0.11 >/dev/null 2>&1; then
-      export PATH="$HOME/.local/bin:$PATH"
-      if is_neovim_011; then
-        return 0
-      fi
-    fi
-  fi
-
-  warn 'Falling back to system package manager for Neovim...'
+  # Deliberately not `mise use -g neovim@...`. That writes a real
+  # ~/.config/mise/config.toml, and this runs before the stow step, so it
+  # leaves a plain file exactly where the repo's own mise package has to
+  # link. Stow then refuses the package and the whole install exits 1.
+  warn 'Neovim v0.11+ is required. Installing...'
   case "$OS" in
     darwin)
       ensure_homebrew || return 1
       brew install neovim || brew upgrade neovim || true
       ;;
     linux)
-      apt_install neovim || true
+      # Debian stable ships Neovim 0.7, which lazy.nvim rejects, so pull a
+      # release build into ~/.local/bin instead of taking whatever apt has.
+      if [ -x "$SCRIPT_DIR/__scripts__/install_nvim.sh" ]; then
+        bash "$SCRIPT_DIR/__scripts__/install_nvim.sh" || warn 'Neovim release install failed.'
+        export PATH="$HOME/.local/bin:$PATH"
+      else
+        apt_install neovim || true
+      fi
       ;;
     *)
       warn "Unsupported OS for automatic Neovim install: $OS"
@@ -293,16 +294,36 @@ else
   ensure_optional_command bear bear bear || true
 fi
 
+# Debian needs a wider net than the ensure_optional_command list above: yazi's
+# previewers, the apt-shipped zsh plugins and clipboard tooling have no
+# Homebrew-equivalent step on Linux.
+if [ "$OS" = "linux" ] && [ "$SKIP_OPTIONAL_TOOLS" != "1" ]; then
+  deb_list="$SCRIPT_DIR/__scripts__/debian-packages.txt"
+  if [ -f "$deb_list" ]; then
+    # One package per line. Strip inline comments (`pkg  # note`) and blanks,
+    # otherwise the comment words reach apt as bogus package names and abort
+    # the whole transaction.
+    deb_pkgs="$(sed -E 's/#.*$//' "$deb_list" | grep -vE '^[[:space:]]*$' | tr '\n' ' ')"
+    if [ -n "${deb_pkgs// /}" ]; then
+      log 'Installing Debian packages...'
+      # shellcheck disable=SC2086
+      apt_install $deb_pkgs || warn 'Some apt packages failed; see above.'
+    fi
+  fi
+fi
+
+if [ "$SKIP_OPTIONAL_TOOLS" != "1" ] && [ -x "$SCRIPT_DIR/__scripts__/install_zsh_plugins.sh" ]; then
+  log 'Installing zsh plugins...'
+  bash "$SCRIPT_DIR/__scripts__/install_zsh_plugins.sh" || warn 'zsh plugin step had warnings.'
+fi
+
 # Local modules: created empty so the loaders have somewhere to look. What goes
 # in it is deliberately outside this repo - see README, "Local modules".
 mkdir -p "$HOME/.config/dotfiles/modules"
 
 config_dirs=(
-  "$HOME/.config/aerospace"
   "$HOME/.config/alacritty"
   "$HOME/.config/nvim"
-  "$HOME/.config/borders"
-  "$HOME/.config/sketchybar"
   "$HOME/.config/tmux"
   "$HOME/.claude"
   "$HOME/.config/herdr"
@@ -314,16 +335,23 @@ config_dirs=(
   "$HOME/.config/yazi"
 )
 
+# aerospace, borders and sketchybar are macOS window-manager tooling; creating
+# and stowing them on Linux leaves dead config nothing will ever read.
+if [ "$OS" = "darwin" ]; then
+  config_dirs+=(
+    "$HOME/.config/aerospace"
+    "$HOME/.config/borders"
+    "$HOME/.config/sketchybar"
+  )
+fi
+
 for dir in "${config_dirs[@]}"; do
   mkdir -p "$dir"
 done
 
 stow_pairs=(
-  "$HOME/.config/aerospace:aerospace"
   "$HOME/.config/alacritty:alacritty"
   "$HOME/.config/nvim:nvim"
-  "$HOME/.config/borders:borders"
-  "$HOME/.config/sketchybar:sketchybar"
   "$HOME/.config/tmux:tmux"
   "$HOME/.claude:claude"
   "$HOME/.config/herdr:herdr"
@@ -338,6 +366,14 @@ stow_pairs=(
   "$HOME/.config/nix:nix"
   "$HOME:lynx"
 )
+
+if [ "$OS" = "darwin" ]; then
+  stow_pairs+=(
+    "$HOME/.config/aerospace:aerospace"
+    "$HOME/.config/borders:borders"
+    "$HOME/.config/sketchybar:sketchybar"
+  )
+fi
 
 stow_failures=()
 
@@ -381,6 +417,10 @@ fi
 # LaunchAgent plists are templates: launchd does not expand $HOME, and a literal
 # path would carry one machine's username into the repo.
 render_launch_agents() {
+  # launchd exists only on macOS; on Linux this would create a stray
+  # ~/Library/LaunchAgents that nothing ever reads.
+  [ "$OS" = "darwin" ] || return 0
+
   local dest="$HOME/Library/LaunchAgents"
   mkdir -p "$dest"
   local template
@@ -421,6 +461,14 @@ if [ "$OS" = "linux" ] && [ "$INSTALL_DEBIAN_BREW_EQUIV" = "1" ] && [ -x "$SCRIP
     debian_bridge_args+=(--skip-update)
   fi
   "$SCRIPT_DIR/__scripts__/install_debian_brew_equivalents.sh" "${debian_bridge_args[@]}" || warn 'Debian package bridge encountered issues.'
+fi
+
+# yazi and joshuto are not in Debian stable; on macOS they come from the
+# Brewfile, so this step is a no-op there.
+if [ "$OS" = "linux" ] && [ "$SKIP_OPTIONAL_TOOLS" != "1" ] \
+   && [ -x "$SCRIPT_DIR/__scripts__/install_rust_tools.sh" ]; then
+  log 'Installing Rust CLI tools (yazi)...'
+  bash "$SCRIPT_DIR/__scripts__/install_rust_tools.sh" || warn 'Rust CLI tool step had warnings.'
 fi
 
 if [ "$SKIP_MISE_INSTALL" = "1" ]; then

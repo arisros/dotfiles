@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Lint shell scripts
+        # -x follows `source`d files; fragments carry `# shellcheck shell=bash`.
+        # Gate on warning+ (style/info are advisory). zsh files (.zshrc, the
+        # dot-prefixed alias/function files) are excluded - shellcheck has no
+        # zsh dialect.
+        run: |
+          shellcheck --version
+          shellcheck -x --severity=warning \
+            install.sh \
+            .githooks/pre-commit \
+            .githooks/pre-push \
+            __scripts__/export_brew_leaves.sh \
+            __scripts__/install_debian_brew_equivalents.sh \
+            __scripts__/install_git_hooks.sh \
+            __scripts__/install_karabiner_rules.sh \
+            __scripts__/install_nvim.sh \
+            __scripts__/install_rust_tools.sh \
+            __scripts__/install_version_manager.sh \
+            __scripts__/install_zsh_plugins.sh \
+            __scripts__/karabiner-prefix-indicator.sh \
+            __scripts__/opencode_scaffold_template.sh \
+            __scripts__/render_mermaid.sh \
+            __scripts__/restore_credentials.sh \
+            __scripts__/scan_secrets.sh
+
+  packages-debian:
+    name: debian package list resolves
+    runs-on: ubuntu-latest
+    container: debian:12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every apt package name still exists
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        # Catches typos and packages dropped between Debian releases without
+        # paying for a full install.
+        run: |
+          set -eux
+          apt-get update
+          pkgs="$(sed -E 's/#.*$//' __scripts__/debian-packages.txt \
+                  | grep -vE '^[[:space:]]*$' | tr '\n' ' ')"
+          apt-get install -s -y $pkgs
+
+  smoke-debian:
+    name: install.sh smoke (Debian 12)
+    runs-on: ubuntu-latest
+    container: debian:12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run installer
+        env:
+          DEBIAN_FRONTEND: noninteractive
+          # Keep CI to apt + stow: no mise toolchains, no network installers.
+          DOTFILES_SKIP_MISE_INSTALL: "1"
+          DOTFILES_INSTALL_OPENCODE: "0"
+          DOTFILES_INSTALL_OH_MY_OPENCODE: "0"
+          DOTFILES_INSTALL_DEBIAN_BREW_EQUIV: "0"
+        run: bash install.sh
+      - name: Verify symlinks, OS gating and shell load
+        run: |
+          set -eux
+          test -L "$HOME/.zshrc"
+          test -e "$HOME/.config/nvim"
+          # macOS-only modules must NOT be stowed on Linux
+          test ! -e "$HOME/.config/sketchybar"
+          test ! -e "$HOME/.config/aerospace"
+          test ! -e "$HOME/.config/borders"
+          test ! -d "$HOME/Library/LaunchAgents"
+          # apt zsh plugins present (regression test for the plugin gap)
+          test -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+          test -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+          # The repo's own mise config won the stow: nothing wrote a plain
+          # file there first (regression test for the neovim bootstrap)
+          test -L "$HOME/.config/mise/config.toml"
+          # history-substring-search is vendored (apt does not ship it)
+          test -d "$HOME/.zsh-plugins/zsh-history-substring-search"
+          # Neovim came from the release tarball, not apt's too-old 0.7
+          test -x "$HOME/.local/bin/nvim"
+          "$HOME/.local/bin/nvim" --version | head -1 | grep -qvE 'v0\.[0-7]\b'
+          # interactive zsh loads cleanly, with no stderr noise from missing
+          # toolchains, and JAVA_HOME is never a dangling path
+          zsh -i -c 'echo zsh-loaded'
+          test -z "$(zsh -i -c true 2>&1 >/dev/null | grep -v 'ssh\|Agent pid' || true)"
+          zsh -i -c '[ -z "$JAVA_HOME" ] || [ -d "$JAVA_HOME" ]'

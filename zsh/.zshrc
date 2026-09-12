@@ -41,7 +41,11 @@ if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"
 fi
 # eval "$(mise activate zsh)"
-export PATH="$(go env GOPATH)/bin:$PATH"
+# Guard on go being present: without it `go env` prints "command not found"
+# on every shell start and the result is an empty, meaningless PATH entry.
+if command -v go >/dev/null 2>&1; then
+  export PATH="$(go env GOPATH)/bin:$PATH"
+fi
 export NODE_OPTIONS="--max-old-space-size=8096"
 
 # git-prompt
@@ -158,6 +162,11 @@ elif [ -d /usr/lib/jvm/java-21-openjdk-amd64 ]; then
 elif [ -d /usr/lib/jvm/java-21-openjdk ]; then
   export JAVA_HOME="/usr/lib/jvm/java-21-openjdk"
   export PATH="$JAVA_HOME/bin:$PATH"
+elif [ -d /usr/lib/jvm/default-java ]; then
+  # Debian keeps a distro-managed symlink to the default JDK. Preferred over
+  # pinning a version that a given release may not ship (bookworm has 17).
+  export JAVA_HOME="/usr/lib/jvm/default-java"
+  export PATH="$JAVA_HOME/bin:$PATH"
 fi
 
 # [mise]
@@ -165,6 +174,9 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # [composer]
 export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+# Locally installed helper scripts (osc52-copy.sh and friends).
+export PATH="$HOME/bin:$PATH"
 #
 
 if command -v mise >/dev/null 2>&1; then
@@ -232,8 +244,13 @@ fi
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-export JAVA_HOME="$HOME/.sdkman/candidates/java/current"
-export PATH="$JAVA_HOME/bin:$PATH"
+# Only let SDKMAN own JAVA_HOME when it actually has a current candidate.
+# Unconditionally, this pointed at a non-existent path on any machine without
+# SDKMAN and overrode the working JVM detected above.
+if [ -d "$SDKMAN_DIR/candidates/java/current" ]; then
+  export JAVA_HOME="$SDKMAN_DIR/candidates/java/current"
+  export PATH="$JAVA_HOME/bin:$PATH"
+fi
 
 export PHPVM_DIR="$HOME/.phpvm"
 export PATH="$PHPVM_DIR/bin:$PATH"
@@ -254,54 +271,58 @@ flash() { ~/keyboard-project/firmware/flash "$@"; }
 kbstatus() { ~/keyboard-project/firmware/kbstatus; }
 
 # --- Sleep control ------------------------------------------------------------
-# Keep the machine awake while something long runs, and put it back afterwards.
-# `disablesleep` also suppresses macOS emergency sleep, so both entry points
-# refuse to run below 20% battery without an explicit confirmation.
-lock() {
-  local batt_pct reply
-  batt_pct=$(pmset -g batt | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
+# pmset/osascript/ioreg are macOS-only, so these are defined there alone —
+# on Linux the names simply do not exist rather than failing when called.
+if $_IS_MACOS; then
+  # Keep the machine awake while something long runs, and put it back afterwards.
+  # `disablesleep` also suppresses macOS emergency sleep, so both entry points
+  # refuse to run below 20% battery without an explicit confirmation.
+  lock() {
+    local batt_pct reply
+    batt_pct=$(pmset -g batt | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
 
-  if [[ -n "$batt_pct" && "$batt_pct" -lt 20 ]]; then
-    echo "⚠️  Battery at ${batt_pct}%. disablesleep also holds off emergency sleep — risk of a hard shutdown if it runs out."
-    read "reply?Continue anyway? (yes/N): "
-    if [[ "${reply:l}" != "yes" ]]; then
-      echo "❌ Cancelled."
-      return 1
+    if [[ -n "$batt_pct" && "$batt_pct" -lt 20 ]]; then
+      echo "⚠️  Battery at ${batt_pct}%. disablesleep also holds off emergency sleep — risk of a hard shutdown if it runs out."
+      read "reply?Continue anyway? (yes/N): "
+      if [[ "${reply:l}" != "yes" ]]; then
+        echo "❌ Cancelled."
+        return 1
+      fi
     fi
-  fi
 
-  echo "🔒 Lid-close sleep disabled — safe to close the lid while something runs."
-  sudo pmset -a disablesleep 1
-  osascript -e 'tell application "System Events" to keystroke "q" using {control down, command down}'
-}
+    echo "🔒 Lid-close sleep disabled — safe to close the lid while something runs."
+    sudo pmset -a disablesleep 1
+    osascript -e 'tell application "System Events" to keystroke "q" using {control down, command down}'
+  }
 
-hard() {
-  local batt_pct reply
-  batt_pct=$(pmset -g batt | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
+  hard() {
+    local batt_pct reply
+    batt_pct=$(pmset -g batt | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
 
-  if [[ -n "$batt_pct" && "$batt_pct" -lt 20 ]]; then
-    echo "⚠️  Battery at ${batt_pct}%. Hard mode also disables display/disk sleep and standby — risk of a hard shutdown without a charger."
-    read "reply?Continue anyway? (yes/N): "
-    if [[ "${reply:l}" != "yes" ]]; then
-      echo "❌ Cancelled."
-      return 1
+    if [[ -n "$batt_pct" && "$batt_pct" -lt 20 ]]; then
+      echo "⚠️  Battery at ${batt_pct}%. Hard mode also disables display/disk sleep and standby — risk of a hard shutdown without a charger."
+      read "reply?Continue anyway? (yes/N): "
+      if [[ "${reply:l}" != "yes" ]]; then
+        echo "❌ Cancelled."
+        return 1
+      fi
     fi
-  fi
 
-  echo "🔥 Hard mode: display, disk and system sleep off on every power source. The screen is NOT locked."
-  sudo pmset -a disablesleep 1 sleep 0 displaysleep 0 disksleep 0 standby 0
-}
+    echo "🔥 Hard mode: display, disk and system sleep off on every power source. The screen is NOT locked."
+    sudo pmset -a disablesleep 1 sleep 0 displaysleep 0 disksleep 0 standby 0
+  }
 
-normal() {
-  echo "💤 Restoring normal sleep behaviour..."
-  sudo pmset -a disablesleep 0 sleep 1 displaysleep 2 disksleep 10 standby 1
-  pkill -x caffeinate 2>/dev/null
-  if ioreg -r -k AppleClamshellState -d 4 | grep -q '"AppleClamshellState" = Yes'; then
-    echo "Lid is closed but the system is still awake — sleeping now."
-    pmset sleepnow
-  fi
-  echo "✅ Normal sleep behaviour restored."
-}
+  normal() {
+    echo "💤 Restoring normal sleep behaviour..."
+    sudo pmset -a disablesleep 0 sleep 1 displaysleep 2 disksleep 10 standby 1
+    pkill -x caffeinate 2>/dev/null
+    if ioreg -r -k AppleClamshellState -d 4 | grep -q '"AppleClamshellState" = Yes'; then
+      echo "Lid is closed but the system is still awake — sleeping now."
+      pmset sleepnow
+    fi
+    echo "✅ Normal sleep behaviour restored."
+  }
+fi
 
 # The Claude Code PreToolUse hook routes bash commands through rtk unless this
 # file exists, so the toggle is the file, not a setting.
