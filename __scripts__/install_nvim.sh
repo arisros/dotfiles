@@ -20,7 +20,13 @@ case "$OS-$ARCH" in
     *) echo "Unsupported $OS-$ARCH" >&2; exit 1 ;;
 esac
 
-url="https://github.com/neovim/neovim/releases/latest/download/$asset"
+# Pinned, not "latest": nvim-treesitter's master branch lists Neovim 0.10/0.11
+# as its supported upper bound, and on 0.12 every markdown buffer throws
+# "attempt to call method 'range'" out of the set-lang-from-info-string!
+# directive. Override with NVIM_VERSION= once the config moves to the
+# nvim-treesitter main branch.
+NVIM_VERSION="${NVIM_VERSION:-v0.11.7}"
+url="https://github.com/neovim/neovim/releases/download/$NVIM_VERSION/$asset"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 

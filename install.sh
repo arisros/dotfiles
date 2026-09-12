@@ -146,7 +146,9 @@ is_neovim_011() {
 
   nvim_line="$(nvim --version 2>/dev/null | sed -n '1p')"
   case "$nvim_line" in
-    "NVIM v0.11"*|"NVIM v0.12"*|"NVIM v0.13"*|"NVIM v1."*)
+    # Upper-bounded on purpose: 0.12 parses fine but breaks nvim-treesitter's
+    # master branch, so a box that already has 0.12 still needs 0.11 installed.
+    "NVIM v0.11"*)
       return 0
       ;;
     *)
@@ -164,7 +166,7 @@ ensure_neovim_target() {
   # ~/.config/mise/config.toml, and this runs before the stow step, so it
   # leaves a plain file exactly where the repo's own mise package has to
   # link. Stow then refuses the package and the whole install exits 1.
-  warn 'Neovim v0.11+ is required. Installing...'
+  warn 'Neovim v0.11.x is required (0.12 breaks nvim-treesitter). Installing...'
   case "$OS" in
     darwin)
       ensure_homebrew || return 1
