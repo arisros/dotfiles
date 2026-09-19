@@ -1,6 +1,6 @@
 [tools]
 node = "22"
-go = "1.26.5"
+go = "1.26.6"
 # golangci-lint = "latest"
 bun = "1.2.7"
 
