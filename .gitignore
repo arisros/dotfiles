@@ -79,7 +79,6 @@ zsh/.zshrcbackup
 # Context-specific tooling config: host lists, service names and profiles that
 # belong to one employer. The generic config for these tools is tracked; these
 # are not.
-zsh/.blue_dev
 zsh/.db_aliases_work
 queuepeek/config.toml
 # Homelab Vault/Cloudflare helpers: hardcoded cluster paths and service names.

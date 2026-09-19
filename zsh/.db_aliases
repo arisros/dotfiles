@@ -36,7 +36,7 @@ _rf_container_env() {
 # ── Commands ─────────────────────────────────────────────────────────────────
 # rfdb [name-filter] — pick a running postgres/mysql container and open it.
 # Credentials come from the container's own env and published port, so every
-# compose stack (LCAS, lms-calculation, …) works without hardcoding anything.
+# compose stack works without hardcoding anything.
 # Set RFDB_ASK_PASSWORD=1 to let rainfrog prompt instead of reusing the
 # container's password (it is a local dev container either way).
 rfdb() {
@@ -130,7 +130,7 @@ rfurl() {
 # `cargo install rmqtui`; no config file, flags/env only — same idea as rfdb:
 # credentials come from the running container, nothing hardcoded.
 # queuepeek — message-level TUI (pretty JSON, edit & re-publish, `L` DLQ
-# re-route). Profiles live in dotfiles/queuepeek/config.toml.
+# re-route). Profiles come from the private overlay.
 alias qp='queuepeek'
 
 # rmq [name-filter] — pick a running rabbitmq container and open rmqtui on it.

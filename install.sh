@@ -436,6 +436,17 @@ render_launch_agents
 # dangles on a machine that has no private context to load.
 touch "$HOME/.claude/context.local.md"
 
+# Plugins: separate repos that link themselves into the local hooks. Each one is
+# a symlink in the directory below, so this repo never names any of them. See
+# README, "Local modules".
+plugin_dir="${DOTFILES_PLUGINS:-$HOME/.config/dotfiles/plugins}"
+mkdir -p "$plugin_dir"
+for plugin in "$plugin_dir"/*; do
+  [ -x "$plugin/install.sh" ] || continue
+  log "Installing plugin $(basename "$plugin")..."
+  "$plugin/install.sh" || warn "Plugin $(basename "$plugin") reported problems."
+done
+
 
 ensure_tmux_bootstrap
 

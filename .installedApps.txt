@@ -12,7 +12,6 @@ DBeaver.app
 DisplayLink Manager.app
 Falcon.app
 Ghostty.app
-GlobalProtect.app
 Google Chrome.app
 Insomnia.app
 Karabiner-Elements.app
