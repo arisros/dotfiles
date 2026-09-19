@@ -112,7 +112,9 @@ goes into a local module instead of being committed here.
 ```
 ~/.config/dotfiles/modules/*.zsh   sourced by zsh if present
 ~/.config/git/config.local         included by git/.gitconfig
+~/.config/git/config.overlay       included by git/.gitconfig, for an overlay repo
 ~/.ssh/config.local                included by ssh/config, above every Host block
+~/.ssh/config.d/*                  included right after it, for an overlay repo
 ~/.config/tmux/local.conf          sourced by tmux (source-file -q)
 ~/.config/nvim/lua/local/init.lua  pcall(require, "local")
 Brewfile.local                     installed by install.sh when it exists
@@ -129,6 +131,37 @@ repo refers to it by name, so nothing breaks.
 
 `ssh/config.local.example` and `git/config.local.example` document the expected
 shape without carrying any real values.
+
+## Multiple GitHub accounts across machines
+
+Each account gets an ssh host alias with its own key and `IdentitiesOnly yes`.
+Repos are routed to an account by the org in their remote URL, not by the
+directory they happen to be cloned into, so a personal repo under a work folder
+still pushes as you. The shapes are in `ssh/config.local.example` and
+`git/config.local.example`.
+
+```mermaid
+flowchart LR
+  R["git@github.com:ORG/x"] -->|insteadOf| A["ALIAS:ORG/x"]
+  A --> H1["Host ALIAS: work key"]
+  P["git@github.com:YOU/x"] --> H2["Host github.com: personal key"]
+  H1 & H2 --> K{private key on this machine?}
+  K -->|yes| U[use it]
+  K -->|only the .pub| F[pick that key from the forwarded agent]
+```
+
+Other machines (a homelab, a VM) never get a private key:
+
+1. On the laptop, set `ForwardAgent yes` on that one host in `~/.ssh/config.local`.
+   On macOS the `com.user.ssh-agent` LaunchAgent loads every keychain key at
+   login, so the agent already holds them all.
+2. On the remote machine, copy only the `.pub` files to `~/.ssh/` and use the
+   same host aliases. ssh reads `<key>.pub` when `<key>` is missing and asks the
+   agent for exactly that key.
+3. `.zshrc` points `SSH_AUTH_SOCK` at `~/.ssh/agent.sock`, re-linked on every
+   login, so tmux sessions that outlive the connection keep working.
+
+Check with `ssh -T git@github.com` and `ssh -T <alias>`: each greets its own user.
 
 ## C development setup
 

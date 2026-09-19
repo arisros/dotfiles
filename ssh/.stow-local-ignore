@@ -1,0 +1,4 @@
+# Rendered into ~/Library/LaunchAgents by install.sh, not linked into ~/.ssh.
+com\.user\..*\.plist
+config\.local\.example
+\.stow-local-ignore

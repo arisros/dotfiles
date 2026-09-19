@@ -1,3 +1,7 @@
+# UseKeychain is Apple's patch; stock OpenSSH on Linux rejects it as a bad
+# option unless told to ignore it. Must come before any line that uses it.
+IgnoreUnknown UseKeychain
+
 # Added by OrbStack: 'orb' SSH host for Linux machines
 # This only works if it's at the top of ssh_config (before any Host blocks).
 # This won't be added again if you remove it.
@@ -5,7 +9,9 @@ Include ~/.orbstack/ssh/config
 
 # Real machines - addresses, logins, ports, key names - live here, untracked.
 # Include must stay above any Host block, or the entries below would win.
+# config.d/ is for drop-ins from a private overlay repo.
 Include ~/.ssh/config.local
+Include ~/.ssh/config.d/*
 
 # Defaults that are the same on every machine.
 Host *

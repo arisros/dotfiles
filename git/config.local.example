@@ -5,9 +5,16 @@
 # [user]
 #     name = "<name>"
 #     email = "<email>"
-# [core]
-#     sshCommand = "ssh -i ~/.ssh/<key> -F /dev/null"
 
-# Per-directory identity, if you switch by workspace:
-# [includeIf "gitdir:~/<dir>/"]
+# A second account, routed by where the repo lives rather than which directory
+# it is cloned into. insteadOf sends the org through the ssh alias from
+# ssh/config.local.example; hasconfig matches the remote URL as written.
+# [url "<alias>:<org>/"]
+#     insteadOf = git@github.com:<org>/
+#     insteadOf = https://github.com/<org>/
+# [includeIf "hasconfig:remote.*.url:git@github.com:<org>/**"]
+#     path = ~/.config/git/config.<name>
+# [includeIf "hasconfig:remote.*.url:https://github.com/<org>/**"]
+#     path = ~/.config/git/config.<name>
+# [includeIf "hasconfig:remote.*.url:<alias>:<org>/**"]
 #     path = ~/.config/git/config.<name>
