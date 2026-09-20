@@ -129,6 +129,10 @@ plugin: symlink it into `~/.config/dotfiles/plugins/` and `install.sh` runs it
 after stowing. To detach, remove the symlink: nothing in this repo refers to any
 plugin by name, so nothing breaks.
 
+`docs/plugins.md` covers the why, every hook a plugin can use, how to write one,
+and how to keep a plugin's contents private - including a public plugin whose
+files are encrypted.
+
 `ssh/config.local.example` and `git/config.local.example` document the expected
 shape without carrying any real values.
 
