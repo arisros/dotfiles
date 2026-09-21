@@ -36,6 +36,17 @@
               {
                 "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
               }
+            ],
+            "to_if_canceled": [
+              {
+                "set_variable": {
+                  "name": "tmux_browser_prefix",
+                  "value": 0
+                }
+              },
+              {
+                "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+              }
             ]
           },
           "parameters": {
@@ -83,6 +94,17 @@
               {
                 "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
               }
+            ],
+            "to_if_canceled": [
+              {
+                "set_variable": {
+                  "name": "tmux_browser_prefix",
+                  "value": 0
+                }
+              },
+              {
+                "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+              }
             ]
           },
           "parameters": {
@@ -121,6 +143,17 @@
           ],
           "to_delayed_action": {
             "to_if_invoked": [
+              {
+                "set_variable": {
+                  "name": "tmux_browser_prefix",
+                  "value": 0
+                }
+              },
+              {
+                "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+              }
+            ],
+            "to_if_canceled": [
               {
                 "set_variable": {
                   "name": "tmux_browser_prefix",

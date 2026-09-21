@@ -333,6 +333,7 @@ config_dirs=(
   "$HOME/.config/mise"
   "$HOME/.config/nix"
   "$HOME/.config/yazi"
+  "$HOME/.config/htop"
 )
 
 # aerospace, borders and sketchybar are macOS window-manager tooling; creating
@@ -360,6 +361,7 @@ stow_pairs=(
   "$HOME/.ssh:ssh"
   "$HOME/.config/mise:mise"
   "$HOME/.config/yazi:yazi"
+  "$HOME/.config/htop:htop"
   "$HOME:git"
   "$HOME:vim"
   "$HOME:zsh"
