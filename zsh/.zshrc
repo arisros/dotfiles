@@ -115,11 +115,20 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-if [ -z "$SSH_AUTH_SOCK" ]; then
-    eval "$(ssh-agent -s)"
-    ssh-add ~/.ssh/id_ed25519_github
-    ssh-add ~/.ssh/id_rsa_git_arisjirat
+# Over SSH, use the forwarded agent through a fixed symlink: tmux panes keep the
+# socket path they started with, and the raw one dies with that connection.
+# Keys are never added here; AddKeysToAgent in ssh/config loads them on use.
+_agent_sock="$HOME/.ssh/agent.sock"
+if [ -n "$SSH_CONNECTION" ]; then
+    if [ -S "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$_agent_sock" ]; then
+        ln -sfn "$SSH_AUTH_SOCK" "$_agent_sock"
+    fi
+    [ -S "$_agent_sock" ] && export SSH_AUTH_SOCK="$_agent_sock"
 fi
+if [ ! -S "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)" >/dev/null
+fi
+unset _agent_sock
 
 # [usr/local/bin]
 export PATH="/usr/local/bin:$PATH"

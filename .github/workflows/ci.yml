@@ -94,5 +94,10 @@ jobs:
           # interactive zsh loads cleanly, with no stderr noise from missing
           # toolchains, and JAVA_HOME is never a dangling path
           zsh -i -c 'echo zsh-loaded'
-          test -z "$(zsh -i -c true 2>&1 >/dev/null | grep -v 'ssh\|Agent pid' || true)"
+          test -z "$(zsh -i -c true 2>&1 >/dev/null)"
+          # ssh accepts the macOS-flavoured config on stock OpenSSH, and git
+          # reads the stowed config with both optional includes missing
+          ssh -G github.com >/dev/null
+          git config --global --list >/dev/null
+          test ! -e "$HOME/.ssh/com.user.ssh-agent.plist"
           zsh -i -c '[ -z "$JAVA_HOME" ] || [ -d "$JAVA_HOME" ]'

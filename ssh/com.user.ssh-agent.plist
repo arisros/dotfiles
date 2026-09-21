@@ -5,11 +5,12 @@
     <key>Label</key>
     <string>com.user.ssh-agent</string>
 
+    <!-- Every key whose passphrase is in the keychain, so the agent already
+         holds them all before anything forwards it to another host. -->
     <key>ProgramArguments</key>
     <array>
         <string>/usr/bin/ssh-add</string>
-        <string>--apple-use-keychain</string>
-        <string>~/.ssh/id_rsa_git_arisjirat</string>
+        <string>--apple-load-keychain</string>
     </array>
 
     <key>RunAtLoad</key>

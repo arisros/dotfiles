@@ -5,6 +5,7 @@
 zsh
 stow
 git
+openssh-client
 curl
 ca-certificates
 build-essential

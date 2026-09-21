@@ -10,9 +10,23 @@
 #     Port 22
 #     IdentityFile ~/.ssh/<key>
 #     StrictHostKeyChecking yes
+#     # Only on hosts you own: lets them use this machine's keys, which never
+#     # leave it. See "Multiple GitHub accounts" in the README.
+#     ForwardAgent yes
 
-# An extra identity for a second account:
-# Host github.com-<alias>
+# Plain github.com. Needed because ssh/config sets IdentitiesOnly yes for Host *,
+# so no key is offered without an explicit IdentityFile. Tools that set their own
+# GIT_SSH_COMMAND (lazy.nvim does) discard the -i in git's core.sshCommand, so a
+# rewrite of https://github.com/ to ssh then authenticates with no key at all.
+# Host github.com
+#     HostName github.com
+#     User git
+#     IdentityFile ~/.ssh/<key>
+
+# A second GitHub account, reached as <alias>:<org>/<repo>. On a host that only
+# has the forwarded agent, copy just <key>.pub there: ssh reads it to pick that
+# one key out of the agent.
+# Host <alias>
 #     HostName github.com
 #     User git
 #     IdentityFile ~/.ssh/<key>
