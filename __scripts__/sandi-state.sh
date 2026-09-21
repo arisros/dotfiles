@@ -25,6 +25,11 @@ call it rather than reimplementing the checks.
   offline           remote unreachable
 
   --no-fetch        report from local refs only, no network round trip
+
+States are reported in priority order, so "dirty" masks any ahead/behind
+count. Clean the working tree first, then re-check.
+
+The fetch is bounded by SANDI_CONNECT_TIMEOUT (default 3 seconds).
 EOF
 }
 
@@ -72,7 +77,11 @@ if ! git -C "$STORE" rev-parse --abbrev-ref '@{u}' >/dev/null 2>&1; then
 fi
 
 if [ "$FETCH" -eq 1 ]; then
-  if ! git -C "$STORE" fetch --quiet 2>/dev/null; then
+  # Bound the round trip. Hosts are free to set "ConnectTimeout none", and an
+  # unroutable address then blocks for 75s before ssh gives up, which is far
+  # too long for a status check.
+  if ! GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh} -o BatchMode=yes -o ConnectTimeout=${SANDI_CONNECT_TIMEOUT:-3}" \
+      git -C "$STORE" fetch --quiet 2>/dev/null; then
     printf 'offline\n'
     exit 0
   fi

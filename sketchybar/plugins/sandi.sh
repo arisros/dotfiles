@@ -4,9 +4,12 @@ source "$CONFIG_DIR/env.sh"
 
 STATE_SCRIPT="${SANDI_STATE_SCRIPT:-$HOME/dotfiles/__scripts__/sandi-state.sh}"
 
+# --no-fetch deliberately: this runs every update_freq seconds whether or not
+# the remote is reachable, and a bar item must never block on the network.
+# ahead/behind still refresh on any `sandi sync` or `sandi st`.
 state="unknown"
 if [ -x "$STATE_SCRIPT" ]; then
-  state="$("$STATE_SCRIPT" 2>/dev/null || printf 'unknown')"
+  state="$("$STATE_SCRIPT" --no-fetch 2>/dev/null || printf 'unknown')"
 fi
 
 # shellcheck disable=SC2086
