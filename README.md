@@ -333,8 +333,10 @@ export SANDI_REMOTE="yourhost:path/to/password-store.git"
 
 `sandi-setup.sh` is idempotent and runs from `install.sh`. It initialises git in the store, wires the remote, and installs a `post-commit` hook that pushes in the background, so an out-of-sync store only ever means the machine was offline. It never pushes or decrypts itself, so it cannot prompt.
 
+It is **opt-in**: with neither `SANDI_REMOTE` nor `DOTFILES_SANDI=1` set it leaves `~/.password-store` strictly untouched, so installing these dotfiles never git-initialises a password store you did not ask it to.
+
 `__scripts__/sandi-state.sh` is the single source of truth for sync state. The shell function and the sketchybar item both call it rather than duplicating the checks. It prints one of `synced`, `ahead N`, `behind N`, `diverged N M`, `dirty N`, `offline`, `unpushed`, `noremote`, `nogit`, `nostore`.
 
-The sketchybar item shows the same state as `S:ok`, `S:^2`, `S:v1`, `S:off`. Note that every other right-side item is commented out in `sketchybar/sketchybarrc`; comment out `source $ITEM_DIR/sandi.sh` too if that is not wanted.
+The sketchybar item shows the same state as `S:ok`, `S:^2`, `S:v1`. It ships commented out in `sketchybar/sketchybarrc`, matching its neighbours; uncomment `source $ITEM_DIR/sandi.sh` to enable it. It calls `sandi-state.sh --no-fetch`, so it reports local truth and never blocks the bar on the network. Ahead/behind counts refresh on any `sandi sync` or `sandi st`.
 
 `.gpg` files are binary, so git cannot merge them. Two machines editing the same entry while both offline produces a conflict that is resolved by picking one side and re-inserting. Different entries merge cleanly.

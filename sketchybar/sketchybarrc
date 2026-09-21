@@ -12,7 +12,7 @@ source $CONFIG_DIR/aerospaces.sh
 # source $ITEM_DIR/battery.sh
 # source $ITEM_DIR/clock.sh
 source $ITEM_DIR/tmux_prefix.sh
-source $ITEM_DIR/sandi.sh
+# source $ITEM_DIR/sandi.sh
 
 ##### Finalizing Setup #####
 sketchybar --update

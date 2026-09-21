@@ -71,6 +71,28 @@ if [ ! -d "$STORE" ]; then
   exit 0
 fi
 
+# install.sh runs this from bash, where the zsh module has not been loaded, so
+# read the remote out of the module rather than depending on the environment.
+# This must happen before the opt-in gate below, which tests SANDI_REMOTE.
+# The line must be a plain `export SANDI_REMOTE="..."`: this deliberately does
+# not source zsh from bash, so `typeset -x`, trailing comments and unusual
+# quoting are not recognised.
+if [ -z "${SANDI_REMOTE:-}" ]; then
+  module="${DOTFILES_MODULES:-$HOME/.config/dotfiles/modules}/sandi.zsh"
+  if [ -f "$module" ]; then
+    SANDI_REMOTE="$(sed -n 's/^[[:space:]]*export[[:space:]]*SANDI_REMOTE=["'"'"']\{0,1\}\([^"'"'"']*\)["'"'"']\{0,1\}[[:space:]]*$/\1/p' "$module" | tail -1)"
+  fi
+fi
+
+# Everything below mutates a store that lives outside this repo. install.sh
+# runs on every machine, so git-initialising someone's password store as a
+# side effect of installing dotfiles is not ours to decide. Opt in with
+# SANDI_REMOTE in the local module, or DOTFILES_SANDI=1 for a local-only store.
+if [ -z "${SANDI_REMOTE:-}" ] && [ "${DOTFILES_SANDI:-0}" != "1" ]; then
+  log 'not configured (no SANDI_REMOTE, no DOTFILES_SANDI=1), leaving the store untouched'
+  exit 0
+fi
+
 if [ ! -f "$STORE/.gitignore" ]; then
   printf '.DS_Store\n' > "$STORE/.gitignore"
   log 'added .gitignore to the store'
@@ -79,15 +101,6 @@ fi
 if ! git -C "$STORE" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   pass git init >/dev/null 2>&1
   log 'initialised git in the store'
-fi
-
-# install.sh runs this from bash, where the zsh module has not been loaded, so
-# read the remote out of the module rather than depending on the environment.
-if [ -z "${SANDI_REMOTE:-}" ]; then
-  module="${DOTFILES_MODULES:-$HOME/.config/dotfiles/modules}/sandi.zsh"
-  if [ -f "$module" ]; then
-    SANDI_REMOTE="$(sed -n 's/^[[:space:]]*export[[:space:]]*SANDI_REMOTE=["'"'"']\{0,1\}\([^"'"'"']*\)["'"'"']\{0,1\}[[:space:]]*$/\1/p' "$module" | tail -1)"
-  fi
 fi
 
 if ! git -C "$STORE" remote get-url origin >/dev/null 2>&1; then
@@ -99,10 +112,28 @@ if ! git -C "$STORE" remote get-url origin >/dev/null 2>&1; then
   fi
 fi
 
+# Versioned so a later improvement to the hook body still reaches machines that
+# already have an older one. A hook we did not write is never overwritten.
 hook="$STORE/.git/hooks/post-commit"
+hook_version='# sandi-hook-version: 1'
+write_hook=0
+hook_signature='# Installed by dotfiles __scripts__/sandi-setup.sh'
 if [ ! -f "$hook" ]; then
-  cat > "$hook" <<'HOOK'
+  write_hook=1
+elif grep -qxF "$hook_version" "$hook"; then
+  : # already current
+elif grep -q '^# sandi-hook-version:' "$hook" || grep -qxF "$hook_signature" "$hook"; then
+  # Ours, either an older version or the original unversioned one.
+  write_hook=1
+  log 'upgrading the post-commit hook'
+else
+  warn 'a post-commit hook already exists and is not ours, leaving it alone'
+fi
+
+if [ "$write_hook" -eq 1 ]; then
+  cat > "$hook" <<HOOK
 #!/usr/bin/env bash
+$hook_version
 # Installed by dotfiles __scripts__/sandi-setup.sh
 # Pushes in the background so that "not synced" only ever means "was offline".
 git rev-parse --abbrev-ref '@{u}' >/dev/null 2>&1 || exit 0
