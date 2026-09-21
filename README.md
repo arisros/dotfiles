@@ -308,3 +308,33 @@ This script writes `~/.secrets` from available `pass` entries using these mappin
 - `github/token` -> `GITHUB_TOKEN`
 
 If `pass` is not installed/unlocked, it falls back to environment variables, then to template placeholders in `~/.secrets`.
+
+## sandi (password store sync)
+
+`sandi` is a thin wrapper around `pass`. Anything it does not recognise is forwarded straight through, so `sandi show`, `sandi find` and `sandi git` behave exactly like the `pass` equivalents. It adds two subcommands:
+
+```bash
+sandi sync   # pull --rebase, then push
+sandi st     # print the sync state
+```
+
+The store stays encrypted end to end. Secrets are encrypted on the device to every key listed in `.gpg-id`, and only ciphertext is pushed, so the sync host holds no key and can decrypt nothing. Entry names are filenames, which means `sandi find` searches offline with no network round trip and no decryption.
+
+One-time setup per machine:
+
+```bash
+# ~/.config/dotfiles/modules/sandi.zsh, untracked, machine-local
+export SANDI_REMOTE="yourhost:path/to/password-store.git"
+```
+
+```bash
+./__scripts__/sandi-setup.sh
+```
+
+`sandi-setup.sh` is idempotent and runs from `install.sh`. It initialises git in the store, wires the remote, and installs a `post-commit` hook that pushes in the background, so an out-of-sync store only ever means the machine was offline. It never pushes or decrypts itself, so it cannot prompt.
+
+`__scripts__/sandi-state.sh` is the single source of truth for sync state. The shell function and the sketchybar item both call it rather than duplicating the checks. It prints one of `synced`, `ahead N`, `behind N`, `diverged N M`, `dirty N`, `offline`, `unpushed`, `noremote`, `nogit`, `nostore`.
+
+The sketchybar item shows the same state as `S:ok`, `S:^2`, `S:v1`, `S:off`. Note that every other right-side item is commented out in `sketchybar/sketchybarrc`; comment out `source $ITEM_DIR/sandi.sh` too if that is not wanted.
+
+`.gpg` files are binary, so git cannot merge them. Two machines editing the same entry while both offline produces a conflict that is resolved by picking one side and re-inserting. Different entries merge cleanly.

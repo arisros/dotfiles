@@ -1,0 +1,59 @@
+# ── sandi ────────────────────────────────────────────────────────────────────
+# Thin wrapper around pass. Anything it does not recognise is forwarded
+# straight through, so `sandi show`, `sandi find`, `sandi insert` and
+# `sandi git` behave exactly like the pass equivalents. Two additions:
+#
+#   sandi sync    pull --rebase then push
+#   sandi st      print the sync state
+#
+# The store itself, the gpg keys and the remote are not configured here.
+# Set SANDI_REMOTE per machine in ~/.config/dotfiles/modules/sandi.zsh and run
+# __scripts__/sandi-setup.sh.
+
+: "${SANDI_DOTFILES:=$HOME/dotfiles}"
+: "${SANDI_STATE_SCRIPT:=$SANDI_DOTFILES/__scripts__/sandi-state.sh}"
+
+sandi() {
+  command -v pass >/dev/null 2>&1 || { printf 'sandi: pass not found\n' >&2; return 1; }
+  case "${1:-}" in
+    sync)
+      shift
+      _sandi_sync "$@"
+      ;;
+    st|status)
+      shift
+      _sandi_status "$@"
+      ;;
+    *)
+      pass "$@"
+      ;;
+  esac
+}
+
+_sandi_store() {
+  printf '%s\n' "${PASSWORD_STORE_DIR:-$HOME/.password-store}"
+}
+
+_sandi_sync() {
+  local store
+  store="$(_sandi_store)"
+  if ! git -C "$store" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    printf 'sandi: %s is not a git repository, run sandi-setup.sh\n' "$store" >&2
+    return 1
+  fi
+  if ! git -C "$store" rev-parse --abbrev-ref '@{u}' >/dev/null 2>&1; then
+    printf 'sandi: no upstream configured, run sandi-setup.sh\n' >&2
+    return 1
+  fi
+  pass git pull --rebase --quiet || return 1
+  pass git push --quiet || return 1
+  printf 'sandi: synced\n'
+}
+
+_sandi_status() {
+  if [ ! -x "$SANDI_STATE_SCRIPT" ]; then
+    printf 'sandi: %s not found\n' "$SANDI_STATE_SCRIPT" >&2
+    return 1
+  fi
+  "$SANDI_STATE_SCRIPT" "$@"
+}

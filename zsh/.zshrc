@@ -213,6 +213,14 @@ fi
 # [ZSH] db_aliases - rainfrog helpers (rf, rfdb, rfenv, rfurl) + rabbitmq (rmq, qp)
 [ -f "$HOME/.db_aliases" ] && source "$HOME/.db_aliases"
 
+# [ZSH] gpg - pinentry-curses needs this to find the terminal, without it
+# every decrypt fails with "No such file or directory". $TTY not $(tty): no
+# subprocess, and it stays empty when detached instead of "not a tty".
+export GPG_TTY=$TTY
+
+# [ZSH] sandi - pass wrapper with sync helpers (sandi sync, sandi st)
+[ -f "$HOME/.sandi_aliases" ] && source "$HOME/.sandi_aliases"
+
 # rainfrog keeps config and state under XDG paths instead of ~/Library/Application Support
 export RAINFROG_CONFIG="$HOME/.config/rainfrog"
 export RAINFROG_DATA="$HOME/.local/share/rainfrog"
