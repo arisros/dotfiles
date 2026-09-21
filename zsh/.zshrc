@@ -213,6 +213,9 @@ fi
 # [ZSH] db_aliases - rainfrog helpers (rf, rfdb, rfenv, rfurl) + rabbitmq (rmq, qp)
 [ -f "$HOME/.db_aliases" ] && source "$HOME/.db_aliases"
 
+# [ZSH] sandi - pass wrapper with sync helpers (sandi sync, sandi st)
+[ -f "$HOME/.sandi_aliases" ] && source "$HOME/.sandi_aliases"
+
 # rainfrog keeps config and state under XDG paths instead of ~/Library/Application Support
 export RAINFROG_CONFIG="$HOME/.config/rainfrog"
 export RAINFROG_DATA="$HOME/.local/share/rainfrog"
