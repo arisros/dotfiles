@@ -20,6 +20,7 @@ case "$1" in
   dirty)    label="*$2"       ; color=$MAROON   ;;
   offline)  label="off"       ; color=$OVERLAY1 ;;
   noremote) label="local"     ; color=$OVERLAY1 ;;
+  unpushed) label="new"       ; color=$YELLOW   ;;
   nogit)    label="nogit"     ; color=$RED      ;;
   nostore)  label="none"      ; color=$OVERLAY1 ;;
   *)        label="?"         ; color=$RED      ;;

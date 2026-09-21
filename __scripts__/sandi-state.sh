@@ -20,7 +20,8 @@ call it rather than reimplementing the checks.
   dirty N           N uncommitted changes in the store
   nostore           store directory does not exist
   nogit             store is not a git repository
-  noremote          no upstream branch configured
+  noremote          no remote configured at all
+  unpushed          remote configured, but no upstream branch yet
   offline           remote unreachable
 
   --no-fetch        report from local refs only, no network round trip
@@ -62,7 +63,11 @@ if [ "$dirty" -gt 0 ]; then
 fi
 
 if ! git -C "$STORE" rev-parse --abbrev-ref '@{u}' >/dev/null 2>&1; then
-  printf 'noremote\n'
+  if git -C "$STORE" remote get-url origin >/dev/null 2>&1; then
+    printf 'unpushed\n'
+  else
+    printf 'noremote\n'
+  fi
   exit 0
 fi
 
