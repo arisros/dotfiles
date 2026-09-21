@@ -156,15 +156,12 @@ fallback_hint() {
   case "$1" in
     git-secrets) printf 'manual: https://github.com/awslabs/git-secrets\n' ;;
     chatgpt-cli) printf 'manual: npm/pipx install for chatgpt-cli\n' ;;
-    jira-cli) printf 'manual: use Atlassian jira-cli installer\n' ;;
-    jiratui) printf 'manual: build from source (Rust/Go depending on tool)\n' ;;
     joshuto|viu|yazi) printf 'manual: cargo install %s\n' "$1" ;;
     lazysql) printf 'manual: download release binary\n' ;;
     fvm) printf 'manual: curl -fsSL https://fvm.app/install.sh | bash\n' ;;
     mockery) printf 'manual: go install github.com/vektra/mockery/v2@latest\n' ;;
     ollama) printf 'manual: curl -fsSL https://ollama.com/install.sh | sh\n' ;;
     supabase) printf 'manual: https://github.com/supabase/cli/releases\n' ;;
-    temporal) printf 'manual: https://docs.temporal.io/cli\n' ;;
     *) printf 'manual install required\n' ;;
   esac
 }

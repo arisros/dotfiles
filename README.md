@@ -117,7 +117,7 @@ goes into a local module instead of being committed here.
 ~/.ssh/config.d/*                  included right after it, for an overlay repo
 ~/.config/tmux/local.conf          sourced by tmux (source-file -q)
 ~/.config/nvim/lua/local/init.lua  pcall(require, "local")
-Brewfile.local                     installed by install.sh when it exists
+~/.config/dotfiles/plugins/*/      each plugin's install.sh is run by install.sh
 ```
 
 Every hook is optional and silent when the file is missing, so a fresh clone
@@ -125,9 +125,15 @@ works with none of them present. `install.sh` creates the modules directory and
 nothing else - what goes in it is yours to manage, kept out of this repo by
 `.gitignore`.
 
-To attach a set of modules, put them in that directory (a clone of a private
-repo, symlinked, works well). To detach, delete the directory: nothing in this
-repo refers to it by name, so nothing breaks.
+To attach a set of modules, put them in that directory (a clone of a separate
+repo, symlinked, works well). A repo that brings its own `install.sh` is a
+plugin: symlink it into `~/.config/dotfiles/plugins/` and `install.sh` runs it
+after stowing. To detach, remove the symlink: nothing in this repo refers to any
+plugin by name, so nothing breaks.
+
+`docs/plugins.md` covers the why, every hook a plugin can use, how to write one,
+and how to keep a plugin's contents private - including a public plugin whose
+files are encrypted.
 
 `ssh/config.local.example` and `git/config.local.example` document the expected
 shape without carrying any real values.

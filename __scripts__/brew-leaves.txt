@@ -21,8 +21,6 @@ go
 gobject-introspection
 htop
 jdtls
-jira-cli
-jiratui
 joshuto
 jq
 kardolus/chatgpt-cli/chatgpt-cli
@@ -54,7 +52,6 @@ resvg
 sevenzip
 stow
 supabase/tap/supabase
-temporal
 tig
 tmux
 tomcat

@@ -1,6 +1,5 @@
 tap "felixkratz/formulae"
 tap "homebrew/services"
-tap "infisical/get-cli"
 tap "kardolus/chatgpt-cli"
 tap "leoafarias/fvm"
 tap "nats-io/nats-tools"
@@ -40,10 +39,6 @@ brew "lazygit"
 # --- E2E / container workflow -------------------------------------------
 # Run GitHub Actions locally
 brew "act"
-# Fetch secrets into a command's environment instead of a dotfile
-brew "infisical/get-cli/infisical"
-# Workflow engine CLI - describe/list against a local stack
-brew "temporal"
 # TUI for a multi-container compose stack
 brew "lazydocker"
 # TUI JSON viewer, for test reports and captured payloads

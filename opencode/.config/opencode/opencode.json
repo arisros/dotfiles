@@ -12,17 +12,6 @@
     "opencode-antigravity-auth@latest",
     "oh-my-openagent@latest"
   ],
-  "mcp": {
-    "jira": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@open-mcp/jira"
-      ],
-      "enabled": true
-    }
-  },
   "provider": {
     "openai": {
       "options": {
