@@ -56,6 +56,16 @@ include_git_config() {
 }
 ```
 
+Order matters, and getting it wrong is quiet. A plugin that sets `[user]`
+unconditionally overrides every conditional rule included before it, because git
+applies includes in order and the last value wins. So conditional identity has to
+be included *after* any plugin that sets an identity: keep those rules in their
+own file appended to `~/.config/git/config.overlay` last, not in
+`~/.config/git/config.local`, which `git/.gitconfig` includes first. The symptom
+is a work repo quietly committing with a personal email, with nothing to see in
+either file on its own. `git config --show-origin --get user.email` names the
+file that won.
+
 Conditional includes let a plugin route identity by the repo's remote rather than
 by the directory it sits in, which is what you want when one folder holds repos
 from two accounts:
