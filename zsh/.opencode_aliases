@@ -1,0 +1,19 @@
+# ── opencode ─────────────────────────────────────────────────────────────────
+# opencode.json reads its keys as {env:VAR} at runtime, so they have to be set
+# when opencode starts. Resolving them here keeps them out of every other
+# shell and off disk entirely; see `sandi env` in .sandi_aliases.
+#
+# Entries that are not in the store are skipped with a warning, so opencode
+# still starts with whichever providers are configured.
+
+opencode() {
+  if ! command -v pass >/dev/null 2>&1; then
+    command opencode "$@"
+    return
+  fi
+  sandi env \
+    OPENAI_API_KEY=openai/api-key \
+    ANTHROPIC_API_KEY=anthropic/api-key \
+    GOOGLE_API_KEY=google/api-key \
+    -- command opencode "$@"
+}

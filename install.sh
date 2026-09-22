@@ -457,16 +457,6 @@ if [ -x "$SCRIPT_DIR/__scripts__/install_git_hooks.sh" ]; then
   "$SCRIPT_DIR/__scripts__/install_git_hooks.sh" || warn 'Could not install git hooks automatically.'
 fi
 
-if [ -f "$SCRIPT_DIR/zsh/.secrets.example" ] && [ ! -f "$HOME/.secrets" ]; then
-  cp "$SCRIPT_DIR/zsh/.secrets.example" "$HOME/.secrets"
-  chmod 600 "$HOME/.secrets"
-  warn 'Created ~/.secrets from template. Fill values or run __scripts__/restore_credentials.sh'
-fi
-
-if [ -x "$SCRIPT_DIR/__scripts__/restore_credentials.sh" ]; then
-  "$SCRIPT_DIR/__scripts__/restore_credentials.sh" --quiet || true
-fi
-
 if [ -x "$SCRIPT_DIR/__scripts__/sandi-setup.sh" ]; then
   "$SCRIPT_DIR/__scripts__/sandi-setup.sh" --quiet || true
 fi

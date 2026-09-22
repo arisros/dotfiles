@@ -18,7 +18,7 @@ Or after cloning the repo:
 - on Debian, additionally install everything in `__scripts__/debian-packages.txt`
   (yazi's previewers, clipboard tooling, the apt-shipped zsh plugins)
 - attempt to install `mise` and run `mise install` from `mise/config.toml`
-- install versioned git hooks and initialize `~/.secrets` template safely
+- install versioned git hooks and, when sandi is configured, prepare the password store
 
 If a package manager is unavailable for the current OS, the script exits with a clear actionable error.
 
@@ -93,7 +93,7 @@ Run this on every new machine:
 git clone <your-dotfiles-repo>
 cd dotfiles
 ./install.sh
-./__scripts__/restore_credentials.sh --force
+./__scripts__/sandi-setup.sh
 ```
 
 Quick verification:
@@ -277,37 +277,19 @@ Enable the versioned pre-push hook in this repo:
 
 The hook uses `gitleaks` when installed, and falls back to the local regex scanner otherwise.
 
-## Credentials restore strategy (easy)
+## Credentials strategy
 
-Priority strategy for multi-machine setup:
-
-1. Keep real secrets out of git (`~/.secrets` is local only).
-2. Keep secret source-of-truth in `pass` (password store) entries.
-3. Restore to shell env with:
+Secrets live in `pass` and are resolved into the one process that needs them. Nothing is written to disk, and nothing sits in every shell's environment.
 
 ```bash
-./__scripts__/restore_credentials.sh --force
+sandi env OPENAI_API_KEY=openai/api-key ANTHROPIC_API_KEY=anthropic/api-key -- some-tool
 ```
 
-Alternative restore methods:
+An entry that is not in the store is a warning, not a failure, so a tool needing two of three keys still starts.
 
-```bash
-# restore from environment variables currently in shell
-OPENAI_API_KEY="..." OPENCODE_API_KEY="..." ./__scripts__/restore_credentials.sh --force
+`zsh/.opencode_aliases` is the worked example: `opencode.json` reads its keys as `{env:VAR}` at runtime, so the wrapper resolves them at launch and they exist nowhere else.
 
-# restore from secure transferred file
-./__scripts__/restore_credentials.sh --from-file ~/secure/.secrets --force
-```
-
-This script writes `~/.secrets` from available `pass` entries using these mappings:
-
-- `openai/api-key` -> `OPENAI_API_KEY`
-- `opencode/api-key` -> `OPENCODE_API_KEY`
-- `anthropic/api-key` -> `ANTHROPIC_API_KEY`
-- `google/api-key` -> `GOOGLE_API_KEY`
-- `github/token` -> `GITHUB_TOKEN`
-
-If `pass` is not installed/unlocked, it falls back to environment variables, then to template placeholders in `~/.secrets`.
+There is deliberately no `~/.secrets`. An eager dump of every secret into a plaintext file that every shell sources undoes the encryption it was restored from, and it silently produced empty values whenever the decrypt failed.
 
 ## sandi (password store sync)
 
