@@ -35,7 +35,7 @@ silent when its file is absent.
 
 | Hook | Read by |
 |---|---|
-| `~/.config/dotfiles/modules/*.zsh` | `zsh/.zshrc`, after the alias files, before `~/.secrets` |
+| `~/.config/dotfiles/modules/*.zsh` | `zsh/.zshrc`, after the alias files |
 | `~/.config/git/config.local` | `git/.gitconfig` `[include]` |
 | `~/.config/git/config.overlay` | `git/.gitconfig` `[include]`, for plugins |
 | `~/.ssh/config.local` | `ssh/config` `Include`, above every `Host` block |
