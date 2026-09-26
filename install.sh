@@ -318,7 +318,7 @@ if [ "$SKIP_OPTIONAL_TOOLS" != "1" ] && [ -x "$SCRIPT_DIR/__scripts__/install_zs
 fi
 
 # Local modules: created empty so the loaders have somewhere to look. What goes
-# in it is deliberately outside this repo - see README, "Local modules".
+# in it is deliberately outside this repo - see docs/plugins.md.
 mkdir -p "$HOME/.config/dotfiles/modules"
 
 config_dirs=(
@@ -440,7 +440,7 @@ touch "$HOME/.claude/context.local.md"
 
 # Plugins: separate repos that link themselves into the local hooks. Each one is
 # a symlink in the directory below, so this repo never names any of them. See
-# README, "Local modules".
+# docs/plugins.md.
 plugin_dir="${DOTFILES_PLUGINS:-$HOME/.config/dotfiles/plugins}"
 mkdir -p "$plugin_dir"
 for plugin in "$plugin_dir"/*; do

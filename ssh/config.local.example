@@ -11,7 +11,7 @@
 #     IdentityFile ~/.ssh/<key>
 #     StrictHostKeyChecking yes
 #     # Only on hosts you own: lets them use this machine's keys, which never
-#     # leave it. See "Multiple GitHub accounts" in the README.
+#     # leave it. See docs/git-ssh.md.
 #     ForwardAgent yes
 
 # Plain github.com. Needed because ssh/config sets IdentitiesOnly yes for Host *,

@@ -3,16 +3,15 @@
 Brings the tmux prefix grammar into Chrome/Brave, so `Home` means the same thing
 in the terminal and in the browser.
 
-`tmux-browser.json` is a Karabiner **complex modifications** asset. It is stowed
-into `~/.config/karabiner/assets/complex_modifications/`, which Karabiner only
-ever *reads* — unlike `karabiner.json`, which Karabiner rewrites on every change
-and which therefore cannot be symlinked (see upstream issue #3248).
+`tmux-browser.json` is a Karabiner **complex modifications** asset. It is not
+stowed: `karabiner.json` cannot be symlinked because Karabiner rewrites it on
+every change (see upstream issue #3248), so the rules are merged into it instead.
 
 ## Enabling
 
-`install.sh` does it — `__scripts__/install_karabiner_rules.sh` runs after the stow
-and merges both rules into the selected profile. Re-run it on its own after
-editing the rules:
+`install.sh` does not do this. Run the script by hand once, and again after
+editing the rules. It reads `tmux-browser.json` straight from the repo and merges
+both rules into the selected profile:
 
     bash __scripts__/install_karabiner_rules.sh
 
@@ -25,7 +24,8 @@ exits without doing anything.
 This exists because Karabiner has no CLI for enabling a rule — `karabiner_cli`
 can only *lint* one. The GUI's "Add rule" copies the rule out of
 `assets/complex_modifications/` into `karabiner.json`, and the script does the
-same thing directly. The GUI route still works if you prefer it:
+same thing directly. The GUI route still works if you prefer it: copy
+`tmux-browser.json` into `~/.config/karabiner/assets/complex_modifications/`, then
 Karabiner-Elements → Complex Modifications → Add rule, enabling
 **"tmux prefix in the browser"** before **"caps_lock -> home"**.
 
@@ -40,7 +40,7 @@ Three ways to fire it, all producing the same layer:
 
 | Trigger | Where it comes from |
 |---|---|
-| `Home` | ArkButton right-thumb key (didefinisikan di repo firmware ZMK, bukan di sini) |
+| `Home` | ArkButton right-thumb key (defined in the ZMK firmware repo, not here) |
 | `fn`+`←` | MacBook built-in keyboard — macOS' own Home |
 | `caps_lock` | via rule 2; ArkButton has no caps_lock, this is for the built-in board |
 

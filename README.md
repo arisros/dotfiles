@@ -1,324 +1,40 @@
-```
+# dotfiles
+
+One repo, identical on every macOS and Debian machine. Anything machine-specific lives outside it and is attached through optional hooks.
+
+```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/arisros/dotfiles/main/install.sh)"
-```
-
-Or after cloning the repo:
-
-```bash
+# or, from a clone
 ./install.sh
 ```
-
-## Cross-machine compatibility (macOS + Debian)
-
-`install.sh` is machine-aware and will:
-
-- detect platform (`darwin` or `linux`)
-- auto-install missing core dependencies (`git`, `stow`, `curl`) using Homebrew (macOS) or `apt-get` (Debian)
-- best-effort install common tools (`tmux`, `neovim` with v0.11+ target, `lazygit`, `ripgrep`, `jq`, `gnupg`, `pass`)
-- on Debian, additionally install everything in `__scripts__/debian-packages.txt`
-  (yazi's previewers, clipboard tooling, the apt-shipped zsh plugins)
-- attempt to install `mise` and run `mise install` from `mise/config.toml`
-- install versioned git hooks and, when sandi is configured, prepare the password store
-
-If a package manager is unavailable for the current OS, the script exits with a clear actionable error.
-
-### What differs per OS
-
-Only macOS gets the window-manager stack. `aerospace`, `borders` and
-`sketchybar` are stowed on darwin alone, and `~/Library/LaunchAgents` is
-rendered there alone — on Linux they would just be config nothing reads.
-
-Two things cannot come from apt on Debian stable and are handled separately:
-
-| Tool | Why | Handled by |
-|---|---|---|
-| Neovim | bookworm ships 0.7; lazy.nvim needs ≥ 0.8 | `__scripts__/install_nvim.sh` pulls a release build into `~/.local/bin` |
-| yazi | not packaged; the gnu builds need a newer glibc | `__scripts__/install_rust_tools.sh` fetches the musl binary |
-
-`zsh-autosuggestions` and `zsh-syntax-highlighting` come from apt;
-`zsh-history-substring-search` is not packaged, so
-`__scripts__/install_zsh_plugins.sh` vendors it into `~/.zsh-plugins`.
-
-joshuto publishes no prebuilt binary. It is skipped by default; build it with
-`JOSHUTO_FORCE_CARGO=1 bash __scripts__/install_rust_tools.sh`.
-
-CI runs shellcheck over every script, simulates the apt list against a real
-Debian 12 image, and smoke-tests `install.sh` end to end on that image.
-
-Quick bootstrap:
-
-- macOS: `./install.sh`
-- Debian: `./install.sh` (uses `sudo apt-get` when needed)
-
-Optional toggles (to disable parts of the default profile):
-
-```bash
-DOTFILES_SKIP_MISE_INSTALL=1 ./install.sh
-DOTFILES_SKIP_OPTIONAL_TOOLS=1 DOTFILES_SKIP_MISE_INSTALL=1 ./install.sh
-DOTFILES_INSTALL_ZSH=0 ./install.sh
-DOTFILES_INSTALL_DEBIAN_BREW_EQUIV=0 ./install.sh
-DOTFILES_INSTALL_OPENCODE=0 DOTFILES_INSTALL_OH_MY_OPENCODE=0 ./install.sh
-DOTFILES_STOW_ADOPT=0 ./install.sh
-```
-
-`DOTFILES_STOW_ADOPT` is enabled by default. Set `DOTFILES_STOW_ADOPT=0` to use regular stow behavior.
-
-OpenCode / oh-my-opencode bootstrap:
-
-- OpenCode install is enabled by default (official installer: `https://opencode.ai/install`)
-- oh-my-opencode installer is enabled by default
-- by default, oh-my-opencode runs non-interactive with conservative "all subscriptions = no" flags; override with:
-
-```bash
-DOTFILES_OH_MY_OPENCODE_FLAGS='--claude=yes --openai=yes --gemini=no --copilot=no --opencode-zen=no --zai-coding-plan=no' \
-./install.sh
-```
-
-Use the official oh-my-opencode repository for docs/releases: `https://github.com/code-yeongyu/oh-my-opencode`
-
-Shell strategy:
-
-- default behavior: attempt zsh package install, but keep shell unchanged (no automatic `chsh`)
-- keep existing shell package setup by disabling zsh install:
-
-```bash
-DOTFILES_INSTALL_ZSH=0 ./install.sh
-```
-
-## New machine checklist (macOS + Debian)
-
-Run this on every new machine:
-
-```bash
-git clone <your-dotfiles-repo>
-cd dotfiles
-./install.sh
-./__scripts__/sandi-setup.sh
-```
-
-Quick verification:
-
-```bash
-zsh -i -c 'echo shell-ok'
-tmux new -d -s tmux-check && tmux kill-session -t tmux-check
-```
-
-## Local modules
-
-Everything in this repo is meant to be identical on every machine. Anything that
-is not - an identity, a host list, tooling that only makes sense in one context -
-goes into a local module instead of being committed here.
-
-```
-~/.config/dotfiles/modules/*.zsh   sourced by zsh if present
-~/.config/git/config.local         included by git/.gitconfig
-~/.config/git/config.overlay       included by git/.gitconfig, for an overlay repo
-~/.ssh/config.local                included by ssh/config, above every Host block
-~/.ssh/config.d/*                  included right after it, for an overlay repo
-~/.config/tmux/local.conf          sourced by tmux (source-file -q)
-~/.config/nvim/lua/local/init.lua  pcall(require, "local")
-~/.config/dotfiles/plugins/*/      each plugin's install.sh is run by install.sh
-```
-
-Every hook is optional and silent when the file is missing, so a fresh clone
-works with none of them present. `install.sh` creates the modules directory and
-nothing else - what goes in it is yours to manage, kept out of this repo by
-`.gitignore`.
-
-To attach a set of modules, put them in that directory (a clone of a separate
-repo, symlinked, works well). A repo that brings its own `install.sh` is a
-plugin: symlink it into `~/.config/dotfiles/plugins/` and `install.sh` runs it
-after stowing. To detach, remove the symlink: nothing in this repo refers to any
-plugin by name, so nothing breaks.
-
-`docs/plugins.md` covers the why, every hook a plugin can use, how to write one,
-and how to keep a plugin's contents private - including a public plugin whose
-files are encrypted.
-
-`ssh/config.local.example` and `git/config.local.example` document the expected
-shape without carrying any real values.
-
-## Multiple GitHub accounts across machines
-
-Each account gets an ssh host alias with its own key and `IdentitiesOnly yes`.
-Repos are routed to an account by the org in their remote URL, not by the
-directory they happen to be cloned into, so a personal repo under a work folder
-still pushes as you. The shapes are in `ssh/config.local.example` and
-`git/config.local.example`.
 
 ```mermaid
 flowchart LR
-  R["git@github.com:ORG/x"] -->|insteadOf| A["ALIAS:ORG/x"]
-  A --> H1["Host ALIAS: work key"]
-  P["git@github.com:YOU/x"] --> H2["Host github.com: personal key"]
-  H1 & H2 --> K{private key on this machine?}
-  K -->|yes| U[use it]
-  K -->|only the .pub| F[pick that key from the forwarded agent]
+  R["this repo"] -->|"install.sh: stow"| H["$HOME and ~/.config"]
+  M["local modules<br/>~/.config/dotfiles/modules"] -.->|"sourced if present"| H
+  P["plugins<br/>~/.config/dotfiles/plugins"] -.->|"their install.sh"| M
+  S["pass store"] -->|"sandi env, per process"| T["tools"]
+  H --> T
 ```
 
-Other machines (a homelab, a VM) never get a private key:
-
-1. On the laptop, set `ForwardAgent yes` on that one host in `~/.ssh/config.local`.
-   On macOS the `com.user.ssh-agent` LaunchAgent loads every keychain key at
-   login, so the agent already holds them all.
-2. On the remote machine, copy only the `.pub` files to `~/.ssh/` and use the
-   same host aliases. ssh reads `<key>.pub` when `<key>` is missing and asks the
-   agent for exactly that key.
-3. `.zshrc` points `SSH_AUTH_SOCK` at `~/.ssh/agent.sock`, re-linked on every
-   login, so tmux sessions that outlive the connection keep working.
-
-Check with `ssh -T git@github.com` and `ssh -T <alias>`: each greets its own user.
-
-## C development setup
-
-This dotfiles setup now includes C/C++ developer tooling with `mise` and Neovim integration.
-
-Install tools:
+## New machine
 
 ```bash
-mise install
+git clone git@github.com:arisros/dotfiles.git ~/dotfiles
+cd ~/dotfiles && ./install.sh
+zsh -i -c 'echo shell-ok'
 ```
 
-Toolchain and build tools:
+`install.sh` also runs `sandi-setup.sh`, which only touches the password store when `SANDI_REMOTE` is set in a local module ([secrets](docs/secrets.md)).
 
-- `clang` (system package via Homebrew/apt)
-- `cmake`
-- `ninja`
-- `ccache`
+## Docs
 
-Neovim support:
-
-- LSP: `clangd`
-- Formatter: `clang-format` via Conform
-- Linter: `cppcheck` via nvim-lint
-- Debugger: `codelldb` via nvim-dap
-
-Quick local check:
-
-```bash
-cat > /tmp/hello.c <<'EOF'
-#include <stdio.h>
-int main(void) { puts("hello"); return 0; }
-EOF
-
-clang -Wall -Wextra -std=c17 /tmp/hello.c -o /tmp/hello && /tmp/hello
-clang-format -i /tmp/hello.c
-cppcheck --enable=warning,style --std=c11 /tmp/hello.c
-```
-
-Platform notes:
-
-- macOS: if Homebrew bootstrap fails, run `xcode-select --install` once, then rerun `./install.sh`.
-- Debian: installer uses `sudo apt-get`; if `sudo` is not available, run installer as root.
-
-Tmux style note:
-
-- installer now bootstraps tmux compatibility by creating `~/.tmux.conf` -> `~/.config/tmux/tmux.conf` when missing and ensuring TPM/plugins are installed.
-
-## Debian package bridge from Homebrew
-
-Use this when you want Debian to install CLI equivalents of your Homebrew apps and skip GUI/macOS-only formulas by default.
-
-You can run this directly, or set `DOTFILES_INSTALL_DEBIAN_BREW_EQUIV=1` in `./install.sh`.
-
-1) Export your Homebrew leaves on macOS:
-
-```bash
-./__scripts__/export_brew_leaves.sh
-```
-
-2) On Debian, run dry-run first:
-
-```bash
-./__scripts__/install_debian_brew_equivalents.sh --from-file ./__scripts__/brew-leaves.txt --dry-run
-```
-
-3) Install available apt equivalents:
-
-```bash
-./__scripts__/install_debian_brew_equivalents.sh --from-file ./__scripts__/brew-leaves.txt
-```
-
-Notes:
-
-- default behavior skips GUI/macOS-only formulas (`borders`, `sketchybar`, `mpv`)
-- include GUI formulas explicitly with `--include-gui`
-- script prints fallback hints for formulas without apt equivalents
-
-## Mermaid chart rendering
-
-Use the helper script to render Mermaid diagrams into `svg`, `png`, or `pdf`.
-
-```bash
-./__scripts__/render_mermaid.sh ./diagram.mmd svg
-./__scripts__/render_mermaid.sh ./diagram.mmd png ./out/diagram.png
-```
-
-If `mmdc` is missing, install it with:
-
-```bash
-mise use -g npm:@mermaid-js/mermaid-cli@latest
-```
-
-## Secret scan hardening
-
-Run the local high-confidence secret scan before commit/push:
-
-```bash
-./__scripts__/scan_secrets.sh --staged
-./__scripts__/scan_secrets.sh --tracked
-```
-
-Enable the versioned pre-push hook in this repo:
-
-```bash
-./__scripts__/install_git_hooks.sh
-```
-
-The hook uses `gitleaks` when installed, and falls back to the local regex scanner otherwise.
-
-## Credentials strategy
-
-Secrets live in `pass` and are resolved into the one process that needs them. Nothing is written to disk, and nothing sits in every shell's environment.
-
-```bash
-sandi env OPENAI_API_KEY=openai/api-key ANTHROPIC_API_KEY=anthropic/api-key -- some-tool
-```
-
-An entry that is not in the store is a warning, not a failure, so a tool needing two of three keys still starts.
-
-`zsh/.opencode_aliases` is the worked example: `opencode.json` reads its keys as `{env:VAR}` at runtime, so the wrapper resolves them at launch and they exist nowhere else.
-
-There is deliberately no `~/.secrets`. An eager dump of every secret into a plaintext file that every shell sources undoes the encryption it was restored from, and it silently produced empty values whenever the decrypt failed.
-
-## sandi (password store sync)
-
-`sandi` is a thin wrapper around `pass`. Anything it does not recognise is forwarded straight through, so `sandi show`, `sandi find` and `sandi git` behave exactly like the `pass` equivalents. It adds two subcommands:
-
-```bash
-sandi sync   # pull --rebase, then push
-sandi st     # print the sync state
-```
-
-The store stays encrypted end to end. Secrets are encrypted on the device to every key listed in `.gpg-id`, and only ciphertext is pushed, so the sync host holds no key and can decrypt nothing. Entry names are filenames, which means `sandi find` searches offline with no network round trip and no decryption.
-
-One-time setup per machine:
-
-```bash
-# ~/.config/dotfiles/modules/sandi.zsh, untracked, machine-local
-export SANDI_REMOTE="yourhost:path/to/password-store.git"
-```
-
-```bash
-./__scripts__/sandi-setup.sh
-```
-
-`sandi-setup.sh` is idempotent and runs from `install.sh`. It initialises git in the store, wires the remote, and installs a `post-commit` hook that pushes in the background, so an out-of-sync store only ever means the machine was offline. It never pushes or decrypts itself, so it cannot prompt.
-
-It is **opt-in**: with neither `SANDI_REMOTE` nor `DOTFILES_SANDI=1` set it leaves `~/.password-store` strictly untouched, so installing these dotfiles never git-initialises a password store you did not ask it to.
-
-`__scripts__/sandi-state.sh` is the single source of truth for sync state. The shell function and the sketchybar item both call it rather than duplicating the checks. It prints one of `synced`, `ahead N`, `behind N`, `diverged N M`, `dirty N`, `offline`, `unpushed`, `noremote`, `nogit`, `nostore`.
-
-The sketchybar item shows the same state as `S:ok`, `S:^2`, `S:v1`. It ships commented out in `sketchybar/sketchybarrc`, matching its neighbours; uncomment `source $ITEM_DIR/sandi.sh` to enable it. It calls `sandi-state.sh --no-fetch`, so it reports local truth and never blocks the bar on the network. Ahead/behind counts refresh on any `sandi sync` or `sandi st`.
-
-`.gpg` files are binary, so git cannot merge them. Two machines editing the same entry while both offline produces a conflict that is resolved by picking one side and re-inserting. Different entries merge cleanly.
+| Page | Covers |
+|---|---|
+| [architecture](docs/architecture.md) | repo to machine, install pipeline, stow map |
+| [shell](docs/shell.md) | `.zshrc` load order, alias files, ssh agent socket |
+| [secrets](docs/secrets.md) | `sandi`, sync, state, secret scanning, CI |
+| [git and ssh](docs/git-ssh.md) | config layering, multiple GitHub accounts, agent forwarding |
+| [desktop](docs/desktop.md) | AeroSpace, SketchyBar, borders, Karabiner, tmux and nvim |
+| [plugins](docs/plugins.md) | attaching private, per-machine config |
+| [reference](docs/reference.md) | install toggles, macOS vs Debian, C tooling, mermaid |
