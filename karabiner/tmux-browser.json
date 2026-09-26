@@ -57,7 +57,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -115,7 +116,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -173,7 +175,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -210,7 +213,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -247,7 +251,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -284,7 +289,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -321,7 +327,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -358,7 +365,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -395,7 +403,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -432,7 +441,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -469,7 +479,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -506,7 +517,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -544,7 +556,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -582,7 +595,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -620,7 +634,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -657,7 +672,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -694,7 +710,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -736,7 +753,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -774,7 +792,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -812,7 +831,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -850,7 +870,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -892,7 +913,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -929,7 +951,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -967,7 +990,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1001,7 +1025,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1035,7 +1060,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1077,7 +1103,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1114,7 +1141,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1152,7 +1180,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1198,7 +1227,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1229,7 +1259,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1262,7 +1293,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1295,7 +1327,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1328,7 +1361,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1361,7 +1395,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1395,7 +1430,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1429,7 +1465,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1463,7 +1500,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1502,7 +1540,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1536,7 +1575,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1575,7 +1615,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1613,7 +1654,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1651,7 +1693,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1676,7 +1719,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1701,7 +1745,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1726,7 +1771,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1751,7 +1797,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1779,7 +1826,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1807,7 +1855,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1835,7 +1884,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1868,7 +1918,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1896,7 +1947,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1929,7 +1981,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1959,7 +2012,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -1989,7 +2043,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -2017,7 +2072,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -2063,7 +2119,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -2091,7 +2148,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -2131,7 +2189,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
@@ -2171,7 +2230,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "^com\\.google\\.Chrome$",
-                "^com\\.brave\\.Browser$"
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
               ]
             }
           ]
