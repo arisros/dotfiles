@@ -24,6 +24,10 @@ sandi() {
       shift
       _sandi_status "$@"
       ;;
+    env)
+      shift
+      _sandi_env "$@"
+      ;;
     *)
       pass "$@"
       ;;
@@ -48,6 +52,46 @@ _sandi_sync() {
   pass git pull --rebase --quiet || return 1
   pass git push --quiet || return 1
   printf 'sandi: synced\n'
+}
+
+# sandi env VAR=entry [VAR=entry ...] -- command [args...]
+#
+# Resolves each entry and runs command with those variables set, and nothing
+# else changed. The values live in that one process and are never written to
+# disk, which is the whole point: a secret needed by one tool should not sit
+# in every shell's environment, let alone in a file.
+#
+# A missing entry is a warning, not a failure, so a tool that only needs two
+# of three keys still starts.
+_sandi_env() {
+  local -a assignments envargs
+  local arg name entry value
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --) shift; break ;;
+      *=*) assignments+=("$1"); shift ;;
+      *) printf 'sandi env: expected VAR=entry or --, got %s\n' "$1" >&2; return 1 ;;
+    esac
+  done
+  if [ "$#" -eq 0 ]; then
+    printf 'sandi env: no command given after --\n' >&2
+    return 1
+  fi
+  for arg in "${assignments[@]}"; do
+    name="${arg%%=*}"
+    entry="${arg#*=}"
+    value="$(pass show "$entry" 2>/dev/null | head -1)"
+    if [ -z "$value" ]; then
+      printf 'sandi env: %s is not in the store, %s left unset\n' "$entry" "$name" >&2
+      continue
+    fi
+    envargs+=("$name=$value")
+  done
+  if [ "${#envargs[@]}" -eq 0 ]; then
+    "$@"
+    return
+  fi
+  env "${envargs[@]}" "$@"
 }
 
 _sandi_status() {
