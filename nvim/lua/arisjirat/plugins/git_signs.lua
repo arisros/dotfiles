@@ -1,3 +1,57 @@
+local function popup(lines)
+	vim.lsp.util.open_floating_preview(lines, "markdown", { border = "rounded", focus_id = "blame_pr" })
+end
+
+local function blame_pr(bufnr)
+	local file = vim.api.nvim_buf_get_name(bufnr)
+	local dir = vim.fn.fnamemodify(file, ":h")
+	local line = vim.api.nvim_win_get_cursor(0)[1]
+	local contents = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), "\n") .. "\n"
+
+	-- --contents - keeps line numbers right for unsaved edits
+	vim.system(
+		{ "git", "blame", "--porcelain", "-L", line .. "," .. line, "--contents", "-", "--", file },
+		{ cwd = dir, stdin = contents, text = true },
+		function(blame)
+			local sha = blame.code == 0 and blame.stdout:match("^(%x+)") or nil
+			if not sha or sha:match("^0+$") then
+				vim.schedule(function()
+					vim.notify("Line is not committed yet", vim.log.levels.INFO)
+				end)
+				return
+			end
+
+			vim.system({
+				"gh",
+				"api",
+				"repos/{owner}/{repo}/commits/" .. sha .. "/pulls",
+				"--jq",
+				'.[0] // empty | "\\(.number)\\t\\(.title)\\t\\(.html_url)\\t\\(.user.login)\\t\\(.merged_at // "not merged")"',
+			}, { cwd = dir, text = true }, function(res)
+				vim.schedule(function()
+					if res.code ~= 0 then
+						vim.notify("gh: " .. vim.trim(res.stderr), vim.log.levels.ERROR)
+						return
+					end
+					local out = vim.trim(res.stdout)
+					if out == "" then
+						popup({ "No PR found for `" .. sha:sub(1, 8) .. "`" })
+						return
+					end
+					local number, title, url, author, merged = unpack(vim.split(out, "\t"))
+					popup({
+						"**#" .. number .. "** " .. title,
+						"",
+						url,
+						"",
+						"by @" .. author .. ", merged " .. merged:sub(1, 10) .. ", commit `" .. sha:sub(1, 8) .. "`",
+					})
+				end)
+			end)
+		end
+	)
+end
+
 return {
 	"lewis6991/gitsigns.nvim",
 	event = { "BufReadPre", "BufNewFile" },
@@ -59,6 +113,9 @@ return {
 				----------------------------------------------------------------
 				map("n", "<leader>hb", gs.blame_line, "Blame line")
 				map("n", "<leader>hB", gs.blame, "Blame buffer")
+				map("n", "<leader>hP", function()
+					blame_pr(bufnr)
+				end, "Blame line PR")
 
 				map("n", "<leader>hp", gs.preview_hunk, "Preview hunk")
 				map("n", "<leader>hd", gs.diffthis, "Diff this")
