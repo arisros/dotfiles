@@ -36,17 +36,6 @@
               {
                 "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
               }
-            ],
-            "to_if_canceled": [
-              {
-                "set_variable": {
-                  "name": "tmux_browser_prefix",
-                  "value": 0
-                }
-              },
-              {
-                "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
-              }
             ]
           },
           "parameters": {
@@ -95,17 +84,6 @@
               {
                 "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
               }
-            ],
-            "to_if_canceled": [
-              {
-                "set_variable": {
-                  "name": "tmux_browser_prefix",
-                  "value": 0
-                }
-              },
-              {
-                "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
-              }
             ]
           },
           "parameters": {
@@ -145,17 +123,6 @@
           ],
           "to_delayed_action": {
             "to_if_invoked": [
-              {
-                "set_variable": {
-                  "name": "tmux_browser_prefix",
-                  "value": 0
-                }
-              },
-              {
-                "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
-              }
-            ],
-            "to_if_canceled": [
               {
                 "set_variable": {
                   "name": "tmux_browser_prefix",
@@ -1237,6 +1204,105 @@
           "type": "basic",
           "from": {
             "key_code": "escape"
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 0
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "left_shift",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_shift"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "right_shift",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_shift"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "tmux_browser_prefix",
+              "value": 1
+            },
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "any": "key_code",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
           },
           "to": [
             {

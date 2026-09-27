@@ -53,6 +53,12 @@ The prefix disarms after **2000 ms** (`basic.to_delayed_action_delay_millisecond
 tmux itself waits indefinitely; a timeout was chosen so a stray `Home` cannot
 leave the next keystroke reinterpreted. Delete `to_delayed_action` to match tmux.
 
+The arming manipulators deliberately have no `to_if_canceled`: Karabiner runs it
+on the next key_down *before* that key is matched, so it would disarm the prefix
+ahead of every layer key. Instead, a catch-all at the end of the layer disarms
+and swallows any unbound key, as tmux does (shift passes through so `:`, `?`
+and `&` still work).
+
 ## The map
 
 Left column is what `tmux list-keys -T prefix` reports for this repo's tmux.conf.
