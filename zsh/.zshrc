@@ -56,13 +56,6 @@ if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-autosuggestio
 elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
   source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
-# syntax-highlighting
-if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-  source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
-
 set -o vi
 
 # In vi mode Backspace is vi-backward-delete-char, which is documented as
@@ -93,14 +86,29 @@ setopt HIST_FCNTL_LOCK            # Prevent corruption when multiple shells writ
 setopt HIST_VERIFY                # Show command before running on history expansion
 
 # history-substring-search
+# apt doesn't package this (see __scripts__/install_zsh_plugins.sh), so on
+# Debian it's vendored under ~/.zsh-plugins instead.
 if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh" ]; then
   source "$HOMEBREW_PREFIX/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
 elif [ -f /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]; then
   source /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+elif [ -f "$HOME/.zsh-plugins/zsh-history-substring-search/zsh-history-substring-search.zsh" ]; then
+  source "$HOME/.zsh-plugins/zsh-history-substring-search/zsh-history-substring-search.zsh"
 fi
 
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+if (( $+widgets[history-substring-search-up] )); then
+  bindkey '^[[A' history-substring-search-up
+  bindkey '^[[B' history-substring-search-down
+fi
+
+# syntax-highlighting must load last: it wraps every ZLE widget that exists
+# at source time, so anything registered after it (like the substring-search
+# widgets above) never gets wrapped and zsh warns "unhandled ZLE widget".
+if [ -n "${HOMEBREW_PREFIX:-}" ] && [ -f "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 autoload -Uz compinit && compinit
 
