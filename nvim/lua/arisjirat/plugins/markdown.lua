@@ -31,6 +31,8 @@ return {
 			border = "thin",
 			-- Minimal code block background so it doesn't pop too much
 			highlight = "RenderMarkdownCode",
+			-- mermaid-nvim owns these blocks
+			disable = { "mermaid" },
 		},
 		sign = { enabled = false },
 	},
