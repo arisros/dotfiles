@@ -54,8 +54,12 @@ Never attach or generate a rendered image when a mermaid block will do.
 
 Strict minimum. Zero comments is the default, not the exception.
 
+When in doubt, write nothing. A missing comment costs me nothing, a bad one costs me a read.
+
 - Delete comments that restate the code, narrate a change, mark sections, or talk to me ("added this", "as requested", "per review").
 - Keep only: a non obvious why, a workaround with the cause it works around, a spec or ticket reference, and public API doc comments the project's own conventions already require.
+- One line. If the why genuinely needs more than two, it belongs in the commit message or a doc, not above the code.
+- No block banners, no ASCII dividers, no restating a function's signature in prose above it, no paragraph essays wrapped in `//`.
 - Never explain a diff in a comment. That belongs in the commit message.
 - Remove stale and commented out code you pass over while editing a file.
 - If a comment is only needed because the code is unclear, fix the code instead.
