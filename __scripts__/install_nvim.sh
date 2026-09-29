@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Install a recent Neovim into ~/.local/bin (and ~/.local/share/nvim-current).
 # Debian's apt ships Neovim 0.7 which is too old for lazy.nvim (needs ≥0.8).
-# This script grabs the latest stable tarball from the Neovim GitHub releases
+# This script grabs a pinned release tarball from the Neovim GitHub releases
 # and shadows the apt version because ~/.local/bin comes first on PATH.
 set -euo pipefail
 
@@ -20,7 +20,9 @@ case "$OS-$ARCH" in
     *) echo "Unsupported $OS-$ARCH" >&2; exit 1 ;;
 esac
 
-url="https://github.com/neovim/neovim/releases/latest/download/$asset"
+# nvim-treesitter master breaks on 0.12 ("attempt to call method 'range'" in markdown buffers).
+NVIM_VERSION="${NVIM_VERSION:-v0.11.7}"
+url="https://github.com/neovim/neovim/releases/download/$NVIM_VERSION/$asset"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 
