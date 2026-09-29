@@ -30,7 +30,7 @@ There is deliberately no `~/.secrets`. A plaintext dump sourced by every shell u
 |---|---|
 | `sandi env VAR=entry ... -- cmd` | run `cmd` with resolved entries |
 | `sandi sync` | `pull --rebase`, then `push` |
-| `sandi st` | print sync state |
+| `sandi st` | print sync state; on `offline`, also print `SANDI_OFFLINE_HINT` to stderr |
 | anything else | passed through to `pass` (`show`, `find`, `insert`, `git`, ...); `find` matches filenames, so it is offline and decrypts nothing |
 
 ## Sync
@@ -67,7 +67,10 @@ Set the remote in a machine-local module:
 ```bash
 # ~/.config/dotfiles/modules/sandi.zsh
 export SANDI_REMOTE="yourhost:path/to/password-store.git"
+export SANDI_OFFLINE_HINT="yourhost unreachable, is the VPN up?"
 ```
+
+When the remote is only reachable over a VPN, `offline` usually means the tunnel is down, not the host. The hint stays machine-local so the tracked repo never names the host or tunnel.
 
 ## State
 
