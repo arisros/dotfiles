@@ -1,0 +1,4 @@
+# Replaces stow's default ignore list for this package.
+# .cloudflare_env is a gitignored, hand-linked secrets file; one stow conflict on it aborts the whole package.
+\.cloudflare_env
+\.stow-local-ignore
