@@ -5,7 +5,7 @@
 ```mermaid
 flowchart TD
   subgraph git["~/.gitconfig (git/.gitconfig)"]
-    G1["https://github.com/ insteadOf git@github.com:"]
+    G1["git@github.com: pushInsteadOf https://github.com/"]
     G2["credential: gh auth git-credential"]
     G3["include ~/.config/git/config.local"]
     G4["include ~/.config/git/config.overlay"]
@@ -20,6 +20,8 @@ flowchart TD
     S1 --> S2 --> S3 --> S4 --> S5
   end
 ```
+
+Fetches from `https://github.com/` stay anonymous https, so installing public plugins needs no key. Only pushes are rewritten to ssh.
 
 Git applies includes in order and the last value wins, so `config.overlay` beats `config.local`. ssh takes the **first** value, so the includes sit above `Host *`. Shapes: `git/config.local.example`, `ssh/config.local.example`. Include ordering pitfalls: [plugins.md](plugins.md).
 
@@ -42,7 +44,7 @@ flowchart LR
 | `url "<alias>:<org>/".insteadOf` | `~/.config/git/config.local` |
 | `includeIf "hasconfig:remote.*.url:..."` for identity | `~/.config/git/config.local` or `.overlay` |
 | `Host <alias>` with its own `IdentityFile` | `~/.ssh/config.local` |
-| explicit `Host github.com` `IdentityFile` | `~/.ssh/config.local`, needed because `IdentitiesOnly yes` |
+| explicit `Host github.com` `IdentityFile` | `~/.ssh/config.local`, needed to push because `IdentitiesOnly yes` |
 
 Check: `ssh -T git@github.com` and `ssh -T <alias>` each greet their own user. `git config --show-origin --get user.email` names the file that set the identity.
 
