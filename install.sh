@@ -425,11 +425,17 @@ render_launch_agents() {
 
   local dest="$HOME/Library/LaunchAgents"
   mkdir -p "$dest"
-  local template
+  local template plist domain
+  domain="gui/$(id -u)"
   for template in "$SCRIPT_DIR"/*/com.user.*.plist; do
     [ -e "$template" ] || continue
     log "Rendering $(basename "$template") -> $dest"
-    sed "s|__HOME__|$HOME|g" "$template" > "$dest/$(basename "$template")"
+    plist="$dest/$(basename "$template")"
+    sed "s|__HOME__|$HOME|g" "$template" > "$plist"
+    # launchd reads LaunchAgents only at login; reload so a fresh install works now.
+    launchctl bootout "$domain" "$plist" 2>/dev/null || true
+    launchctl bootstrap "$domain" "$plist" 2>/dev/null \
+      || warn "Could not load $(basename "$plist"), it will load at next login"
   done
 }
 

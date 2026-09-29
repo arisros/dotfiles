@@ -14,10 +14,9 @@
 #     # leave it. See docs/git-ssh.md.
 #     ForwardAgent yes
 
-# Plain github.com. Needed because ssh/config sets IdentitiesOnly yes for Host *,
-# so no key is offered without an explicit IdentityFile. Tools that set their own
-# GIT_SSH_COMMAND (lazy.nvim does) discard the -i in git's core.sshCommand, so a
-# rewrite of https://github.com/ to ssh then authenticates with no key at all.
+# Plain github.com, used by pushes (git/.gitconfig rewrites only pushes to ssh).
+# Needed because ssh/config sets IdentitiesOnly yes for Host *, so no key is
+# offered without an explicit IdentityFile.
 # Host github.com
 #     HostName github.com
 #     User git

@@ -1,9 +1,10 @@
 ; Identity is machine-local: see the [include] at the bottom and
 ; git/config.local.example for the shape.
 
-; ssh instead of https
+; Fetch public repos over anonymous https so plugin installs (lazy.nvim, tpm,
+; zsh plugins) never need a key; push goes over ssh.
 [url "git@github.com:"]
-    insteadOf = https://github.com/
+    pushInsteadOf = https://github.com/
 
 ; Resolve gh from PATH: it is /opt/homebrew/bin/gh on macOS but /usr/bin/gh
 ; on Debian, and an absolute path makes the helper a no-op on the other OS.
