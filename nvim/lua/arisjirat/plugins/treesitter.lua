@@ -1,5 +1,7 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
+	-- The default branch is now main, which drops the nvim-treesitter.configs API used below.
+	branch = "master",
 
 	lazy = false,
 	build = ":TSUpdate",
