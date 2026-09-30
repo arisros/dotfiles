@@ -229,9 +229,6 @@ export GPG_TTY=$TTY
 # [ZSH] sandi - pass wrapper with sync helpers (sandi sync, sandi st, sandi env)
 [ -f "$HOME/.sandi_aliases" ] && source "$HOME/.sandi_aliases"
 
-# [ZSH] opencode - resolves its API keys from the store at launch
-[ -f "$HOME/.opencode_aliases" ] && source "$HOME/.opencode_aliases"
-
 # rainfrog keeps config and state under XDG paths instead of ~/Library/Application Support
 export RAINFROG_CONFIG="$HOME/.config/rainfrog"
 export RAINFROG_DATA="$HOME/.local/share/rainfrog"
@@ -261,7 +258,7 @@ fi
 ## [secrets]
 # Deliberately not sourcing a plaintext ~/.secrets any more. Secrets are
 # resolved from the store into the one process that needs them; see
-# `sandi env` in .sandi_aliases and the opencode wrapper.
+# `sandi env` in .sandi_aliases.
 
 
 
@@ -287,9 +284,6 @@ export PATH="$PHPVM_DIR/bin:$PATH"
 
 
 
-
-# opencode
-export PATH="$HOME/.opencode/bin:$PATH"
 
 # Added by Antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"

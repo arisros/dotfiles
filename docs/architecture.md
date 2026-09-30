@@ -45,8 +45,7 @@ flowchart TD
   P -->|yes| Q["brew leaves bridge, install_rust_tools.sh (yazi)"]
   P -->|no| R
   Q --> R["mise install"]
-  R --> S["OpenCode + oh-my-opencode"]
-  S --> T{"stow failures?"}
+  R --> T{"stow failures?"}
   T -->|yes| X["exit 1"]
   T -->|no| Y["done"]
 ```
@@ -57,7 +56,7 @@ Every step checks before acting (`command -v`, `mkdir -p`, `stow -R`), so re-run
 
 | Package | Target | OS |
 |---|---|---|
-| `zsh`, `git`, `vim`, `lynx`, `opencode` | `$HOME` | all |
+| `zsh`, `git`, `vim`, `lynx` | `$HOME` | all |
 | `ssh` | `~/.ssh` | all |
 | `claude` | `~/.claude` | all |
 | `nvim` `tmux` `alacritty` `ghostty` `herdr` `mise` `yazi` `htop` `nix` | `~/.config/<pkg>` | all |
