@@ -271,59 +271,12 @@ fi
 # in it is deliberately outside this repo - see docs/plugins.md.
 mkdir -p "$HOME/.config/dotfiles/modules"
 
-config_dirs=(
-  "$HOME/.config/alacritty"
-  "$HOME/.config/nvim"
-  "$HOME/.config/tmux"
-  "$HOME/.claude"
-  "$HOME/.config/herdr"
-  "$HOME/.config/ghostty"
-  "$HOME/.ssh"
-  "$HOME/.config/mise"
-  "$HOME/.config/nix"
-  "$HOME/.config/yazi"
-  "$HOME/.config/htop"
-)
-
-# aerospace, borders and sketchybar are macOS window-manager tooling; creating
-# and stowing them on Linux leaves dead config nothing will ever read.
-if [ "$OS" = "darwin" ]; then
-  config_dirs+=(
-    "$HOME/.config/aerospace"
-    "$HOME/.config/borders"
-    "$HOME/.config/sketchybar"
-  )
-fi
+# shellcheck source=__scripts__/stow-map.sh
+source "$SCRIPT_DIR/__scripts__/stow-map.sh"
 
 for dir in "${config_dirs[@]}"; do
   mkdir -p "$dir"
 done
-
-stow_pairs=(
-  "$HOME/.config/alacritty:alacritty"
-  "$HOME/.config/nvim:nvim"
-  "$HOME/.config/tmux:tmux"
-  "$HOME/.claude:claude"
-  "$HOME/.config/herdr:herdr"
-  "$HOME/.config/ghostty:ghostty"
-  "$HOME/.ssh:ssh"
-  "$HOME/.config/mise:mise"
-  "$HOME/.config/yazi:yazi"
-  "$HOME/.config/htop:htop"
-  "$HOME:git"
-  "$HOME:vim"
-  "$HOME:zsh"
-  "$HOME/.config/nix:nix"
-  "$HOME:lynx"
-)
-
-if [ "$OS" = "darwin" ]; then
-  stow_pairs+=(
-    "$HOME/.config/aerospace:aerospace"
-    "$HOME/.config/borders:borders"
-    "$HOME/.config/sketchybar:sketchybar"
-  )
-fi
 
 stow_failures=()
 

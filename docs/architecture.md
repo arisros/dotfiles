@@ -52,6 +52,24 @@ flowchart TD
 
 Every step checks before acting (`command -v`, `mkdir -p`, `stow -R`), so re-running is safe. `--adopt` is on by default: a real file already at a target is pulled **into the repo**, check `git diff` after a first run.
 
+## Updating a machine
+
+`git pull` only moves the repo. TPM plugins, `~/.zsh-plugins` and local plugins are cloned once by `install.sh`, so `dots-sync` refreshes them:
+
+```mermaid
+flowchart LR
+  A["dots-sync"] --> B["git pull --ff-only"]
+  P["git pull"] -->|".githooks/post-merge"| C
+  B --> C["stow -R (no adopt)"]
+  C --> D["git hooks"]
+  D --> E["TPM install, update all, clean"]
+  E --> F["tmux source-file if running"]
+  F --> G["pull ~/.zsh-plugins/*"]
+  G --> H["pull + install.sh each local plugin"]
+```
+
+TPM plugins track their default branch, so a push to `arisros/tmux-agent-deck` reaches a machine on its next sync. nvim is not touched: `lazy-lock.json` is machine-local.
+
 ## Stow map
 
 | Package | Target | OS |
