@@ -136,7 +136,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'display notification \"Claude finished responding\" with title \"Claude Code\" sound name \"Funk\"'; afplay /System/Library/Sounds/Funk.aiff; [ -n \"$TMUX\" ] && { tmux set-window-option -t \"$TMUX_PANE\" window-status-style 'bg=green,fg=black'; tmux refresh-client -S; } 2>/dev/null",
+            "command": "osascript -e 'display notification \"Claude finished responding\" with title \"Claude Code\" sound name \"Funk\"'; afplay /System/Library/Sounds/Funk.aiff",
             "async": true
           }
         ]
@@ -148,28 +148,6 @@
           {
             "type": "command",
             "command": "osascript -e 'display notification \"Claude needs your input\" with title \"Claude Code\" sound name \"Ping\"'; afplay /System/Library/Sounds/Ping.aiff",
-            "async": true
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "[ -n \"$TMUX\" ] && { tmux set-window-option -t \"$TMUX_PANE\" window-status-style 'bg=yellow,fg=black'; tmux refresh-client -S; } 2>/dev/null; true",
-            "async": true
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "[ -n \"$TMUX\" ] && tmux set-window-option -t \"$TMUX_PANE\" -u window-status-style 2>/dev/null; true",
             "async": true
           }
         ]
