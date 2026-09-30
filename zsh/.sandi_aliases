@@ -99,5 +99,10 @@ _sandi_status() {
     printf 'sandi: %s not found\n' "$SANDI_STATE_SCRIPT" >&2
     return 1
   fi
-  "$SANDI_STATE_SCRIPT" "$@"
+  local state
+  state="$("$SANDI_STATE_SCRIPT" "$@")" || return
+  printf '%s\n' "$state"
+  if [ "$state" = offline ]; then
+    printf 'sandi: %s\n' "${SANDI_OFFLINE_HINT:-remote unreachable, check network or VPN}" >&2
+  fi
 }
