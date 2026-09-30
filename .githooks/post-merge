@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Keep plugins, links and the running tmux in step with every pull.
+
+[ -n "${DOTS_SYNC_RUNNING:-}" ] && exit 0
+
+repo_root="$(git rev-parse --show-toplevel)"
+"$repo_root/__scripts__/dots-sync.sh" --no-pull || true

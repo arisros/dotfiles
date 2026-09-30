@@ -1,2 +1,3 @@
 alias tmuxr='tmux source-file ~/.tmux.conf'
 alias szz='source ~/.zshrc'
+alias dots-sync='~/dotfiles/__scripts__/dots-sync.sh'
