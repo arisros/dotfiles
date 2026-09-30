@@ -12,9 +12,6 @@ SKIP_OPTIONAL_TOOLS="${DOTFILES_SKIP_OPTIONAL_TOOLS:-0}"
 INSTALL_ZSH="${DOTFILES_INSTALL_ZSH:-1}"
 INSTALL_DEBIAN_BREW_EQUIV="${DOTFILES_INSTALL_DEBIAN_BREW_EQUIV:-1}"
 STOW_ADOPT="${DOTFILES_STOW_ADOPT:-1}"
-INSTALL_OPENCODE="${DOTFILES_INSTALL_OPENCODE:-1}"
-INSTALL_OH_MY_OPENCODE="${DOTFILES_INSTALL_OH_MY_OPENCODE:-1}"
-OH_MY_OPENCODE_FLAGS="${DOTFILES_OH_MY_OPENCODE_FLAGS:---claude=no --openai=no --gemini=no --copilot=no --opencode-zen=no --zai-coding-plan=no}"
 
 log() {
   printf '[install] %s\n' "$*"
@@ -216,54 +213,6 @@ ensure_tmux_bootstrap() {
   fi
 }
 
-ensure_opencode_cli() {
-  if command -v opencode >/dev/null 2>&1; then
-    return 0
-  fi
-
-  if ! command -v curl >/dev/null 2>&1; then
-    warn 'curl is required to install OpenCode.'
-    return 1
-  fi
-
-  warn 'OpenCode is missing. Attempting install via https://opencode.ai/install ...'
-  curl -fsSL https://opencode.ai/install | bash
-
-  export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
-  if ! command -v opencode >/dev/null 2>&1; then
-    warn 'OpenCode installation failed. Install manually: curl -fsSL https://opencode.ai/install | bash'
-    return 1
-  fi
-
-  return 0
-}
-
-install_oh_my_opencode() {
-  if command -v bunx >/dev/null 2>&1; then
-    installer=(bunx)
-  elif command -v npx >/dev/null 2>&1; then
-    installer=(npx)
-  else
-    warn 'oh-my-opencode installer requires bunx or npx. Install Bun/Node first, then rerun with DOTFILES_INSTALL_OH_MY_OPENCODE=1.'
-    return 1
-  fi
-
-  if [ ! -f "$HOME/.config/opencode/opencode.json" ]; then
-    warn 'OpenCode config not found at ~/.config/opencode/opencode.json. Run stow/install first.'
-    return 1
-  fi
-
-  flags=()
-  IFS=' ' read -r -a flags <<< "$OH_MY_OPENCODE_FLAGS"
-  log "Installing oh-my-opencode with flags: $OH_MY_OPENCODE_FLAGS"
-  "${installer[@]}" oh-my-opencode install --no-tui "${flags[@]}" || {
-    warn 'oh-my-opencode installation failed. You can rerun manually with bunx/npx.'
-    return 1
-  }
-
-  return 0
-}
-
 log "Detected OS: $OS"
 
 ensure_command git git git || warn 'Please install git manually if this fails.'
@@ -329,7 +278,6 @@ config_dirs=(
   "$HOME/.claude"
   "$HOME/.config/herdr"
   "$HOME/.config/ghostty"
-  "$HOME/.config/opencode"
   "$HOME/.ssh"
   "$HOME/.config/mise"
   "$HOME/.config/nix"
@@ -358,7 +306,6 @@ stow_pairs=(
   "$HOME/.claude:claude"
   "$HOME/.config/herdr:herdr"
   "$HOME/.config/ghostty:ghostty"
-  "$HOME:opencode"
   "$HOME/.ssh:ssh"
   "$HOME/.config/mise:mise"
   "$HOME/.config/yazi:yazi"
@@ -492,15 +439,6 @@ elif ensure_mise; then
     log 'Installing tools from mise config (this can take a while)...'
     mise install || warn 'mise install failed. You can rerun: mise install'
   fi
-fi
-
-if [ "$INSTALL_OPENCODE" = "1" ]; then
-  ensure_opencode_cli || warn 'OpenCode install step encountered issues.'
-fi
-
-if [ "$INSTALL_OH_MY_OPENCODE" = "1" ]; then
-  ensure_opencode_cli || true
-  install_oh_my_opencode || warn 'oh-my-opencode install step encountered issues.'
 fi
 
 if [ "${#stow_failures[@]}" -gt 0 ]; then

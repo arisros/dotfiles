@@ -14,7 +14,7 @@ flowchart TD
   H --> I["alias files"]
   I --> J["local modules: ~/.config/dotfiles/modules/*.zsh"]
   J --> K["arduino completion, nix-daemon"]
-  K --> L["SDKMAN, phpvm, opencode PATH, wt"]
+  K --> L["SDKMAN, phpvm, wt"]
   L --> M["macOS sleep helpers: lock / hard / normal"]
 ```
 
@@ -25,14 +25,13 @@ Modules load after every alias file, so a module can override any alias or funct
 | File | Purpose |
 |---|---|
 | `.config_restart_aliases` | reload configs |
-| `.fs_aliases` | filesystem, `oc-init` scaffold |
+| `.fs_aliases` | filesystem |
 | `.functions` | general helpers |
 | `.git_aliases` | git |
 | `.docker_aliases` | docker |
 | `.runpod_aliases` | runpod, uses `__scripts__/rpdash.py` |
 | `.db_aliases` | databases |
 | `.sandi_aliases` | `sandi`, see [secrets.md](secrets.md) |
-| `.opencode_aliases` | `opencode` wrapped with `sandi env` |
 
 ## ssh agent socket
 

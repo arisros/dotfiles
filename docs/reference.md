@@ -9,16 +9,7 @@
 | `DOTFILES_INSTALL_ZSH` | `1` | `0` leaves the zsh package alone; `chsh` is never run either way |
 | `DOTFILES_STOW_ADOPT` | `1` | `0` uses plain stow, conflicts fail instead of being adopted |
 | `DOTFILES_INSTALL_DEBIAN_BREW_EQUIV` | `1` | Debian: install apt equivalents of `brew-leaves.txt` |
-| `DOTFILES_INSTALL_OPENCODE` | `1` | OpenCode CLI via `https://opencode.ai/install` |
-| `DOTFILES_INSTALL_OH_MY_OPENCODE` | `1` | oh-my-opencode via bunx or npx |
-| `DOTFILES_OH_MY_OPENCODE_FLAGS` | all subscriptions `no` | passed to `oh-my-opencode install` |
 | `DOTFILES_PLUGINS` | `~/.config/dotfiles/plugins` | plugin directory |
-
-oh-my-opencode docs and releases: https://github.com/code-yeongyu/oh-my-opencode
-
-```bash
-DOTFILES_OH_MY_OPENCODE_FLAGS='--claude=yes --openai=yes --gemini=no --copilot=no --opencode-zen=no --zai-coding-plan=no' ./install.sh
-```
 
 ## macOS vs Debian
 

@@ -50,7 +50,7 @@ wl-clipboard
 # --- fonts ---
 fontconfig
 
-# --- node for nvim Mason LSPs and tools like opencode ---
+# --- node for nvim Mason LSPs ---
 nodejs
 npm
 

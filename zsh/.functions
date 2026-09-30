@@ -298,32 +298,3 @@ PY
 
   rm -f "$tmp_img"
 }
-
-function "??"() {
-  if [ "$#" -eq 0 ]; then
-    echo 'Usage: ?? <prompt>'
-    return 1
-  fi
-
-  opencode run "$*"
-}
-
-ask() {
-  if [ "$#" -eq 0 ]; then
-    opencode
-    return $?
-  fi
-
-  opencode --prompt "$*"
-}
-
-asknews() {
-  local query
-  if [ "$#" -eq 0 ]; then
-    query="today's important AI, software engineering, cybersecurity, and big-tech updates"
-  else
-    query="$*"
-  fi
-
-  opencode run --agent librarian "WEB-ONLY NEWS MODE. Find newest, verifiable information about: ${query}. IMPORTANT: Do not inspect local files/folders/codebase, and do not use repo search tools. Use internet sources only (google_search, websearch_web_search_exa, web pages, official announcements, and if available social/X and map/location sources). Prioritize updates from last 24-72 hours. For Indonesia/Jakarta queries, prioritize local Indonesian sources first. Output: 1 short overview + 5-10 bullets (what happened, why it matters, source URL, timestamp/date) + 'Signals to watch next' + 'Confidence (High/Medium/Low)' with one-line reason."
-}
