@@ -10,17 +10,15 @@ sequenceDiagram
   participant S as sandi env
   participant P as pass / gpg
   participant C as child process
-  U->>S: sandi env OPENAI_API_KEY=openai/api-key -- opencode
+  U->>S: sandi env OPENAI_API_KEY=openai/api-key -- some-cli
   loop each VAR=entry
     S->>P: pass show entry
     P-->>S: first line, or nothing
     Note over S: missing entry: warn, leave VAR unset
   end
-  S->>C: env VAR=value ... opencode
+  S->>C: env VAR=value ... some-cli
   Note over C: values exist only here
 ```
-
-Worked example: `zsh/.opencode_aliases`, since `opencode.json` reads its keys as `{env:VAR}`.
 
 There is deliberately no `~/.secrets`. A plaintext dump sourced by every shell undoes the encryption, and it silently held empty values whenever a decrypt failed.
 

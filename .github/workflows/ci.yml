@@ -32,7 +32,6 @@ jobs:
             __scripts__/install_version_manager.sh \
             __scripts__/install_zsh_plugins.sh \
             __scripts__/karabiner-prefix-indicator.sh \
-            __scripts__/opencode_scaffold_template.sh \
             __scripts__/render_mermaid.sh \
             __scripts__/sandi-setup.sh \
             __scripts__/sandi-state.sh \
@@ -67,8 +66,6 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
           # Keep CI to apt + stow: no mise toolchains, no network installers.
           DOTFILES_SKIP_MISE_INSTALL: "1"
-          DOTFILES_INSTALL_OPENCODE: "0"
-          DOTFILES_INSTALL_OH_MY_OPENCODE: "0"
           DOTFILES_INSTALL_DEBIAN_BREW_EQUIV: "0"
         run: bash install.sh
       - name: Verify symlinks, OS gating and shell load
