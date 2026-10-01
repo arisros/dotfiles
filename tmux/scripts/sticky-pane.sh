@@ -38,8 +38,8 @@ mark() {
 
 # Same path as the window switch hooks in tmux.conf, for the picker.
 apply() {
-  tmux run-shell -C -t "$1" '#{?#{E:@sticky_should},#{E:@sticky_move},}'
-  tmux run-shell -C -t "$1" '#{?#{@sticky_moved},#{E:@sticky_settle},}'
+  tmux if-shell -F -t "$1" '#{E:@sticky_should}' "run-shell -t $1 -C '#{E:@sticky_move}'"
+  tmux if-shell -F -t "$1" '#{@sticky_moved}' "run-shell -t $1 -C '#{E:@sticky_settle}'"
 }
 
 list() {
