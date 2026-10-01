@@ -77,7 +77,7 @@ TPM plugins track their default branch, so a push to `arisros/tmux-agent-deck` r
 | `zsh`, `git`, `vim`, `lynx` | `$HOME` | all |
 | `ssh` | `~/.ssh` | all |
 | `claude` | `~/.claude` | all |
-| `nvim` `tmux` `alacritty` `ghostty` `herdr` `mise` `yazi` `htop` `nix` | `~/.config/<pkg>` | all |
+| `nvim` `tmux` `alacritty` `ghostty` `mise` `yazi` `htop` `nix` | `~/.config/<pkg>` | all |
 | `aerospace` `borders` `sketchybar` | `~/.config/<pkg>` | darwin |
 
 Target directories are created first, so stow links files into them instead of folding the whole directory into one symlink.
