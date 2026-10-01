@@ -36,15 +36,10 @@ mark() {
   fi
 }
 
+# Same path as the window switch hooks in tmux.conf, for the picker.
 apply() {
-  local win=$1 p on pwin width
-  p=$(sticky_pane) || { tmux set -gu @sticky_pane; return; }
-  on=$(tmux display -p -t "$win" '#{||:#{@sticky_win},#{@sticky_sess}}')
-  [[ $on == 1 ]] || return
-  pwin=$(tmux display -p -t "$p" '#{window_id}')
-  [[ $pwin == "$win" ]] && return
-  width=$(tmux show -gqv @sticky_width)
-  tmux join-pane -d -f -h -b -l "${width:-22%}" -s "$p" -t "$win"
+  tmux run-shell -C -t "$1" '#{?#{E:@sticky_should},#{E:@sticky_move},}'
+  tmux run-shell -C -t "$1" '#{?#{@sticky_moved},#{E:@sticky_settle},}'
 }
 
 list() {
