@@ -1,7 +1,7 @@
 return {
 	"searleser97/mermaid-nvim",
 	ft = { "markdown" },
-	-- Needs a mermaid-to-ASCII CLI on PATH: pipx install 'termaid[rich]'
+	build = "pipx install 'termaid[rich]'",
 	opts = {
 		cmd = { "termaid", "--gap", "2" },
 		enabled = true,
