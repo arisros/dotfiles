@@ -32,6 +32,8 @@ brew "pkgconf"
 brew "htop"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
+# SVG rendering library and CLI (yazi svg previews)
+brew "resvg"
 # Java language specific implementation of the Language Server Protocol
 brew "jdtls"
 # Simple terminal UI for git commands

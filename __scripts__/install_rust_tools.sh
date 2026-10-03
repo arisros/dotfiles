@@ -2,6 +2,7 @@
 # Install Rust-based CLI tools that aren't packaged in apt:
 #   - yazi (file manager)
 #   - joshuto (file manager)
+#   - resvg (yazi svg previews)
 #
 # Prefers prebuilt GitHub release binaries (small, fast, no compile). Falls
 # back to `cargo install` if no matching release asset is found.
@@ -71,6 +72,15 @@ if ! have ya; then
     ya_bin="$(find "$tmp" -type f -name ya | head -1)"
     [ -n "$ya_bin" ] && install -m 0755 "$ya_bin" "$DEST_BIN/ya"
     rm -rf "$tmp"
+fi
+
+# --- resvg -----------------------------------------------------------------
+# yazi's svg previewer shells out to resvg. Upstream only ships x86_64 Linux builds.
+if [ "$ARCH" = "x86_64" ]; then
+    install_release resvg \
+        "https://github.com/linebender/resvg/releases/latest/download/resvg-linux-x86_64.tar.gz"
+elif ! have resvg && have cargo; then
+    cargo install --locked resvg
 fi
 
 # --- joshuto ---------------------------------------------------------------
