@@ -44,6 +44,8 @@ for pair in "${stow_pairs[@]}"; do
   fi
 done
 
+[ -e "$HOME/.claude/settings.json" ] || cp "$REPO_DIR/claude/settings.json" "$HOME/.claude/settings.json"
+
 "$REPO_DIR/__scripts__/install_git_hooks.sh" >/dev/null || warn 'git hooks'
 
 tpm_dir="$HOME/.config/tmux/plugins/tpm"

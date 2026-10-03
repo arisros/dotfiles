@@ -344,6 +344,9 @@ render_launch_agents
 # The tracked CLAUDE.md imports this file. Create it empty so the import never
 # dangles on a machine that has no private context to load.
 touch "$HOME/.claude/context.local.md"
+# settings.json is copied once, not linked: Claude Code and the tools that
+# register hooks rewrite it in place, which would land machine state in the repo.
+[ -e "$HOME/.claude/settings.json" ] || cp "$SCRIPT_DIR/claude/settings.json" "$HOME/.claude/settings.json"
 
 # Plugins: separate repos that link themselves into the local hooks. Each one is
 # a symlink in the directory below, so this repo never names any of them. See
