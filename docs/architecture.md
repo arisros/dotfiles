@@ -68,7 +68,7 @@ flowchart LR
   G --> H["pull + install.sh each local plugin"]
 ```
 
-TPM plugins track their default branch, so a push to `arisros/tmux-agent-deck` reaches a machine on its next sync. nvim is not touched: `lazy-lock.json` is machine-local.
+TPM plugins track their default branch, so a push to `arisros/ytta` reaches a machine on its next sync. nvim is not touched: `lazy-lock.json` is machine-local.
 
 ## Stow map
 
