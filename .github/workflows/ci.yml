@@ -84,6 +84,10 @@ jobs:
           # The repo's own mise config won the stow: nothing wrote a plain
           # file there first (regression test for the neovim bootstrap)
           test -L "$HOME/.config/mise/config.toml"
+          # CLAUDE.md is linked, settings.json is a seeded copy the machine owns
+          test -L "$HOME/.claude/CLAUDE.md"
+          test -f "$HOME/.claude/settings.json"
+          test ! -L "$HOME/.claude/settings.json"
           # history-substring-search is vendored (apt does not ship it)
           test -d "$HOME/.zsh-plugins/zsh-history-substring-search"
           # Neovim came from the release tarball, not apt's too-old 0.7

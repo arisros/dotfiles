@@ -82,6 +82,8 @@ TPM plugins track their default branch, so a push to `arisros/ytta` reaches a ma
 
 Target directories are created first, so stow links files into them instead of folding the whole directory into one symlink.
 
+`claude/settings.json` is the one tracked file that is copied instead of linked (`claude/.stow-local-ignore`): Claude Code and hook installers rewrite it in place, so a link would put machine state into the repo. It is seeded when missing and never overwritten, so later changes to the tracked copy are merged by hand.
+
 Not stowed: `karabiner` (see [desktop](desktop.md)), `joshuto`, `rainfrog`. The `Brewfile` is not applied by `install.sh`.
 
 ## Where to go next

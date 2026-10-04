@@ -33,12 +33,14 @@ Conventional Commits: `type(scope): subject`.
   - a `## Test` section only when a reviewer actually has something to run
 - No boilerplate headings that would be empty or that restate the diff ("Summary", "Changes", "Impact", "Risk", "Notes").
 - Never narrate the diff back as prose. The reviewer already sees it.
+- Mermaid diagrams are vertical (`flowchart TB`), 2 to 6 nodes.
+- Evidence, measurements and rejected alternatives go in a collapsed `<details>`, not in the visible body.
 
 ## Diagrams over prose
 
 When explaining a flow, a picture beats paragraphs, and text based beats an attached image. In order of preference:
 
-1. mermaid (`sequenceDiagram`, `stateDiagram-v2`, `flowchart`), renders in GitHub, Jira and any markdown viewer
+1. mermaid (`sequenceDiagram`, `stateDiagram-v2`, `flowchart`), renders in GitHub and any markdown viewer
 2. a markdown table
 3. an ASCII box drawing
 
