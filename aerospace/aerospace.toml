@@ -126,21 +126,22 @@ automatically-unhide-macos-hidden-apps = false
     alt-equal = 'resize smart +50'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-    alt-1 = 'workspace 1'
-    alt-2 = 'workspace 2'
-    alt-3 = 'workspace 3'
-    alt-4 = 'workspace 4'
-    alt-5 = 'workspace 5'
-    alt-q = 'workspace q'
-    alt-w = 'workspace w'
-    alt-e = 'workspace e'
-    alt-r = 'workspace r'
-    alt-t = 'workspace t'
-    alt-a = 'workspace a'
-    alt-s = 'workspace s'
-    alt-d = 'workspace d'
-    alt-f = 'workspace f'
-    alt-g = 'workspace g'
+    # The trailing no-op resets AeroSpace's closed-windows cache, which otherwise bounces back to the previous workspace: nikitabobko/AeroSpace#2312
+    alt-1 = ['workspace 1', 'summon-workspace 1']
+    alt-2 = ['workspace 2', 'summon-workspace 2']
+    alt-3 = ['workspace 3', 'summon-workspace 3']
+    alt-4 = ['workspace 4', 'summon-workspace 4']
+    alt-5 = ['workspace 5', 'summon-workspace 5']
+    alt-q = ['workspace q', 'summon-workspace q']
+    alt-w = ['workspace w', 'summon-workspace w']
+    alt-e = ['workspace e', 'summon-workspace e']
+    alt-r = ['workspace r', 'summon-workspace r']
+    alt-t = ['workspace t', 'summon-workspace t']
+    alt-a = ['workspace a', 'summon-workspace a']
+    alt-s = ['workspace s', 'summon-workspace s']
+    alt-d = ['workspace d', 'summon-workspace d']
+    alt-f = ['workspace f', 'summon-workspace f']
+    alt-g = ['workspace g', 'summon-workspace g']
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
     alt-shift-1 = 'move-node-to-workspace 1'
     alt-shift-2 = 'move-node-to-workspace 2'
@@ -158,7 +159,7 @@ automatically-unhide-macos-hidden-apps = false
     alt-shift-f = 'move-node-to-workspace f'
     alt-shift-g = 'move-node-to-workspace g'
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
-    alt-tab = 'workspace-back-and-forth'
+    alt-tab = ['workspace-back-and-forth', 'resize smart +0']
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
     alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
