@@ -34,6 +34,7 @@ return {
 					width = 0.75,
 				},
 				path_display = { "smart" },
+				file_ignore_patterns = { "graphify/", "graphify%-out/" },
 				theme = "dropdown",
 				previewer = true,
 				find_files = {
