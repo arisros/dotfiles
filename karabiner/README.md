@@ -12,7 +12,7 @@ every change (see upstream issue #3248), so the rules are merged into it instead
 `install.sh` runs the script on macOS. A merged rule change does nothing until it
 is applied, so after editing or pulling the rules, re-run `install.sh` or the
 script itself. It reads `tmux-browser.json` straight from the repo and merges
-both rules into the selected profile:
+its rules into the selected profile:
 
     bash __scripts__/install_karabiner_rules.sh
 
@@ -30,7 +30,7 @@ same thing directly. The GUI route still works if you prefer it: copy
 Karabiner-Elements → Complex Modifications → Add rule, enabling
 **"tmux prefix in the browser"** before **"caps_lock -> home"**.
 
-That order matters either way: both rules bind `caps_lock`, and Karabiner
+That order matters either way: the first two rules bind `caps_lock`, and Karabiner
 applies manipulators top-down. Rule 1 claims `caps_lock` only while a browser is
 frontmost; outside the browser its condition fails and rule 2 takes over. The
 script preserves the order the rules appear in `tmux-browser.json`.
@@ -183,3 +183,15 @@ must never cost you a keypress. Karabiner cannot expand a repo-relative path, so
 `$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh`. Clone the repo
 anywhere else and the indicator silently does nothing — the layer itself still
 works, since the script never blocks a keystroke.
+
+## Screenshot to an ssh host
+
+Dragging a screenshot into a terminal that is ssh'd somewhere pastes a Mac path
+the remote machine cannot read. The third rule binds `Ctrl`+`Shift`+`4` to
+`__scripts__/shot-remote.sh`: select a region, the image is uploaded to
+`~/shots/` on the host, and the remote path lands on the clipboard ready to
+paste. Remote shots older than 7 days are pruned on each upload.
+
+The host is the ssh alias `homelab`, or whatever `~/.config/shot-remote/host`
+contains. macOS asks once for Screen Recording permission for
+`karabiner_console_user_server`, which is the process that runs the script.
