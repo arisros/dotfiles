@@ -48,6 +48,11 @@ done
 
 "$REPO_DIR/__scripts__/install_git_hooks.sh" >/dev/null || warn 'git hooks'
 
+if [ "$OS" = "darwin" ]; then
+  log 'Merging Karabiner rules'
+  "$REPO_DIR/__scripts__/install_karabiner_rules.sh" >/dev/null || warn 'karabiner rules'
+fi
+
 tpm_dir="$HOME/.config/tmux/plugins/tpm"
 if command -v tmux >/dev/null 2>&1; then
   if [ ! -d "$tpm_dir" ]; then

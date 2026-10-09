@@ -44,7 +44,7 @@ stateDiagram-v2
   note right of copy: sketchybar COPY, red border
 ```
 
-The rules are **not** stowed. `install.sh` merges them into `karabiner.json`; after editing or pulling a rule change, re-run it or apply them directly:
+The rules are **not** stowed. `install.sh` and `dots-sync` (so every `git pull`, through the post-merge hook) merge them into `karabiner.json`. After editing a rule locally, apply it directly:
 
 ```bash
 bash __scripts__/install_karabiner_rules.sh

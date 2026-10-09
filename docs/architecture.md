@@ -62,7 +62,8 @@ flowchart LR
   P["git pull"] -->|".githooks/post-merge"| C
   B --> C["stow -R (no adopt)"]
   C --> D["git hooks"]
-  D --> E["TPM install, update all, clean"]
+  D --> K["Karabiner rules (macOS)"]
+  K --> E["TPM install, update all, clean"]
   E --> F["tmux source-file if running"]
   F --> G["pull ~/.zsh-plugins/*"]
   G --> H["pull + install.sh each local plugin"]
