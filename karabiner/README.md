@@ -36,18 +36,24 @@ script preserves the order the rules appear in `tmux-browser.json`.
 
 ## The prefix
 
-Three ways to fire it, all producing the same layer:
+Four ways to fire it, all producing the same layer:
 
 | Trigger | Where it comes from |
 |---|---|
 | `Home` | ArkButton right-thumb key (defined in the ZMK firmware repo, not here) |
 | `fn`+`←` | MacBook built-in keyboard — macOS' own Home |
 | `caps_lock` | via rule 2; ArkButton has no caps_lock, this is for the built-in board |
+| `Ctrl`+`b` | MacBook built-in keyboard only (`device_if`), mirrors tmux's `prefix2` |
 
 The `left_arrow`+`fn` manipulator is a belt-and-braces entry: Karabiner may report
 `fn`+`←` either as `home`+fn (caught by the first manipulator, which accepts any
 modifier) or as `left_arrow`+fn. Whichever it is on a given machine, one of the
 two matches and the other never fires. Confirm with Karabiner-EventViewer.
+
+`Ctrl`+`b` is limited to the built-in keyboard so an external board keeps the
+browser's own `Ctrl`+`b` (cursor back one character in a text field). Release
+`Ctrl` before the layer key: the layer keys match without modifiers, so
+`Ctrl`+`b` `Ctrl`+`c` falls through to the catch-all and is swallowed.
 
 The prefix disarms after **2000 ms** (`basic.to_delayed_action_delay_milliseconds`).
 tmux itself waits indefinitely; a timeout was chosen so a stray `Home` cannot
