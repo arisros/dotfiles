@@ -2380,6 +2380,28 @@
           ]
         }
       ]
+    },
+    {
+      "description": "[dotfiles] ctrl-shift-4 -> capture a region, upload it to the ssh host and copy the remote path (__scripts__/shot-remote.sh)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "4",
+            "modifiers": {
+              "mandatory": [
+                "control",
+                "shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/shot-remote.sh\""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
