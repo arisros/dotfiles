@@ -2,7 +2,7 @@
   "title": "tmux-style navigation (arisjirat dotfiles)",
   "rules": [
     {
-      "description": "[dotfiles] tmux prefix in the browser: Home (ArkButton thumb) / fn+Left / caps_lock, then 1-9 n p c x w s f : [ v o l r z u ? & \u2014 plus a copy-mode layer over caret browsing. Chrome & Brave only.",
+      "description": "[dotfiles] tmux prefix in the browser: Home (ArkButton thumb) / fn+Left / caps_lock / ctrl-b (built-in keyboard only), then 1-9 n p c x w s f : [ v o l r z u ? & \u2014 plus a copy-mode layer over caret browsing. Chrome & Brave only.",
       "manipulators": [
         {
           "type": "basic",
@@ -144,6 +144,62 @@
                 "^com\\.google\\.Chrome$",
                 "^com\\.brave\\.Browser$",
                 "^kok_bref$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "b",
+            "modifiers": {
+              "mandatory": [
+                "control"
+              ]
+            }
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "tmux_browser_prefix",
+                "value": 1
+              }
+            },
+            {
+              "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" prefix"
+            }
+          ],
+          "to_delayed_action": {
+            "to_if_invoked": [
+              {
+                "set_variable": {
+                  "name": "tmux_browser_prefix",
+                  "value": 0
+                }
+              },
+              {
+                "shell_command": "\"$HOME/dotfiles/__scripts__/karabiner-prefix-indicator.sh\" off"
+              }
+            ]
+          },
+          "parameters": {
+            "basic.to_delayed_action_delay_milliseconds": 2000
+          },
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.google\\.Chrome$",
+                "^com\\.brave\\.Browser$",
+                "^kok_bref$"
+              ]
+            },
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "is_built_in_keyboard": true
+                }
               ]
             }
           ]
