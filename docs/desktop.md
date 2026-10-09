@@ -27,7 +27,7 @@ flowchart LR
 | AeroSpace | `aerospace/aerospace.toml` | `start-at-login = true` |
 | SketchyBar | `sketchybar/sketchybarrc` | LaunchAgent |
 | JankyBorders | `borders/bordersrc` | LaunchAgent |
-| Karabiner rules | `karabiner/tmux-browser.json` | merged by hand, see below |
+| Karabiner rules | `karabiner/tmux-browser.json` | merged by `install.sh`, see below |
 
 `install.sh` writes the plists but never runs `launchctl load`; they start at next login.
 
@@ -44,7 +44,7 @@ stateDiagram-v2
   note right of copy: sketchybar COPY, red border
 ```
 
-The rules are **not** stowed and **not** applied by `install.sh`. Apply them after editing:
+The rules are **not** stowed. `install.sh` merges them into `karabiner.json`; after editing or pulling a rule change, re-run it or apply them directly:
 
 ```bash
 bash __scripts__/install_karabiner_rules.sh

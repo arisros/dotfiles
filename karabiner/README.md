@@ -9,8 +9,9 @@ every change (see upstream issue #3248), so the rules are merged into it instead
 
 ## Enabling
 
-`install.sh` does not do this. Run the script by hand once, and again after
-editing the rules. It reads `tmux-browser.json` straight from the repo and merges
+`install.sh` runs the script on macOS. A merged rule change does nothing until it
+is applied, so after editing or pulling the rules, re-run `install.sh` or the
+script itself. It reads `tmux-browser.json` straight from the repo and merges
 both rules into the selected profile:
 
     bash __scripts__/install_karabiner_rules.sh

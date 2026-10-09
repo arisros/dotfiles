@@ -371,6 +371,10 @@ if [ -x "$SCRIPT_DIR/__scripts__/sandi-setup.sh" ]; then
   "$SCRIPT_DIR/__scripts__/sandi-setup.sh" --quiet || true
 fi
 
+if [ "$OS" = "darwin" ] && [ -x "$SCRIPT_DIR/__scripts__/install_karabiner_rules.sh" ]; then
+  "$SCRIPT_DIR/__scripts__/install_karabiner_rules.sh" || warn 'Could not merge Karabiner rules.'
+fi
+
 if [ "$OS" = "linux" ] && [ "$INSTALL_DEBIAN_BREW_EQUIV" = "1" ] && [ -x "$SCRIPT_DIR/__scripts__/install_debian_brew_equivalents.sh" ]; then
   log 'Installing Debian equivalents for Homebrew leaves...'
   debian_bridge_args=(--from-file "$SCRIPT_DIR/__scripts__/brew-leaves.txt")
