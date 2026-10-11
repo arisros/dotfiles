@@ -28,6 +28,7 @@ flowchart LR
 | SketchyBar | `sketchybar/sketchybarrc` | LaunchAgent |
 | JankyBorders | `borders/bordersrc` | LaunchAgent |
 | Karabiner rules | `karabiner/tmux-browser.json` | merged by `install.sh`, see below |
+| Hammerspoon | `hammerspoon/init.lua` | open it once, then "Launch at login" in its preferences |
 
 `install.sh` writes the plists but never runs `launchctl load`; they start at next login.
 
@@ -51,6 +52,29 @@ bash __scripts__/install_karabiner_rules.sh
 ```
 
 Key map, copy-mode keys and design notes: [karabiner/README.md](../karabiner/README.md).
+
+## Browser link to nvim
+
+Neovim has no URL scheme, so a web page cannot open a file in it directly. Hammerspoon registers one and hands the file to `__scripts__/nvim-open.sh`.
+
+```mermaid
+flowchart TB
+  B["link in the browser<br/>hammerspoon://nvim?file=/abs/path&line=12"] --> H["Hammerspoon<br/>hammerspoon/init.lua"]
+  H --> S["__scripts__/nvim-open.sh path line"]
+  S -->|"nvim --server sock --remote-expr"| N["the running nvim whose cwd holds the file"]
+  S -->|"switch-client, select-pane"| X["its tmux pane"]
+  S -->|"open -a Ghostty"| T["terminal to the front"]
+```
+
+With no nvim running, the script opens one in a new tmux window. The browser asks once before it hands a link to Hammerspoon.
+
+For fate-studio:
+
+```sh
+fate-studio --editor-url "hammerspoon://nvim?file={path}&line={line}"
+```
+
+The script also works alone, on Linux too, for any tool that can run a command: `nvim-open.sh <path> [line]`.
 
 ## Terminal
 

@@ -80,6 +80,7 @@ TPM plugins track their default branch, so a push to `arisros/ytta` reaches a ma
 | `claude` | `~/.claude` | all |
 | `nvim` `tmux` `alacritty` `ghostty` `mise` `yazi` `htop` `nix` | `~/.config/<pkg>` | all |
 | `aerospace` `borders` `sketchybar` | `~/.config/<pkg>` | darwin |
+| `hammerspoon` | `~/.hammerspoon` | darwin |
 
 Target directories are created first, so stow links files into them instead of folding the whole directory into one symlink.
 
