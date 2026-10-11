@@ -33,17 +33,19 @@ stow_pairs=(
   "$HOME:lynx"
 )
 
-# aerospace, borders and sketchybar are macOS window-manager tooling; creating
+# aerospace, borders, sketchybar and hammerspoon are macOS desktop tooling; creating
 # and stowing them on Linux leaves dead config nothing will ever read.
 if [ "$OS" = "darwin" ]; then
   config_dirs+=(
     "$HOME/.config/aerospace"
     "$HOME/.config/borders"
     "$HOME/.config/sketchybar"
+    "$HOME/.hammerspoon"
   )
   stow_pairs+=(
     "$HOME/.config/aerospace:aerospace"
     "$HOME/.config/borders:borders"
     "$HOME/.config/sketchybar:sketchybar"
+    "$HOME/.hammerspoon:hammerspoon"
   )
 fi

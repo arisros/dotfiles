@@ -98,6 +98,8 @@ cask "aerospace"
 # Electronics prototyping platform
 cask "arduino-ide"
 cask "font-blex-mono-nerd-font"
+# Lua automation; bridges browser links to nvim
+cask "hammerspoon"
 cask "karabiner-elements"
 cask "font-hack-nerd-font"
 cask "font-sketchybar-app-font"

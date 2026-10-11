@@ -3,6 +3,7 @@ arduino-ide
 font-blex-mono-nerd-font
 font-hack-nerd-font
 font-sketchybar-app-font
+hammerspoon
 insomnia
 ngrok
 obsidian
