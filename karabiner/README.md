@@ -192,6 +192,11 @@ the remote machine cannot read. The third rule binds `Ctrl`+`Shift`+`4` to
 `~/shots/` on the host, and the remote path lands on the clipboard ready to
 paste. Remote shots older than 7 days are pruned on each upload.
 
-The host is the ssh alias `homelab`, or whatever `~/.config/shot-remote/host`
-contains. macOS asks once for Screen Recording permission for
+The host is the ssh alias in `~/.config/shot-remote/host`. That file is per
+machine and not in the repo, like the `Host` blocks in `~/.ssh/config.local` it
+points at; without it the script only posts a notification saying so:
+
+    mkdir -p ~/.config/shot-remote && echo <alias> > ~/.config/shot-remote/host
+
+macOS asks once for Screen Recording permission for
 `karabiner_console_user_server`, which is the process that runs the script.

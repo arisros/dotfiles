@@ -2,7 +2,7 @@
 # Capture a screen region, upload it to a remote host, and put the remote path
 # on the clipboard, so it can be pasted into a terminal that is ssh'd there.
 #
-#   shot-remote.sh [host]   host: argument, else ~/.config/shot-remote/host, else "homelab"
+#   shot-remote.sh [host]   host: argument, else ~/.config/shot-remote/host
 #
 # Karabiner runs shell_command with a minimal PATH and no terminal, so results are reported as notifications.
 PATH="/usr/bin:/bin:/usr/sbin:/sbin"
@@ -16,7 +16,10 @@ notify() { osascript -e "display notification \"$1\" with title \"shot-remote\""
 
 host="${1:-}"
 [ -n "$host" ] || host="$(cat "$HOME/.config/shot-remote/host" 2>/dev/null || true)"
-[ -n "$host" ] || host="homelab"
+if [ -z "$host" ]; then
+    notify "no host set: put an ssh alias in ~/.config/shot-remote/host"
+    exit 1
+fi
 
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
