@@ -1,3 +1,4 @@
 alias tmuxr='tmux source-file ~/.tmux.conf'
 alias szz='source ~/.zshrc'
 alias dots-sync='~/dotfiles/__scripts__/dots-sync.sh'
+alias gpgfix="pkill -f 'gpg -d'; gpgconf --kill gpg-agent"
