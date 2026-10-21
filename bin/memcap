@@ -1,0 +1,32 @@
+#!/bin/sh
+# Usage: memcap <max_mb> <pattern>: prints processes (pgrep -f) over <max_mb> and exits 1.
+# Counts swapped pages too (footprint, or VmRSS + VmSwap): plain RSS hides a swapped-out leak.
+
+set -u
+
+if [ $# -ne 2 ] || ! [ "$1" -eq "$1" ] 2>/dev/null; then
+  echo "usage: memcap <max_mb> <pattern>" >&2
+  exit 2
+fi
+max=$1
+pattern=$2
+
+mem_mb() {
+  if [ -r "/proc/$1/status" ]; then
+    awk '/^(VmRSS|VmSwap):/ { kb += $2 } END { print int(kb / 1024) }' "/proc/$1/status"
+  else
+    footprint "$1" 2>/dev/null | sed -nE 's/.*Footprint: ([0-9.]+) ([KMG]B).*/\1 \2/p' |
+      awk 'NR == 1 { v = $1; if ($2 == "GB") v *= 1024; if ($2 == "KB") v /= 1024; print int(v) }'
+  fi
+}
+
+over=0
+for pid in $(pgrep -f -- "$pattern"); do
+  # pgrep -f also matches this script and the shell that ran it, both carry the pattern.
+  [ "$pid" = "$$" ] || [ "$pid" = "$PPID" ] && continue
+  mb=$(mem_mb "$pid")
+  [ -n "$mb" ] && [ "$mb" -gt "$max" ] || continue
+  printf '%s %s %sMB\n' "$pid" "$(ps -o comm= -p "$pid" | sed 's|.*/||')" "$mb"
+  over=1
+done
+exit "$over"

@@ -13,6 +13,7 @@ config_dirs=(
   "$HOME/.config/nix"
   "$HOME/.config/yazi"
   "$HOME/.config/htop"
+  "$HOME/.local/bin"
 )
 
 stow_pairs=(
@@ -31,6 +32,7 @@ stow_pairs=(
   "$HOME:zsh"
   "$HOME/.config/nix:nix"
   "$HOME:lynx"
+  "$HOME/.local/bin:bin"
 )
 
 # aerospace, borders, sketchybar and hammerspoon are macOS desktop tooling; creating

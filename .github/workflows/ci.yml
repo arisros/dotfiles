@@ -21,6 +21,7 @@ jobs:
           shellcheck --version
           shellcheck -x --severity=warning \
             install.sh \
+            bin/memcap \
             .githooks/pre-commit \
             .githooks/pre-push \
             __scripts__/export_brew_leaves.sh \
