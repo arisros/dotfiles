@@ -78,6 +78,7 @@ TPM plugins track their default branch, so a push to `arisros/ytta` reaches a ma
 | `zsh`, `git`, `vim`, `lynx` | `$HOME` | all |
 | `ssh` | `~/.ssh` | all |
 | `claude` | `~/.claude` | all |
+| `bin` | `~/.local/bin` | all |
 | `nvim` `tmux` `alacritty` `ghostty` `mise` `yazi` `htop` `nix` | `~/.config/<pkg>` | all |
 | `aerospace` `borders` `sketchybar` | `~/.config/<pkg>` | darwin |
 | `hammerspoon` | `~/.hammerspoon` | darwin |
