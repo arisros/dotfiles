@@ -1,10 +1,11 @@
 # ── sandi ────────────────────────────────────────────────────────────────────
 # Thin wrapper around pass. Anything it does not recognise is forwarded
 # straight through, so `sandi show`, `sandi find`, `sandi insert` and
-# `sandi git` behave exactly like the pass equivalents. Two additions:
+# `sandi git` behave exactly like the pass equivalents. Additions:
 #
 #   sandi sync    pull --rebase then push
 #   sandi st      print the sync state
+#   sandi otpw    watch an OTP entry: live code, seconds left, copy each new code
 #
 # The store itself, the gpg keys and the remote are not configured here.
 # Set SANDI_REMOTE per machine in ~/.config/dotfiles/modules/sandi.zsh and run
@@ -27,6 +28,10 @@ sandi() {
     env)
       shift
       _sandi_env "$@"
+      ;;
+    otpw)
+      shift
+      _sandi_otpw "$@"
       ;;
     *)
       pass "$@"
@@ -105,4 +110,28 @@ _sandi_status() {
   if [ "$state" = offline ]; then
     printf 'sandi: %s\n' "${SANDI_OFFLINE_HINT:-remote unreachable, check network or VPN}" >&2
   fi
+}
+
+# The period comes from the otpauth URI, so an entry with period=60 counts down from 60.
+_sandi_otpw() {
+  local entry="${1:-}" uri period code last="" now window
+  if [ -z "$entry" ]; then
+    printf 'usage: sandi otpw <entry>\n' >&2
+    return 1
+  fi
+  uri="$(pass show "$entry")" || return 1
+  period="$(printf '%s\n' "$uri" | grep -o 'period=[0-9]*' | head -1 | cut -d= -f2)"
+  uri=""
+  : "${period:=30}"
+  while :; do
+    now="$(date +%s)"
+    window=$(( now / period ))
+    if [ "$window" != "$last" ]; then
+      code="$(pass otp "$entry")" || return 1
+      command -v pbcopy >/dev/null 2>&1 && printf '%s' "$code" | pbcopy
+      last="$window"
+    fi
+    printf '\r%s  %2ds left (period %ss, copied) ' "$code" $(( period - now % period )) "$period"
+    sleep 1
+  done
 }
