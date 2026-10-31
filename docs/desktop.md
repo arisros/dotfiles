@@ -13,6 +13,7 @@ flowchart LR
   end
   subgraph kb["Karabiner"]
     KR["tmux-browser.json<br/>Home / caps_lock prefix in the browser"]
+    KB["builtin-keyboard.json<br/>kbd off: MacBook keys swallowed"]
   end
   AE["AeroSpace"] -->|"exec-on-workspace-change<br/>--trigger aerospace_workspace_change"| SB["SketchyBar"]
   KR -->|"shell_command prefix | copy | off"| KI["__scripts__/karabiner-prefix-indicator.sh"]
@@ -27,7 +28,7 @@ flowchart LR
 | AeroSpace | `aerospace/aerospace.toml` | `start-at-login = true` |
 | SketchyBar | `sketchybar/sketchybarrc` | LaunchAgent |
 | JankyBorders | `borders/bordersrc` | LaunchAgent |
-| Karabiner rules | `karabiner/tmux-browser.json` | merged by `install.sh`, see below |
+| Karabiner rules | `karabiner/*.json` | merged by `install.sh`, see below |
 | Hammerspoon | `hammerspoon/init.lua` | open it once, then "Launch at login" in its preferences |
 
 `install.sh` writes the plists but never runs `launchctl load`; they start at next login.
@@ -52,6 +53,25 @@ bash __scripts__/install_karabiner_rules.sh
 ```
 
 Key map, copy-mode keys and design notes: [karabiner/README.md](../karabiner/README.md).
+
+## Built-in keyboard switch
+
+```bash
+kbd off      # the MacBook's own keys stop doing anything
+kbd on       # back
+kbd status   # the default with no argument
+```
+
+For when an external keyboard sits on top of the laptop, or the laptop needs a
+wipe. Nothing else is touched: trackpad, external keyboards and everything plugged
+in keep working.
+
+`builtin-keyboard.json` swallows the built-in keyboard while the Karabiner
+variable `builtin_keyboard_disabled` is `1`; `__scripts__/builtin-keyboard.sh` is
+the only thing that sets it, and `zsh/.functions` wraps it as `kbd`. The variable
+is never written to disk, so quitting Karabiner, logging out or rebooting gives
+the keyboard back. Details and the way out when no second keyboard is connected:
+[karabiner/README.md](../karabiner/README.md).
 
 ## Browser link to nvim
 

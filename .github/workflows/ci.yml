@@ -23,6 +23,7 @@ jobs:
             install.sh \
             .githooks/pre-commit \
             .githooks/pre-push \
+            __scripts__/builtin-keyboard.sh \
             __scripts__/export_brew_leaves.sh \
             __scripts__/install_debian_brew_equivalents.sh \
             __scripts__/install_git_hooks.sh \
