@@ -1,0 +1,26 @@
+{
+  "title": "[dotfiles] built-in keyboard switch",
+  "rules": [
+    {
+      "description": "[dotfiles] swallow the built-in keyboard while builtin_keyboard_disabled is 1",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": { "any": "key_code", "modifiers": { "optional": ["any"] } },
+          "conditions": [
+            { "type": "variable_if", "name": "builtin_keyboard_disabled", "value": 1 },
+            { "type": "device_if", "identifiers": [{ "is_built_in_keyboard": true }] }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": { "any": "consumer_key_code", "modifiers": { "optional": ["any"] } },
+          "conditions": [
+            { "type": "variable_if", "name": "builtin_keyboard_disabled", "value": 1 },
+            { "type": "device_if", "identifiers": [{ "is_built_in_keyboard": true }] }
+          ]
+        }
+      ]
+    }
+  ]
+}

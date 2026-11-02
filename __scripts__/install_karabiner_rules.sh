@@ -10,8 +10,21 @@
 # appended in source order otherwise. Safe to re-run after editing the rules.
 set -euo pipefail
 
-SRC_DEFAULT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/karabiner/tmux-browser.json"
-SRC="${1:-$SRC_DEFAULT}"
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# Karabiner applies manipulators top-down, so this order is behaviour: while the
+# built-in keyboard is switched off, its keys must be swallowed before the
+# prefix rules get a chance to translate caps_lock or ctrl-b.
+SRC_DEFAULT=(
+    "$REPO/karabiner/builtin-keyboard.json"
+    "$REPO/karabiner/tmux-browser.json"
+)
+if [ "$#" -gt 0 ]; then
+    SRCS=("$@")
+else
+    SRCS=("${SRC_DEFAULT[@]}")
+fi
+
 CONFIG="$HOME/.config/karabiner/karabiner.json"
 CLI="/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli"
 
@@ -26,16 +39,30 @@ if ! command -v jq >/dev/null 2>&1; then
     exit 0
 fi
 
-[ -f "$SRC" ] || { err "rule file not found: $SRC"; exit 1; }
-
 # Every rule this repo manages carries this prefix; anything else in the profile
 # belongs to the user and is left alone.
 TAG="[dotfiles] "
-if [ "$(jq --arg t "$TAG" '[.rules[] | select((.description // "") | startswith($t))] | length' "$SRC")" \
-   != "$(jq '.rules | length' "$SRC")" ]; then
-    err "every rule in $SRC must have a description starting with '$TAG'"
-    exit 1
-fi
+
+for src in "${SRCS[@]}"; do
+    [ -f "$src" ] || { err "rule file not found: $src"; exit 1; }
+    if [ "$(jq --arg t "$TAG" '[.rules[] | select((.description // "") | startswith($t))] | length' "$src")" \
+       != "$(jq '.rules | length' "$src")" ]; then
+        err "every rule in $src must have a description starting with '$TAG'"
+        exit 1
+    fi
+
+    # Validate before touching a working config. Older builds lack the flag, so a
+    # non-zero exit only aborts when the linter actually reported a problem.
+    if [ -x "$CLI" ]; then
+        if ! "$CLI" --lint-complex-modifications "$src" >/dev/null 2>&1; then
+            if "$CLI" --lint-complex-modifications "$src" 2>&1 | grep -qi "error"; then
+                err "karabiner_cli rejected $src — not touching karabiner.json"
+                "$CLI" --lint-complex-modifications "$src" || true
+                exit 1
+            fi
+        fi
+    fi
+done
 
 if [ ! -f "$CONFIG" ]; then
     warn "$CONFIG does not exist yet."
@@ -44,27 +71,18 @@ if [ ! -f "$CONFIG" ]; then
     exit 0
 fi
 
-# Validate before touching a working config. Older builds lack the flag, so a
-# non-zero exit only aborts when the linter actually reported a problem.
-if [ -x "$CLI" ]; then
-    if ! "$CLI" --lint-complex-modifications "$SRC" >/dev/null 2>&1; then
-        if "$CLI" --lint-complex-modifications "$SRC" 2>&1 | grep -qi "error"; then
-            err "karabiner_cli rejected $SRC — not touching karabiner.json"
-            "$CLI" --lint-complex-modifications "$SRC" || true
-            exit 1
-        fi
-    fi
-fi
-
 tmp="$(mktemp)"
-trap 'rm -f "$tmp"' EXIT
+rules="$(mktemp)"
+trap 'rm -f "$tmp" "$rules"' EXIT
+
+jq -s '[.[].rules[]]' "${SRCS[@]}" > "$rules"
 
 # Managed rules are identified by the TAG in their description, not by the whole
 # string. Matching on the full description meant that renaming a rule left the
 # old copy behind — and since a stale copy sits earlier in the list, it would
 # keep binding Home and silently shadow the new one.
-jq --slurpfile new "$SRC" --arg tag "$TAG" '
-  ($new[0].rules) as $newrules
+jq --slurpfile new "$rules" --arg tag "$TAG" '
+  ($new[0]) as $newrules
   | (((.profiles | map(.selected == true) | index(true)) // 0)) as $i
   | .profiles[$i].complex_modifications.rules =
       (((.profiles[$i].complex_modifications.rules // [])
@@ -74,7 +92,7 @@ jq --slurpfile new "$SRC" --arg tag "$TAG" '
 
 # Sanity-check the result before it replaces a working config.
 jq -e '.profiles | length > 0' "$tmp" >/dev/null || {
-    err "merge produced an invalid config — left $CONFIG untouched (backup: $backup)"
+    err "merge produced an invalid config — left $CONFIG untouched"
     exit 1
 }
 
@@ -95,7 +113,7 @@ cp "$CONFIG" "$backup"
 cat "$tmp" > "$CONFIG"
 
 profile="$(jq -r '(.profiles[] | select(.selected == true) | .name) // .profiles[0].name' "$CONFIG")"
-count="$(jq '[.rules[].description] | length' "$SRC")"
+count="$(jq 'length' "$rules")"
 log "enabled $count rule(s) in Karabiner profile \"$profile\""
-jq -r '.rules[] | "    - " + .description' "$SRC" | cut -c1-100
+jq -r '.[] | "    - " + .description' "$rules" | cut -c1-100
 log "backup: $backup"

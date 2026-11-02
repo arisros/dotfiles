@@ -298,3 +298,11 @@ PY
 
   rm -f "$tmp_img"
 }
+
+# kbd off|on|toggle|status: the MacBook's own keyboard, for when an external
+# board is in front of it. Karabiner holds the switch, see the script.
+: "${KBD_SCRIPT:=$HOME/dotfiles/__scripts__/builtin-keyboard.sh}"
+kbd() {
+  [ -x "$KBD_SCRIPT" ] || { printf 'kbd: not found: %s\n' "$KBD_SCRIPT" >&2; return 1; }
+  "$KBD_SCRIPT" "$@"
+}

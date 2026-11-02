@@ -1,18 +1,22 @@
-# karabiner — tmux-style browser navigation
+# karabiner
 
-Brings the tmux prefix grammar into Chrome/Brave, so `Home` means the same thing
-in the terminal and in the browser.
+Two Karabiner **complex modifications** assets:
 
-`tmux-browser.json` is a Karabiner **complex modifications** asset. It is not
-stowed: `karabiner.json` cannot be symlinked because Karabiner rewrites it on
-every change (see upstream issue #3248), so the rules are merged into it instead.
+| File | What it does |
+|---|---|
+| `builtin-keyboard.json` | the switch behind `kbd off` / `kbd on`: the MacBook's own keyboard stops producing anything |
+| `tmux-browser.json` | brings the tmux prefix grammar into Chrome/Brave, so `Home` means the same thing in the terminal and in the browser |
+
+Neither is stowed: `karabiner.json` cannot be symlinked because Karabiner
+rewrites it on every change (see upstream issue #3248), so the rules are merged
+into it instead.
 
 ## Enabling
 
 `install.sh` runs the script on macOS. A merged rule change does nothing until it
 is applied, so after editing or pulling the rules, re-run `install.sh` or the
-script itself. It reads `tmux-browser.json` straight from the repo and merges
-its rules into the selected profile:
+script itself. It reads the rule files straight from the repo and merges
+their rules into the selected profile, in the order `SRC_DEFAULT` lists them:
 
     bash __scripts__/install_karabiner_rules.sh
 
@@ -26,7 +30,7 @@ This exists because Karabiner has no CLI for enabling a rule — `karabiner_cli`
 can only *lint* one. The GUI's "Add rule" copies the rule out of
 `assets/complex_modifications/` into `karabiner.json`, and the script does the
 same thing directly. The GUI route still works if you prefer it: copy
-`tmux-browser.json` into `~/.config/karabiner/assets/complex_modifications/`, then
+the rule file into `~/.config/karabiner/assets/complex_modifications/`, then
 Karabiner-Elements → Complex Modifications → Add rule, enabling
 **"tmux prefix in the browser"** before **"caps_lock -> home"**.
 
@@ -34,6 +38,43 @@ That order matters either way: the first two rules bind `caps_lock`, and Karabin
 applies manipulators top-down. Rule 1 claims `caps_lock` only while a browser is
 frontmost; outside the browser its condition fails and rule 2 takes over. The
 script preserves the order the rules appear in `tmux-browser.json`.
+
+## Built-in keyboard switch
+
+```bash
+kbd off      # MacBook keys do nothing
+kbd on       # back
+kbd toggle
+kbd status   # what you get with no argument
+```
+
+Only the built-in keyboard goes dead. The trackpad, the ArkButton and anything
+else connected keep working, which is the point: an external board can sit on
+top of the laptop without the keys underneath firing.
+
+`builtin-keyboard.json` swallows every `key_code` and `consumer_key_code` whose
+`device_if` reports `is_built_in_keyboard`, and only while the variable
+`builtin_keyboard_disabled` is `1`. `__scripts__/builtin-keyboard.sh` is the only
+writer, through `karabiner_cli --set-variables`; `zsh/.functions` wraps it as
+`kbd`.
+
+That rule has to come first in the merged profile. Karabiner applies
+manipulators top-down, so a `caps_lock` from the built-in keyboard must be
+swallowed before the prefix rules turn it into `Home`. The order comes from
+`SRC_DEFAULT` in `__scripts__/install_karabiner_rules.sh`, not from the filename.
+
+The variable lives in the running Karabiner process and is never persisted, so
+quitting Karabiner, logging out or rebooting always restores the keyboard. That
+is the way out on a machine with no second keyboard: menu bar icon, Quit.
+`kbd off` prints that hint when it finds no external keyboard connected.
+
+`kbd status` cannot ask Karabiner for the value, since `karabiner_cli` only
+reads system and multitouch variables. It records the Karabiner process identity
+when it switches the keyboard off and compares it on read, so a restart in
+between is reported as `on`, which is what actually happened.
+
+Out of reach: the power/Touch ID button, and everything before Karabiner is
+running, so the login window, FileVault and recovery always have the keyboard.
 
 ## The prefix
 
