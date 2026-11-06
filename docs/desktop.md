@@ -31,6 +31,8 @@ flowchart LR
 | Karabiner rules | `karabiner/*.json` | merged by `install.sh`, see below |
 | Hammerspoon | `hammerspoon/init.lua` | open it once, then "Launch at login" in its preferences |
 
+`init.lua` loads `hs.ipc`, so `hs -c '<lua>'` drives the running instance from a shell. `hs -c 'hs.reload()'` reloads the config without the GUI, but never returns: the Lua state it would answer from is already gone, so interrupt it.
+
 `install.sh` writes the plists but never runs `launchctl load`; they start at next login.
 
 ## Browser prefix layer
@@ -70,7 +72,19 @@ in keep working.
 variable `builtin_keyboard_disabled` is `1`; `__scripts__/builtin-keyboard.sh` is
 the only thing that sets it, and `zsh/.functions` wraps it as `kbd`. The variable
 is never written to disk, so quitting Karabiner, logging out or rebooting gives
-the keyboard back. Details and the way out when no second keyboard is connected:
+the keyboard back.
+
+`off` is not meant to outlive the sitting, so Hammerspoon hands the keyboard back
+on its own:
+
+```mermaid
+flowchart TB
+  L["lid closed"] --> S["machine sleeps<br/>or built-in display leaves"]
+  S --> R["lid opened"]
+  R -->|"caffeinate systemDidWake<br/>screen watcher: built-in display back"| K["kbd on"]
+```
+
+Details and the way out when no second keyboard is connected:
 [karabiner/README.md](../karabiner/README.md).
 
 ## Browser link to nvim
