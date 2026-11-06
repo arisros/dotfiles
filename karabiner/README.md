@@ -52,6 +52,12 @@ Only the built-in keyboard goes dead. The trackpad, the ArkButton and anything
 else connected keep working, which is the point: an external board can sit on
 top of the laptop without the keys underneath firing.
 
+It lasts one sitting. `hammerspoon/init.lua` turns the keyboard back on when the
+machine wakes, and when the built-in display reappears, which is what reopening
+the lid looks like in clamshell, where the machine never slept. Closing the lid
+and opening it again is therefore the shortest way out of `kbd off`, and a laptop
+you walk away from never comes back with a keyboard that does nothing.
+
 `builtin-keyboard.json` swallows every `key_code` and `consumer_key_code` whose
 `device_if` reports `is_built_in_keyboard`, and only while the variable
 `builtin_keyboard_disabled` is `1`. `__scripts__/builtin-keyboard.sh` is the only
@@ -64,9 +70,10 @@ swallowed before the prefix rules turn it into `Home`. The order comes from
 `SRC_DEFAULT` in `__scripts__/install_karabiner_rules.sh`, not from the filename.
 
 The variable lives in the running Karabiner process and is never persisted, so
-quitting Karabiner, logging out or rebooting always restores the keyboard. That
-is the way out on a machine with no second keyboard: menu bar icon, Quit.
-`kbd off` prints that hint when it finds no external keyboard connected.
+quitting Karabiner, logging out or rebooting also restores the keyboard. On a
+machine with no second keyboard that is the manual way out, menu bar icon then
+Quit, and `kbd off` prints the hint when it finds no external keyboard
+connected. The lid is the faster one.
 
 `kbd status` cannot ask Karabiner for the value, since `karabiner_cli` only
 reads system and multitouch variables. It records the Karabiner process identity
