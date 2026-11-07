@@ -39,6 +39,11 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.concealcursor = "nc"
 		vim.opt_local.colorcolumn = ""
 
+		vim.wo[0][0].foldmethod = "expr"
+		vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+		vim.wo[0][0].foldtext = ""
+		vim.wo[0][0].foldlevel = 99
+
 		vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", {
 			buffer = event.buf,
 			expr = true,

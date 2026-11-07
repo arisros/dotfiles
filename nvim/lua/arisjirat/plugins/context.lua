@@ -19,5 +19,12 @@ return {
 			end,
 			desc = "Toggle Treesitter Context",
 		},
+		{
+			"[c",
+			function()
+				require("treesitter-context").go_to_context()
+			end,
+			desc = "Jump to function context",
+		},
 	},
 }

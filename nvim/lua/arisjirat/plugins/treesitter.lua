@@ -1,82 +1,112 @@
+local ensure_installed = {
+	"astro",
+	"bash",
+	"c",
+	"cpp",
+	"css",
+	"dart",
+	"gitignore",
+	"go",
+	"html",
+	"http",
+	"java",
+	"javascript",
+	"json",
+	"lua",
+	"markdown",
+	"markdown_inline",
+	"python",
+	"rust",
+	"templ",
+	"toml",
+	"tsx",
+	"typescript",
+	"vim",
+	"vimdoc",
+	"xml",
+	"yaml",
+}
+
 return {
-	"nvim-treesitter/nvim-treesitter",
-	-- The default branch is now main, which drops the nvim-treesitter.configs API used below.
-	branch = "master",
+	{
+		"nvim-treesitter/nvim-treesitter",
+		-- master is frozen at Nvim 0.11: its query directives still read match[id] as a
+		-- single node, which 0.12 turned into a list, breaking every markdown parse.
+		branch = "main",
+		lazy = false,
+		build = ":TSUpdate",
 
-	lazy = false,
-	build = ":TSUpdate",
+		config = function()
+			vim.filetype.add({
+				extension = {
+					jsp = "html",
+				},
+			})
 
-	dependencies = {
-		"windwp/nvim-ts-autotag",
-		"nvim-treesitter/nvim-treesitter-context",
-		"nvim-treesitter/nvim-treesitter-textobjects",
+			local ts = require("nvim-treesitter")
+			ts.install(ensure_installed)
+
+			local available = {}
+			for _, lang in ipairs(ts.get_available()) do
+				available[lang] = true
+			end
+
+			local function start(buf, lang)
+				if not vim.api.nvim_buf_is_valid(buf) then
+					return
+				end
+				if not pcall(vim.treesitter.start, buf, lang) then
+					return
+				end
+				if vim.treesitter.query.get(lang, "indents") then
+					vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+				end
+			end
+
+			vim.api.nvim_create_autocmd("FileType", {
+				group = vim.api.nvim_create_augroup("ArisjiratTreesitter", { clear = true }),
+				callback = function(event)
+					local lang = vim.treesitter.language.get_lang(event.match)
+					if not lang then
+						return
+					end
+					if vim.treesitter.language.add(lang) then
+						start(event.buf, lang)
+					elseif available[lang] then
+						ts.install({ lang }):await(vim.schedule_wrap(function(err)
+							if not err then
+								start(event.buf, lang)
+							end
+						end))
+					end
+				end,
+			})
+		end,
 	},
 
-	config = function()
-		vim.filetype.add({
-			extension = {
-				jsp = "html",
-			},
-		})
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		branch = "main",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		event = { "BufReadPost", "BufNewFile" },
+		config = function()
+			require("nvim-treesitter-textobjects").setup({
+				move = { set_jumps = true },
+			})
 
-		require("nvim-treesitter.configs").setup({
-			ensure_installed = {
-				"astro",
-				"json",
-				"javascript",
-				"typescript",
-				"tsx",
-				"yaml",
-				"html",
-				"css",
-				"markdown",
-				"markdown_inline",
-				"bash",
-				"lua",
-				"vim",
-				"gitignore",
-				"vimdoc",
-				"c",
-				"cpp",
-				"dart",
-				"python",
-				"java",
-				"xml",
-				"go",
-				"templ",
-				"http",
-				"rust",
-				"toml",
-			},
-			auto_install = true,
-			highlight = { enable = true },
-			indent = { enable = true },
-			autotag = { enable = true },
-			textobjects = {
-				move = {
-					enable = true,
-					set_jumps = true,
-					goto_next_start = {
-						["]f"] = { query = "@function.outer", desc = "Next function start" },
-					},
-					goto_previous_start = {
-						["[f"] = { query = "@function.outer", desc = "Previous function start" },
-					},
-				},
-			},
-		})
+			local move = require("nvim-treesitter-textobjects.move")
+			vim.keymap.set({ "n", "x", "o" }, "]f", function()
+				move.goto_next_start("@function.outer", "textobjects")
+			end, { desc = "Next function start" })
+			vim.keymap.set({ "n", "x", "o" }, "[f", function()
+				move.goto_previous_start("@function.outer", "textobjects")
+			end, { desc = "Previous function start" })
+		end,
+	},
 
-		require("treesitter-context").setup({
-			enable = true,
-			max_lines = 3,
-			trim_scope = "outer",
-			mode = "cursor",
-			separator = "─",
-			zindex = 20,
-		})
-
-		vim.keymap.set("n", "[c", function()
-			require("treesitter-context").go_to_context()
-		end, { desc = "Jump to function context" })
-	end,
+	{
+		"windwp/nvim-ts-autotag",
+		event = { "BufReadPre", "BufNewFile" },
+		opts = {},
+	},
 }
