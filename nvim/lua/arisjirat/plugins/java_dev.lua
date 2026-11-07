@@ -73,12 +73,25 @@ return {
 				end
 			end
 
-			-- mise-managed Java
-			local mise_java = vim.fn.expand("~/.local/share/mise/installs/java/21/")
-			if vim.fn.isdirectory(mise_java) == 1 then
-				local major = java_major(mise_java)
-				if major ~= nil and major >= 21 then
-					return mise_java
+			-- mise names installs <vendor>-<version>, never "21", and `mise where`
+			-- additionally honours a per-project pin.
+			if vim.fn.executable("mise") == 1 then
+				local mise_home = trim(vim.fn.system({ "mise", "where", "java" }))
+				if vim.v.shell_error == 0 and mise_home ~= "" and vim.fn.isdirectory(mise_home) == 1 then
+					local major = java_major(mise_home)
+					if major ~= nil and major >= 21 then
+						return mise_home
+					end
+				end
+			end
+
+			local mise_dir = vim.fn.expand("~/.local/share/mise/installs/java")
+			for _, path in ipairs(vim.fn.glob(mise_dir .. "/*", true, true)) do
+				if vim.fn.isdirectory(path) == 1 then
+					local major = java_major(path)
+					if major ~= nil and major >= 21 then
+						return path
+					end
 				end
 			end
 
