@@ -23,6 +23,8 @@ yarn = "3.6.4"
 rust = "latest"
 # lf = "latest"
 dotnet = "8"
+# nvim-treesitter main shells out to this to build every parser
+tree-sitter = "latest"
 "npm:@biomejs/biome" = "latest"
 "npm:@mermaid-js/mermaid-cli" = "latest"
 
