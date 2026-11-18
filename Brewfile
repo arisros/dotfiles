@@ -58,8 +58,15 @@ brew "ollama"
 brew "pass"
 # Pass extension for managing one-time-password tokens
 brew "pass-otp"
-# Search tool like grep and The Silver Searcher
+# Database management TUI for PostgreSQL/MySQL/SQLite
 brew "rainfrog"
+# Cross-platform TUI database management tool
+brew "lazysql"
+# CLI for MySQL with auto-completion and syntax highlighting
+brew "mycli"
+# Terminal-based HTTP/REST client
+brew "slumber"
+# Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
