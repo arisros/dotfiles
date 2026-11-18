@@ -8,7 +8,7 @@ cmake = "latest"
 ninja = "latest"
 ccache = "latest"
 
-# java = "zulu-21"
+java = "temurin-21"
 maven = "latest"
 
 # php = "latest"

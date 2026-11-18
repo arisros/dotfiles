@@ -196,6 +196,19 @@ export PATH="$HOME/.composer/vendor/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 #
 
+# sdkman-init.sh exports JAVA_HOME and prepends every candidate to PATH, so it
+# has to run before mise, which is the authority for the JVM.
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# Only let SDKMAN own JAVA_HOME when it actually has a current candidate.
+# Unconditionally, this pointed at a non-existent path on any machine without
+# SDKMAN and overrode the working JVM detected above.
+if [ -d "$SDKMAN_DIR/candidates/java/current" ]; then
+  export JAVA_HOME="$SDKMAN_DIR/candidates/java/current"
+  export PATH="$JAVA_HOME/bin:$PATH"
+fi
+
 if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"
 fi
@@ -265,18 +278,6 @@ fi
 
 if $_IS_MACOS; then
   export CATALINA_HOME="/opt/homebrew/opt/tomcat/libexec"
-fi
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-# Only let SDKMAN own JAVA_HOME when it actually has a current candidate.
-# Unconditionally, this pointed at a non-existent path on any machine without
-# SDKMAN and overrode the working JVM detected above.
-if [ -d "$SDKMAN_DIR/candidates/java/current" ]; then
-  export JAVA_HOME="$SDKMAN_DIR/candidates/java/current"
-  export PATH="$JAVA_HOME/bin:$PATH"
 fi
 
 export PHPVM_DIR="$HOME/.phpvm"
