@@ -36,6 +36,9 @@ return {
 				"pyright",
 				"omnisharp",
 			},
+			-- mason's stylua is built without the `lsp` feature, so lspconfig's
+			-- stylua server dies on `--lsp`. It is a formatter here, via conform.
+			automatic_enable = { exclude = { "stylua" } },
 		})
 
 		mason_tool_installer.setup({
