@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 source "$CONFIG_DIR/helper_sketchybar.sh"
 
-workspace="$1"
-monitor="$2"
+[[ -n "$FOCUSED_WORKSPACE" ]] || exit 0
 
-if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
-    focus_workspace $workspace $monitor
-    find_windows_in_workspace $workspace $monitor
-fi
+monitor=$(get_display_for_monitor "$(aerospace list-workspaces --focused --format '%{monitor-id}')")
+focus_workspace "$FOCUSED_WORKSPACE"
+find_windows_in_workspace "$FOCUSED_WORKSPACE" "$monitor"

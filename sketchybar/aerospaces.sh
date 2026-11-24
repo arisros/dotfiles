@@ -4,8 +4,6 @@
 source "$CONFIG_DIR/env.sh" # Loads all defined colors
 source "$CONFIG_DIR/helper_sketchybar.sh"
 
-mkdir -p /tmp/sketchybar
-
 sketchybar --add event aerospace_workspace_change
 count_monitors=$(get_count_monitors)
 divider_every=5
@@ -17,8 +15,7 @@ for monitor_ in $(aerospace list-monitors | awk '{print $1}'); do
     [[ "$count_monitors" -gt 1 || "$monitor_" == 1 ]] && add_empty_space "$monitor_" "$monitor"
 
     workspace_list=$(aerospace list-workspaces --monitor "$monitor_")
-    ordered=("q" "w" "e" "r" "t" "y" "u" "i" "o" "p", "a" "s" "d" "f" "g" "h" "j" "k" "l" "z" "x" "c" "v" "b" "n" "m" "z" "x" "c" "v" "b" "n" "m" "1" "2" "3" "4" "5" "6" "7" "8" "9")
-    local sorted_workspaces=()
+    ordered=("q" "w" "e" "r" "t" "y" "u" "i" "o" "p" "a" "s" "d" "f" "g" "h" "j" "k" "l" "z" "x" "c" "v" "b" "n" "m" "z" "x" "c" "v" "b" "n" "m" "1" "2" "3" "4" "5" "6" "7" "8" "9")
 
     for id in "${ordered[@]}"; do
         while IFS= read -r sid; do
@@ -34,4 +31,6 @@ for monitor_ in $(aerospace list-monitors | awk '{print $1}'); do
         done <<< "$workspace_list"
     done
 done
+
+add_workspace_watcher
 
