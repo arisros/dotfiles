@@ -13,6 +13,7 @@ config_dirs=(
   "$HOME/.config/nix"
   "$HOME/.config/yazi"
   "$HOME/.config/htop"
+  "$HOME/.config/oxker"
   "$HOME/.local/bin"
 )
 
@@ -27,6 +28,7 @@ stow_pairs=(
   "$HOME/.config/mise:mise"
   "$HOME/.config/yazi:yazi"
   "$HOME/.config/htop:htop"
+  "$HOME/.config/oxker:oxker"
   "$HOME:git"
   "$HOME:vim"
   "$HOME:zsh"

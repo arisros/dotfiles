@@ -43,6 +43,8 @@ brew "lazygit"
 brew "act"
 # TUI for a multi-container compose stack
 brew "lazydocker"
+# TUI for single containers, vim-style keymap in oxker/config.toml
+brew "oxker"
 # TUI JSON viewer, for test reports and captured payloads
 brew "jless"
 # ------------------------------------------------------------------------
