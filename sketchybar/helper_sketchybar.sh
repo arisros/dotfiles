@@ -38,24 +38,17 @@ get_display_for_monitor() {
 }
 
 focus_workspace() {
-    local except="$1"
-    local monitor_="$2"
-    local monitor
-    monitor=$(get_display_for_monitor "$monitor_")
+    local focused="$1"
+    local args=()
 
-    local workspaces=$(aerospace list-workspaces --monitor "$monitor")
-
-    for sid in $workspaces; do
-        if [[ "$sid" == "$except" ]]; then
-            sketchybar --set "space.$sid" \
-                background.color=0xFFCC6766 \
-                label.color=0xFF000000
+    for sid in $(aerospace list-workspaces --monitor focused); do
+        if [[ "$sid" == "$focused" ]]; then
+            args+=(--set "space.$sid" background.color=0xFFCC6766 label.color=0xFF000000)
         else
-            sketchybar --set "space.$sid" \
-                background.color=0xFF000000 \
-                label.color=0xFFFFFFFF
+            args+=(--set "space.$sid" background.color=0xFF000000 label.color=0xFFFFFFFF)
         fi
     done
+    [[ ${#args[@]} -gt 0 ]] && sketchybar "${args[@]}"
 }
 
 add_empty_space() {
@@ -75,7 +68,6 @@ add_workspace() {
     local label=$(tr '[:lower:]' '[:upper:]' <<< "$sid")
 
     sketchybar --add item "space.$sid" left \
-        --subscribe "space.$sid" aerospace_workspace_change \
         --set "space.$sid" \
         display="$monitor" \
         width=30 \
@@ -89,8 +81,13 @@ add_workspace() {
         background.color=0x00000000 \
         background.height=30 \
         icon.font="sketchybar-app-font:Regular:5.0" \
-        icon.color=0xFFFFFFFF \
-        script="$CONFIG_DIR/sketch_aero.sh $sid $monitor | tee -a /tmp/sketchybar/sketchy_debug.log"
+        icon.color=0xFFFFFFFF
+}
+
+add_workspace_watcher() {
+    sketchybar --add item aerospace.watcher left \
+        --set aerospace.watcher drawing=off updates=on script="$CONFIG_DIR/sketch_aero.sh" \
+        --subscribe aerospace.watcher aerospace_workspace_change
 }
 
 remove_window() {
@@ -149,56 +146,27 @@ find_windows_in_workspace() {
     local sid="$1"
     local monitor="$2"
 
-    windows=$(aerospace list-windows --workspace "$sid" --json --format '%{monitor-id}%{workspace}%{app-bundle-id}%{window-id}%{app-name}')
-    count=$(jq length <<< "$windows" 2>/dev/null || echo 0)
-    [[ ! "$count" =~ ^[0-9]+$ ]] && return
+    local all_win bar_items args=()
+    all_win=$(aerospace list-windows --all --json --format '%{workspace}%{window-id}%{app-name}') || return
+    bar_items=" $(sketchybar --query bar | jq -r '[.items[] | select(startswith("app."))] | join(" ")') "
 
-
-    for ((i = 0; i < count; i++)); do
-
-        workspace=$(jq -r --argjson i "$i" '.[$i]["workspace"] // empty' <<< "$windows")
-        app_name=$(jq -r --argjson i "$i" '.[$i]["app-name"] // empty' <<< "$windows")
-        window_id=$(jq -r --argjson i "$i" '.[$i]["window-id"] // empty' <<< "$windows")
-
-        [[ "$workspace" != "$sid" ]] && continue
-        [[ -z "$app_name" ]] && continue
-
-        bar=$(sketchybar --query bar | jq -r --arg window_id "$window_id" '.items[] | select(test("^app\\." + $window_id + "$"))')
-        window_app_bar_id="app.$window_id"
-        if [[ "$bar" == "$window_app_bar_id" ]]; then
-            sketchybar --set "$bar" display="$monitor" \
-                --move "$bar" after "space.$sid"
-            continue
-        fi
-        if [[ ! -z "$window_app_bar_id" ]]; then
+    local workspace window_id app_name
+    while IFS=$'\t' read -r workspace window_id app_name; do
+        [[ "$workspace" != "$sid" || -z "$app_name" ]] && continue
+        if [[ "$bar_items" == *" app.$window_id "* ]]; then
+            args+=(--set "app.$window_id" display="$monitor" --move "app.$window_id" after "space.$sid")
+        else
             add_window "$sid" "$monitor" "$app_name" "$window_id"
         fi
+    done < <(jq -r '.[] | [.workspace, (."window-id" | tostring), ."app-name"] | @tsv' <<< "$all_win")
 
+    local live
+    live=" $(jq -r '[.[]."window-id"] | join(" ")' <<< "$all_win") "
+    for item in $bar_items; do
+        [[ "$live" == *" ${item#app.} "* ]] || args+=(--remove "$item")
     done
 
-    all_win=$(aerospace list-windows --all --json --format '%{monitor-id}%{workspace}%{app-bundle-id}%{window-id}%{app-name}')
-    all_win_count=$(jq length <<< "$all_win" 2>/dev/null || echo 0)
-    if [[ "$count" < 1 ]]; then
-        return
-    fi
-
-    for item in $(sketchybar --query bar | jq -r '.items[] | select(test("^app\\."))'); do
-        # extract window_id from bar
-        window_id=$(awk -F'.' '{print $2}' <<< "$item")
-        found=0
-        for ((i = 0; i < all_win_count; i++)); do
-            window_id_aerospace=$(jq -r --argjson i "$i" '.[$i]["window-id"] // empty' <<< "$all_win")
-            if [[ "$window_id" == "$window_id_aerospace" ]]; then
-                ((found++))
-                continue
-            fi
-        done
-
-        # if found is 0, remove window
-        if [[ "$found" == 0 ]]; then
-            sketchybar --remove "app.$window_id"
-        fi
-    done
+    [[ ${#args[@]} -gt 0 ]] && sketchybar "${args[@]}"
 }
 
 add_windows_to_workspace() {
