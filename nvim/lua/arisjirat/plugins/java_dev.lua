@@ -31,109 +31,72 @@ return {
 			return tonumber(version)
 		end
 
-		local function find_java_21_home()
-			-- Linux: check common distro paths
-			local linux_java_paths = {
-				"/usr/lib/jvm/java-21-openjdk-amd64",
-				"/usr/lib/jvm/java-21-openjdk",
-				"/usr/lib/jvm/java-21",
-			}
-			for _, path in ipairs(linux_java_paths) do
-				if vim.fn.isdirectory(path) == 1 then
-					local major = java_major(path)
-					if major ~= nil and major >= 21 then
-						return path
-					end
-				end
-			end
-
-			-- macOS: Homebrew
-			local brew_java_21 = "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
-			if vim.fn.isdirectory(brew_java_21) == 1 then
-				local major = java_major(brew_java_21)
-				if major ~= nil and major >= 21 then
-					return brew_java_21
-				end
-			end
-
-			-- macOS: java_home utility
-			if vim.fn.executable("/usr/libexec/java_home") == 1 then
-				local out = trim(vim.fn.system("/usr/libexec/java_home -v 21 2>/dev/null"))
-				if out ~= "" and vim.fn.isdirectory(out) == 1 then
-					return out
-				end
-			end
-
-			-- SDKMAN (cross-platform)
-			local sdkman_current = vim.fn.expand("~/.sdkman/candidates/java/current")
-			if vim.fn.isdirectory(sdkman_current) == 1 then
-				local major = java_major(sdkman_current)
-				if major ~= nil and major >= 21 then
-					return sdkman_current
-				end
-			end
-
+		local function java_home_candidates()
+			local candidates = {}
 			-- mise names installs <vendor>-<version>, never "21", and `mise where`
-			-- additionally honours a per-project pin.
+			-- additionally honours a per-project pin, so it goes first.
 			if vim.fn.executable("mise") == 1 then
 				local mise_home = trim(vim.fn.system({ "mise", "where", "java" }))
-				if vim.v.shell_error == 0 and mise_home ~= "" and vim.fn.isdirectory(mise_home) == 1 then
-					local major = java_major(mise_home)
-					if major ~= nil and major >= 21 then
-						return mise_home
-					end
+				if vim.v.shell_error == 0 and mise_home ~= "" then
+					table.insert(candidates, mise_home)
 				end
 			end
+			if vim.env.JAVA_HOME ~= nil and vim.env.JAVA_HOME ~= "" then
+				table.insert(candidates, vim.env.JAVA_HOME)
+			end
+			local globs = {
+				"/usr/lib/jvm/*",
+				"/opt/homebrew/opt/openjdk*/libexec/openjdk.jdk/Contents/Home",
+				"/Library/Java/JavaVirtualMachines/*/Contents/Home",
+				"~/.sdkman/candidates/java/*",
+				"~/.local/share/mise/installs/java/*",
+			}
+			for _, pattern in ipairs(globs) do
+				vim.list_extend(candidates, vim.fn.glob(vim.fs.normalize(pattern), true, true))
+			end
+			return candidates
+		end
 
-			local mise_dir = vim.fn.expand("~/.local/share/mise/installs/java")
-			for _, path in ipairs(vim.fn.glob(mise_dir .. "/*", true, true)) do
+		local function find_java_home(min_major)
+			for _, path in ipairs(java_home_candidates()) do
 				if vim.fn.isdirectory(path) == 1 then
 					local major = java_major(path)
-					if major ~= nil and major >= 21 then
-						return path
+					if major ~= nil and major >= min_major then
+						return path, major
 					end
 				end
 			end
-
-			-- Fallback: JAVA_HOME env
-			local env_java_home = vim.env.JAVA_HOME
-			if env_java_home ~= nil and env_java_home ~= "" and vim.fn.isdirectory(env_java_home) == 1 then
-				local major = java_major(env_java_home)
-				if major ~= nil and major >= 21 then
-					return env_java_home
-				end
-			end
-
 			return nil
 		end
 
-		local java_home = find_java_21_home()
-		if java_home == nil then
+		local project_home, project_major = find_java_home(21)
+		if project_home == nil then
 			vim.notify("Java 21+ is required for jdtls. Install Java 21 and set JAVA_HOME.", vim.log.levels.WARN)
 			return
 		end
 
-		vim.env.JAVA_HOME = java_home
-		local java_bin_dir = java_home .. "/bin"
+		-- jdtls itself needs Java 25 since 1.5x; the project keeps compiling against project_home.
+		local server_home = find_java_home(25)
+		if server_home == nil then
+			vim.notify("jdtls needs Java 25+ to run (mise install java@temurin-25).", vim.log.levels.WARN)
+			server_home = project_home
+		end
+
+		vim.env.JAVA_HOME = project_home
+		local java_bin_dir = project_home .. "/bin"
 		if not vim.env.PATH:find(vim.pesc(java_bin_dir), 1, false) then
 			vim.env.PATH = java_bin_dir .. ":" .. vim.env.PATH
 		end
 
 		local root_markers = {
-			".git",
 			"mvnw",
 			"gradlew",
 			"pom.xml",
 			"build.gradle",
 			"build.gradle.kts",
+			".git",
 		}
-		local root_dir = require("jdtls.setup").find_root(root_markers)
-		if root_dir == nil or root_dir == "" then
-			root_dir = vim.fn.getcwd()
-		end
 
-		local project_name = vim.fn.fnamemodify(root_dir, ":p:t")
-		local workspace_dir = vim.fn.stdpath("data") .. "/jdtls-workspace/" .. project_name
 		local jdtls_cmd = vim.fn.stdpath("data") .. "/mason/bin/jdtls"
 		if vim.fn.executable(jdtls_cmd) == 0 then
 			jdtls_cmd = "jdtls"
@@ -145,25 +108,69 @@ return {
 			capabilities = blink.get_lsp_capabilities(capabilities)
 		end
 
-		local config = {
-			cmd = { jdtls_cmd, "-data", workspace_dir },
-			root_dir = root_dir,
-			capabilities = capabilities,
-			settings = {
-				java = {
-					references = {
-						includeDecompiledSources = true,
-					},
-					maven = {
-						downloadSources = true,
+		local mason_packages = vim.fn.stdpath("data") .. "/mason/packages"
+		local bundles = vim.fn.glob(
+			mason_packages .. "/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
+			true,
+			true
+		)
+		-- the runner and jacoco jars are launched by java-test itself, loading them as bundles breaks jdtls
+		local test_excluded = {
+			["com.microsoft.java.test.runner-jar-with-dependencies.jar"] = true,
+			["jacocoagent.jar"] = true,
+		}
+		for _, jar in ipairs(vim.fn.glob(mason_packages .. "/java-test/extension/server/*.jar", true, true)) do
+			if not test_excluded[vim.fn.fnamemodify(jar, ":t")] then
+				table.insert(bundles, jar)
+			end
+		end
+
+		local function on_attach(_, bufnr)
+			local function map(lhs, rhs, desc)
+				vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
+			end
+			map("<leader>Jt", jdtls.test_nearest_method, "Java: test nearest method")
+			map("<leader>JT", jdtls.test_class, "Java: test class")
+			map("<leader>Jp", jdtls.pick_test, "Java: pick test")
+			map("<leader>Jo", jdtls.organize_imports, "Java: organize imports")
+		end
+
+		local function start()
+			local root_dir = vim.fs.root(0, root_markers) or vim.fn.getcwd()
+			local workspace_dir = vim.fn.stdpath("data") .. "/jdtls-workspace/" .. vim.fn.fnamemodify(root_dir, ":t")
+
+			jdtls.start_or_attach({
+				cmd = { jdtls_cmd, "--java-executable", server_home .. "/bin/java", "-data", workspace_dir },
+				root_dir = root_dir,
+				capabilities = capabilities,
+				on_attach = on_attach,
+				dap = { hotcodereplace = "auto" },
+				settings = {
+					java = {
+						configuration = {
+							runtimes = {
+								{ name = "JavaSE-" .. project_major, path = project_home, default = true },
+							},
+						},
+						references = {
+							includeDecompiledSources = true,
+						},
+						maven = {
+							downloadSources = true,
+						},
 					},
 				},
-			},
-			init_options = {
-				bundles = {},
-			},
-		}
+				init_options = {
+					bundles = bundles,
+				},
+			})
+		end
 
-		jdtls.start_or_attach(config)
+		vim.api.nvim_create_autocmd("FileType", {
+			group = vim.api.nvim_create_augroup("arisjirat_jdtls", { clear = true }),
+			pattern = "java",
+			callback = start,
+		})
+		start()
 	end,
 }
