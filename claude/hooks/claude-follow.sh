@@ -20,10 +20,20 @@ follower_pane() {
   [ -n "$id" ] && tmux display -p -t "$id" '#{pane_id}' 2>/dev/null
 }
 
+# A follower sitting at a hit-enter prompt answers no RPC, so an unbounded client hangs forever.
+remote() {
+  nvim --server "$sock" "$@" >/dev/null 2>&1 &
+  local pid=$!
+  (sleep 3 && kill -9 "$pid" 2>/dev/null) >/dev/null 2>&1 &
+  wait "$pid" 2>/dev/null
+}
+
 event=$(jq -r '.hook_event_name // empty' <<<"$input")
 
 if [ "$event" = "SessionEnd" ]; then
   [ "$(jq -r '.reason // empty' <<<"$input")" = "clear" ] && exit 0
+  # Killing only the pane leaves the --embed server orphaned and spinning.
+  [ -S "$sock" ] && remote --remote-send '<C-\><C-n>:qa!<CR>'
   id=$(follower_pane) && tmux kill-pane -t "$id"
   rm -f "$sock"
   exit 0
@@ -55,13 +65,16 @@ if ! follower_pane >/dev/null || [ ! -S "$sock" ]; then
   rm -f "$sock"
   cwd=$(jq -r '.cwd // empty' <<<"$input")
   id=$(tmux split-window -h -d -l 50% -t "$claude_pane" -c "${cwd:-$PWD}" -P -F '#{pane_id}' \
-    nvim --listen "$sock" -c 'set autoread cursorline' -c 'autocmd FocusGained * checktime') || exit 0
+    nvim --listen "$sock" \
+      --cmd 'lua vim.lsp.start = function() end' \
+      -c 'set autoread cursorline' -c 'autocmd FocusGained * checktime' \
+      -c 'lua pcall(function() require("vim._core.ui2").enable({}) end)') || exit 0
   tmux set -p -t "$claude_pane" @claude_follow_pane "$id"
   tmux set -p -t "$id" @claude_follow_of "$claude_pane"
   for _ in $(seq 30); do [ -S "$sock" ] && break; sleep 0.1; done
 fi
 
 esc=${file//\'/\'\'}
-nvim --server "$sock" --remote-expr \
-  "execute('silent! checktime | silent! drop +$line '..fnameescape('$esc')..' | normal! zz')" >/dev/null 2>&1
+remote --remote-expr \
+  "execute('silent! checktime | silent! drop +$line '..fnameescape('$esc')..' | normal! zz')"
 exit 0
