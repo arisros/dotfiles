@@ -38,7 +38,8 @@ return {
 			},
 			-- mason's stylua is built without the `lsp` feature, so lspconfig's
 			-- stylua server dies on `--lsp`. It is a formatter here, via conform.
-			automatic_enable = { exclude = { "stylua" } },
+			-- jdtls is started per project by nvim-jdtls; a second lspconfig client exits 13.
+			automatic_enable = { exclude = { "stylua", "jdtls" } },
 		})
 
 		mason_tool_installer.setup({
@@ -53,6 +54,8 @@ return {
 				"prettierd",
 				"arduino_language_server",
 				"jdtls",
+				"java-debug-adapter",
+				"java-test",
 				"clangd",
 				"clang-format",
 				"codelldb",

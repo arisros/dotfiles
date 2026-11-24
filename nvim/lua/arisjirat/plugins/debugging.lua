@@ -54,6 +54,16 @@ return {
 			}
 		end
 
+		dap.configurations.java = {
+			{
+				type = "java",
+				request = "attach",
+				name = "Attach to JVM on localhost:5005",
+				hostName = "127.0.0.1",
+				port = 5005,
+			},
+		}
+
 		require("telescope").load_extension("dap")
 		-- dap.listeners.before.event_terminated["dapui_keep_open"] = function()
 		-- 	dapui.open()
