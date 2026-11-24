@@ -1,0 +1,20 @@
+# Keymap modelled on tmprl. Any clash or unsupported key reverts the WHOLE keymap
+# to default ("( h ) show help" in the header); "?" is unsupported, hence H.
+# scroll_many is shift because tmux owns Ctrl-j/k and aerospace owns Alt, which
+# also turns K into scroll-up-10, so inspect stays on i.
+
+[keymap]
+scroll_down = ["j", "down"]
+scroll_up = ["k", "up"]
+scroll_start = ["g", "home"]
+scroll_end = ["G", "end"]
+scroll_many = ["shift"]
+select_next_panel = ["l", "tab"]
+select_previous_panel = ["h", "backtab"]
+toggle_help = ["H"]
+filter_mode = ["/"]
+log_search_mode = ["#"]
+inspect = ["i"]
+save_logs = ["Y", "s"]
+force_redraw = ["R", "f"]
+clear = ["esc", "c"]

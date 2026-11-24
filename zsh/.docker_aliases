@@ -1,3 +1,4 @@
 alias dcup='docker compose up'
+alias oxker='oxker --config-file "$HOME/.config/oxker/config.toml"'
 
 # Specific for dev
